@@ -1,0 +1,38 @@
+.user-info-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .left-info p,
+  .right-info p {
+    margin: 5px 0;
+  }
+  
+  .right-info ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .right-info li {
+    background: #e9ecef;
+    padding: 5px 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+  }
+  
+  .edit-btn {
+    padding: 8px 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-btn:hover {
+    background: #0056b3;
+  }  

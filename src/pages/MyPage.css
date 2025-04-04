@@ -1,0 +1,15 @@
+.mypage-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f1f3f5;
+  border-radius: 10px;
+}
+
+.mypage-container h2 {
+  text-align: center;
+}
+
+.history-tabs {
+  margin-bottom: 20px;
+}

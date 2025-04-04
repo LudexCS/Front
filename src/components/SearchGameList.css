@@ -1,0 +1,28 @@
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 30px;
+    padding: 30px;
+    width: 70%;
+  }
+  
+  .game-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background: lightgray;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .game-thumbnail {
+    width: 100%;
+    border-radius: 5px;
+  }
+  
+  .game-title {
+    margin-top: 5px;
+    font-weight: bold;
+  }
+  

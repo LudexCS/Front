@@ -1,0 +1,57 @@
+.sales-history {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .sales-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  
+  .sales-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .expand-btn {
+    padding: 5px 10px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .expand-btn:hover {
+    background: #0056b3;
+  }
+  
+  .sales-detail {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .thumbnail {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 8px 12px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  button:hover {
+    background: #0056b3;
+  }  

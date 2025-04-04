@@ -1,0 +1,61 @@
+.purchase-history {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .purchase-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  
+  .purchase-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .download-btn,
+  .expand-btn {
+    padding: 5px 10px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .expand-btn {
+    margin-left: 10px;
+  }
+  
+  .download-btn:hover,
+  .expand-btn:hover {
+    background: #0056b3;
+  }
+  
+  .purchase-detail {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .thumbnail {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .tags {
+    margin-top: 10px;
+  }
+  
+  .tag {
+    display: inline-block;
+    padding: 3px 8px;
+    background: #e9ecef;
+    border-radius: 5px;
+    margin-right: 5px;
+  }  

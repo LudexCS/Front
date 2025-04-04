@@ -1,0 +1,22 @@
+.tag-container {
+    display: flex;
+    /* gap: 10px; */
+    margin-top: 10px;
+    flex-wrap: wrap; 
+  }
+  
+  .tag {
+    background-color: #a9a9a9;
+    color: #000000;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .tag:hover {
+    color: aliceblue;
+    background-color: #333333;
+  }
+  

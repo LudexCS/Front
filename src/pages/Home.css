@@ -1,0 +1,49 @@
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background: linear-gradient(to bottom, #0055a5, #91bbdf); */
+    padding: 20px;
+  }
+  
+  /* 상단 레이아웃 (배너 + 검색창) */
+  .top-section {
+    display:flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  
+  .top-section .banner {
+    flex: 2;
+    height: 200px;
+    width: 400px;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .top-section .search-bar {
+    /* margin-left: 20px; */
+    width: 100%;
+    max-width: 300px; 
+  }
+  .top-section .tag-container {
+    display: flex;
+    flex-wrap: wrap; /* ✅ 넘치면 자동 줄바꿈 */
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    width: 100%;
+    max-width: 300px; /* ✅ 검색창과 같은 너비 */
+  }
+  
+  /* 하단 게임 리스트 */
+  .bottom-section {
+    width: 100%;
+    max-width: 1200px;
+  }
+  

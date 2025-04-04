@@ -1,0 +1,31 @@
+.search-page {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15%;
+  height: 100px;
+  /* align-items: center; */
+}
+
+.search-page .search-bar {
+  padding: 10px;
+  width: 80%;
+}
+
+.content {
+  display: flex;
+  align-items: flex-start; /* 상단 정렬 */
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.game-list {
+  flex: 1;
+}
+
+.game-detail {
+  flex: 1;
+  border-left: 1px solid #ccc;
+  position: sticky;  /* ✅ 스크롤 시 고정 */
+  top: 80px;         /* 네비게이션바 높이만큼 여백 */
+  height: fit-content;
+}
