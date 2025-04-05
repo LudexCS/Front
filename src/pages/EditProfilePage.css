@@ -1,0 +1,109 @@
+.edit-profile-page {
+    display: flex;
+    max-width: 900px;
+    margin: 40px auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: sans-serif;
+    background-color: white;
+  }
+  
+  .left-panel, .right-panel {
+    flex: 1;
+    padding: 30px;
+  }
+  
+  .left-panel {
+    border-right: 1px solid #ccc;
+  }
+  
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #0066cc;
+  }
+  
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+  }
+  
+  .nickname-row {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .nickname-row input {
+    flex: 1;
+  }
+  
+  .read-only {
+    padding: 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    margin-top: 5px;
+  }
+  
+  .save-button {
+    margin-top: 30px;
+    width: 100px;
+    padding: 10px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .account-delete {
+    color: red;
+    font-size: 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    text-align: right;
+  }
+  
+  .right-panel ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .right-panel li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+  }
+  
+  .delete-wallet {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+  }
+  
+  .add-wallet-row {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .add-wallet-row input {
+    flex: 1;
+  }
+  
+  .delete-confirm-popup {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1000;
+  }  

@@ -1,0 +1,15 @@
+.file-uploader input {
+    margin-bottom: 10px;
+  }
+  
+  .file-uploader ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .file-uploader li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  

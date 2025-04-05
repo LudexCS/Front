@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UserInfo from "../components/UserInfo";
 import HistoryTabs from "../components/HistoryTabs";
 import PurchaseHistory from "../components/PurchaseHistory";
@@ -10,6 +11,7 @@ const MyPage = ({isLoggedIn}) => {
   const userInfo = { nickname: "LudexUser", email: "ludex@example.com", id: "ludex123", password: "password123", wallets: ["0xABC123", "0xDEF456"] };
   
   const [activeTab, setActiveTab] = useState("purchase");
+  const navigate = useNavigate();
 
   const purchaseHistory = [{
     id: 1,
@@ -61,7 +63,7 @@ const MyPage = ({isLoggedIn}) => {
     <div className="mypage-container">
       <Navbar isLoggedIn={isLoggedIn}/>
       <div className="mypage-content">
-      <UserInfo userInfo={userInfo} onEdit={() => alert("정보 수정 페이지로 이동합니다")} />
+      <UserInfo userInfo={userInfo} onEdit={() => navigate("/edit")} />
       <HistoryTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       {activeTab === "purchase" ? (
         <PurchaseHistory purchases={purchaseHistory} onDownload={() => {alert("다운로드를 시작합니다")}} onGoToSalesPage={() => {}} onShowTerms={() => {}} />
