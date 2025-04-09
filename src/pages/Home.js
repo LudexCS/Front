@@ -5,10 +5,10 @@ import HomeGameList from "../components/HomeGameList";
 import SearchBar from "../components/SearchBar";
 import "./Home.css";
 
-const Home = ({isLoggedIn}) => {
+const Home = () => {
     return (
         <div>
-        <Navbar isLoggedIn={isLoggedIn}/>
+        <Navbar />
         <div className="home-container">
         <div className="top-section">
           <Banner />

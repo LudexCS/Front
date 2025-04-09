@@ -6,7 +6,7 @@ import SearchGameList from "../components/SearchGameList";
 import GameDetail from "../components/GameDetail";
 import "./SearchPage.css";
 
-const SearchPage = ({isLoggedIn}) => {
+const SearchPage = () => {
   const { query } = useParams(); // URL에서 검색어 가져오기
   const [selectedGame, setSelectedGame] = useState(null);
 
@@ -21,7 +21,7 @@ const SearchPage = ({isLoggedIn}) => {
 
   return (
     <div>
-    <Navbar isLoggedIn={isLoggedIn}/>
+    <Navbar />
     <div className="search-page">
       <SearchBar/>
     </div>

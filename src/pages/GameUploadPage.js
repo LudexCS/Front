@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import FileUploader from "../components/FileUploader";
 import LicensingForm from "../components/LicensingForm";
 import Navbar from "../components/Navbar";
-import tags from "../context/tags";
+import tags from "../context/Tags";
 import "./GameUploadPage.css";
 
-const GameUploadPage = ({ isLoggedIn }) => {
+const GameUploadPage = () => {
   const [category, setCategory] = useState("origin");
   const [selectedIPs, setSelectedIPs] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
@@ -35,7 +35,7 @@ const GameUploadPage = ({ isLoggedIn }) => {
 
   return (
     <div>
-      <Navbar isLoggedIn={isLoggedIn} />
+      <Navbar />
       <div className="upload-page">
         <h2>이미지&영상 파일 업로드</h2>
         <FileUploader maxFiles={5} />

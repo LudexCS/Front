@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import UserInfo from "../components/UserInfo";
 import HistoryTabs from "../components/HistoryTabs";
 import PurchaseHistory from "../components/PurchaseHistory";
@@ -7,11 +8,19 @@ import SalesHistory from "../components/SalesHistory";
 import Navbar from "../components/Navbar";
 import "./MyPage.css";
 
-const MyPage = ({isLoggedIn}) => {
-  const userInfo = { nickname: "LudexUser", email: "ludex@example.com", id: "ludex123", password: "password123", wallets: ["0xABC123", "0xDEF456"] };
-  
+const MyPage = () => {
+  const { isLoggedIn, logout } = useAuth();
   const [activeTab, setActiveTab] = useState("purchase");
   const navigate = useNavigate();
+
+  const userInfo = {
+    nickname: "LudexUser",
+    email: "ludex@example.com",
+    id: "ludex123",
+    password: "password123",
+    wallets: ["0xABC123", "0xDEF456"],
+  };
+
 
   const purchaseHistory = [{
     id: 1,
@@ -61,15 +70,16 @@ const MyPage = ({isLoggedIn}) => {
 
   return (
     <div className="mypage-container">
-      <Navbar isLoggedIn={isLoggedIn}/>
+      <Navbar />
       <div className="mypage-content">
-      <UserInfo userInfo={userInfo} onEdit={() => navigate("/edit")} />
-      <HistoryTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      {activeTab === "purchase" ? (
-        <PurchaseHistory purchases={purchaseHistory} onDownload={() => {alert("다운로드를 시작합니다")}} onGoToSalesPage={() => {}} onShowTerms={() => {}} />
-      ) : (
-        <SalesHistory sales={salesHistory} onEditGame={() => {alert("게임 정보 수정 페이지로 이동합니다")}} onSetDiscount={() => {alert("할인 설정 페이지로 이동합니다")}} />
-      )}
+        <p className="logout-btn" onClick={logout}>로그아웃</p>
+        <UserInfo userInfo={userInfo} onEdit={() => navigate("/edit")} />
+        <HistoryTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        {activeTab === "purchase" ? (
+          <PurchaseHistory purchases={purchaseHistory} />
+        ) : (
+          <SalesHistory sales={salesHistory} />
+        )}
       </div>
     </div>
   );
