@@ -7,8 +7,7 @@ const UserInfo = ({ userInfo, onEdit }) => {
       <div className="left-info">
         <p>nickname: {userInfo.nickname}</p>
         <p>email: {userInfo.email}</p>
-        <p>id: {userInfo.id}</p>
-        <p>password: {userInfo.password}</p>
+        {/* <p>password: {userInfo.password}</p> */}
         <button className="edit-btn" onClick={onEdit}>edit</button>
       </div>
       <div className="right-info">

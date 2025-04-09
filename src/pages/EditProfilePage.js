@@ -3,18 +3,16 @@ import "./EditProfilePage.css";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import axiosInstance from "../api/axiosInstance"; // ✅ 추가
+import axiosInstance from "../api/axiosInstance";
 
 const EditProfilePage = () => {
   const [nickname, setNickname] = useState("nickname");
   const [email, setEmail] = useState("email@example.com");
-  const [id] = useState("user123");
   const [password] = useState("********");
   const [wallets, setWallets] = useState(["0x1234...abcd"]);
   const [newWallet, setNewWallet] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-  const { logout } = useAuth(); // ✅ 전역 상태에서 로그아웃
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleNicknameCheck = () => {
@@ -43,12 +41,10 @@ const EditProfilePage = () => {
 
   const confirmDelete = async () => {
     try {
-      // ✅ 계정 삭제 API 호출
-      await axiosInstance.delete("/user/delete"); // 엔드포인트 맞게 수정
+      await axiosInstance.delete("/user/delete");
 
-      logout(); // ✅ 전역 로그아웃 처리
+      await logout();
       navigate("/");
-
     } catch (err) {
       alert("계정 삭제 중 오류가 발생했습니다.");
       console.error(err);
@@ -72,9 +68,6 @@ const EditProfilePage = () => {
 
           <label>email</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-
-          <label>id</label>
-          <div className="read-only">{id}</div>
 
           <label>password</label>
           <div className="read-only">{password}</div>

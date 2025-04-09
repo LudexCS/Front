@@ -1,38 +1,111 @@
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  gap: 100px;
+  background-color: #ffffff;
+  font-size: 18px;
+}
+
 .signup-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  .nickname-section {
-    display: flex;
-    gap: 5px;
-  }
-  
-  input {
-    width: 200px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    background: gray;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .signup-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #f1f3f5;
-    border-radius: 10px;
-  }
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  padding-left: 170px;
+  padding-right: 170px;
+  padding-bottom: 70px;
+  padding-top: 40px;
+
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.signup-content h2 {
+  font-size: 32px;
+  margin-bottom: 80px;
+}
+
+.signup-content input {
+  height: 60px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.form-group {
+  display: flex;
+  align-items: first baseline;
+  width: 100%;
+  margin-bottom: 20px;
+  gap: 5px;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 12px 14px;
+  font-size: 5px;
+  height: 60px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.form-group button {
+  padding: 0 16px;
+  height: 60px;
+  font-size: 18px;
+  box-sizing: border-box;
+  border: none;
+  background-color: #b5b5b5;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.form-group button:hover {
+  background-color: #6a6a6a;
+}
+
+/* 독립 입력 필드 */
+.signup-content input[type="password"],
+.signup-content input[type="email"],
+.signup-content input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 20px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.signup-action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 30px;
+  padding-top: 40px;
+}
+
+.signup-action-buttons button {
+  padding: 12px 24px;
+  font-size: 20px;
+  height: 50px;
+  width: 120px;
+  cursor: pointer;
+
+  background-color: #b5b5b5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.signup-action-buttons button:hover {
+  background-color: #6a6a6a;
+}

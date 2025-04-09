@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import React, { useState } from "react";
+import React from "react";
 import { AuthProvider } from "./context/AuthContext";
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -11,19 +11,18 @@ import GameUploadPage from "./pages/GameUploadPage";
 import DeleteAccount from "./components/DeleteAccount";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   console.log(Router);
 
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
-        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/" element={<Home/>} />
+        <Route path="/login" element={<Login/>} />
         <Route path='/signup' element={<Signup />} />
-        <Route path="/my" element={<MyPage isLoggedIn={isLoggedIn} />} />
-        <Route path="/search/:query" element={<SearchPage isLoggedIn={isLoggedIn}/>} />
-        <Route path="edit" element={<EditProfilePage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>}/>
-        <Route path="submit" element={<GameUploadPage isLoggedIn={isLoggedIn}/>}/>
+        <Route path="/my" element={<MyPage/>} />
+        <Route path="/search/:query" element={<SearchPage/>} />
+        <Route path="edit" element={<EditProfilePage />}/>
+        <Route path="submit" element={<GameUploadPage />}/>
         <Route path="/delete-account" element={<DeleteAccount />} />
       </Routes>
     </AuthProvider>

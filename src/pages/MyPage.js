@@ -16,7 +16,6 @@ const MyPage = () => {
   const userInfo = {
     nickname: "LudexUser",
     email: "ludex@example.com",
-    id: "ludex123",
     password: "password123",
     wallets: ["0xABC123", "0xDEF456"],
   };
@@ -68,11 +67,19 @@ const MyPage = () => {
     },
   ];
 
+  const handleLogout = async () => {
+    await logout();
+    console.log(isLoggedIn);
+    navigate("/");
+  };
+
   return (
     <div className="mypage-container">
       <Navbar />
       <div className="mypage-content">
-        <p className="logout-btn" onClick={logout}>로그아웃</p>
+        <button className="logout-btn" onClick={handleLogout}>
+          로그아웃
+        </button>
         <UserInfo userInfo={userInfo} onEdit={() => navigate("/edit")} />
         <HistoryTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === "purchase" ? (

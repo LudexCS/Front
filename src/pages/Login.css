@@ -1,39 +1,67 @@
-.login-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  input {
-    width: 200px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    background: gray;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .signup-link {
-    color: blue;
-    cursor: pointer;
-    text-decoration: underline;
-  }
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  gap: 80px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 18px;
+}
 
-  .login-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #f1f3f5;
-    border-radius: 10px;
-  }
+.login-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  padding: 40px 100px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.login-content h2 {
+  font-size: 32px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.login-content input {
+  align-self: flex-start;
+  width: 100%;
+  height: 60px;
+  padding: 16px 20px;
+  font-size: 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.login-content button {
+  margin-top: 40px;
+  width: 120px;
+  height: 55px;
+  background-color: #b5b5b5;
+  color: white;
+  padding: 12px 24px;
+  font-size: 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.login-content button:hover {
+  background-color: #6a6a6a;
+}
+
+/* 회원가입 링크 스타일 */
+.signup-link {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 20px;
+}

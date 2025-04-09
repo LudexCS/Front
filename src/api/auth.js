@@ -7,6 +7,6 @@ export const loginUser = async (id, password) => {
 };
 
 export const getNewAccessToken = async () => {
-  const response = await axiosInstance.post("/auth/refresh");
-  return response.data;
+  const response = await axiosInstance.get("/auth/reissue");
+  return response.data; 
 };

@@ -1,18 +1,25 @@
-// src/context/AuthContext.jsx
-import React, { createContext, useContext, useEffect, useState } from "react";
+// src/context/AuthContext.js
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { getNewAccessToken } from "../api/auth";
+import axiosInstance from "../api/axiosInstance";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const logout = () => {
-    localStorage.removeItem("accessToken");
-    setIsLoggedIn(false);
+  const logout = async () => {
+    try {
+      await axiosInstance.delete("/auth/logout");
+    } catch (e) {
+      console.error("서버 로그아웃 실패", e);
+    } finally {
+      localStorage.removeItem("accessToken");
+      setIsLoggedIn(false);
+    }
   };
 
-  const refreshAccessToken = async () => {
+  const refreshAccessToken = useCallback(async () => {
     try {
       const data = await getNewAccessToken();
       localStorage.setItem("accessToken", data.accessToken);
@@ -22,12 +29,11 @@ export const AuthProvider = ({ children }) => {
       logout();
       throw err;
     }
-  };
+  }, []);
 
   useEffect(() => {
-    // 자동 로그인 시도
     refreshAccessToken().catch(() => logout());
-  }, []);
+  }, [refreshAccessToken]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, logout, refreshAccessToken }}>
