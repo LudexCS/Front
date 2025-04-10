@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./EditProfilePage.css";
+import "../styles/EditProfilePage.css";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";

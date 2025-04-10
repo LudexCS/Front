@@ -1,14 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
 import { AuthProvider } from "./context/AuthContext";
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import MyPage from "./pages/MyPage";
 import SearchPage from "./pages/SearchPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import GameUploadPage from "./pages/GameUploadPage";
 import DeleteAccount from "./components/DeleteAccount";
+import ManageUsers from "./pages/ManageUsers";
 
 function App() {
   console.log(Router);
@@ -16,14 +17,15 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/login" element={<Login/>} />
-        <Route path='/signup' element={<Signup />} />
+        <Route path="/" element={<HomePage/>} />
+        <Route path="/login" element={<LoginPage/>} />
+        <Route path='/signup' element={<SignupPage />} />
         <Route path="/my" element={<MyPage/>} />
         <Route path="/search/:query" element={<SearchPage/>} />
-        <Route path="edit" element={<EditProfilePage />}/>
-        <Route path="submit" element={<GameUploadPage />}/>
+        <Route path="/edit-profile" element={<EditProfilePage />}/>
+        <Route path="/submit-game" element={<GameUploadPage />}/>
         <Route path="/delete-account" element={<DeleteAccount />} />
+        <Route path="/manage-users" element={<ManageUsers />} />
       </Routes>
     </AuthProvider>
   );

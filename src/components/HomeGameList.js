@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./HomeGameList.css";
+import "../styles/HomeGameList.css";
 
 // 더미 데이터 생성
 const generateDummyGames = () => {

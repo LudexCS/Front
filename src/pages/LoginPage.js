@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { loginUser } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
-import "./Login.css";
+import "../styles/LoginPage.css";
 
-const Login = () => {
+const LoginPage = () => {
   const navigate = useNavigate();
   const { setIsLoggedIn } = useAuth();
   const [email, setEmail] = useState("");
@@ -62,4 +62,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

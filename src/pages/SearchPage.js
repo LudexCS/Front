@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import SearchGameList from "../components/SearchGameList";
 import GameDetail from "../components/GameDetail";
-import "./SearchPage.css";
+import "../styles/SearchPage.css";
 
 const SearchPage = () => {
   const { query } = useParams(); // URL에서 검색어 가져오기

@@ -3,7 +3,7 @@ import FileUploader from "../components/FileUploader";
 import LicensingForm from "../components/LicensingForm";
 import Navbar from "../components/Navbar";
 import tags from "../context/Tags";
-import "./GameUploadPage.css";
+import "../styles/GameUploadPage.css";
 
 const GameUploadPage = () => {
   const [category, setCategory] = useState("origin");

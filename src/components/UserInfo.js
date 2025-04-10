@@ -1,5 +1,5 @@
 import React from "react";
-import "./UserInfo.css";
+import "../styles/UserInfo.css";
 
 const UserInfo = ({ userInfo, onEdit }) => {
   return (

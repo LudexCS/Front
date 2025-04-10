@@ -1,5 +1,5 @@
 import React from "react";
-import "./SearchGameList.css";
+import "../styles/SearchGameList.css";
 
 const dummyGames = Array.from({ length: 30 }, (_, i) => ({
   id: i + 1,

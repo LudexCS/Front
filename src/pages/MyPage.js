@@ -6,7 +6,7 @@ import HistoryTabs from "../components/HistoryTabs";
 import PurchaseHistory from "../components/PurchaseHistory";
 import SalesHistory from "../components/SalesHistory";
 import Navbar from "../components/Navbar";
-import "./MyPage.css";
+import "../styles/MyPage.css";
 
 const MyPage = () => {
   const { isLoggedIn, logout } = useAuth();
@@ -80,7 +80,7 @@ const MyPage = () => {
         <button className="logout-btn" onClick={handleLogout}>
           로그아웃
         </button>
-        <UserInfo userInfo={userInfo} onEdit={() => navigate("/edit")} />
+        <UserInfo userInfo={userInfo} onEdit={() => navigate("/edit-profile")} />
         <HistoryTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === "purchase" ? (
           <PurchaseHistory purchases={purchaseHistory} />

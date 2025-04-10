@@ -3,9 +3,9 @@ import Navbar from "../components/Navbar";
 import Banner from "../components/Banner";
 import HomeGameList from "../components/HomeGameList";
 import SearchBar from "../components/SearchBar";
-import "./Home.css";
+import "../styles/HomePage.css";
 
-const Home = () => {
+const HomePage = () => {
     return (
         <div>
         <Navbar />
@@ -22,4 +22,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default HomePage;

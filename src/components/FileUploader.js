@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./FileUploader.css";
+import "../styles/FileUploader.css";
 
 const FileUploader = ({ maxFiles }) => {
   const [files, setFiles] = useState([]);

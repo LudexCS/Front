@@ -1,5 +1,5 @@
 import React from "react";
-import "./GameDetail.css";
+import "../styles/GameDetail.css";
 import { useNavigate } from "react-router-dom";
 
 const GameDetail = ({ game }) => {
