@@ -77,9 +77,9 @@ const MyPage = () => {
     <div className="mypage-container">
       <Navbar />
       <div className="mypage-content">
-        <button className="logout-btn" onClick={handleLogout}>
-          로그아웃
-        </button>
+        <p className="logout-btn" onClick={handleLogout}>
+          logout
+        </p>
         <UserInfo userInfo={userInfo} onEdit={() => navigate("/edit-profile")} />
         <HistoryTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === "purchase" ? (

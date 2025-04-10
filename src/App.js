@@ -9,7 +9,7 @@ import SearchPage from "./pages/SearchPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import GameUploadPage from "./pages/GameUploadPage";
 import DeleteAccount from "./components/DeleteAccount";
-import ManageUsers from "./pages/ManageUsers";
+import ManageUsersPage from "./pages/ManageUsersPage";
 
 function App() {
   console.log(Router);
@@ -25,7 +25,7 @@ function App() {
         <Route path="/edit-profile" element={<EditProfilePage />}/>
         <Route path="/submit-game" element={<GameUploadPage />}/>
         <Route path="/delete-account" element={<DeleteAccount />} />
-        <Route path="/manage-users" element={<ManageUsers />} />
+        <Route path="/manage-users" element={<ManageUsersPage />} />
       </Routes>
     </AuthProvider>
   );

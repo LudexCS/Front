@@ -6,6 +6,10 @@
   border-radius: 10px;
 }
 
+.mypage-content .logout-btn {
+  color: red;
+}
+
 .mypage-container h2 {
   text-align: center;
 }

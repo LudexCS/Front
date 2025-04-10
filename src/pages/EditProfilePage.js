@@ -7,8 +7,7 @@ import axiosInstance from "../api/axiosInstance";
 
 const EditProfilePage = () => {
   const [nickname, setNickname] = useState("nickname");
-  const [email, setEmail] = useState("email@example.com");
-  const [password] = useState("********");
+  const [email] = useState("email@example.com");
   const [wallets, setWallets] = useState(["0x1234...abcd"]);
   const [newWallet, setNewWallet] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -52,9 +51,9 @@ const EditProfilePage = () => {
   };
 
   return (
-    <div>
+    <div className="edit-profile-page">
       <Navbar />
-      <div className="edit-profile-page">
+      <div className="edit-profile">
         <div className="left-panel">
           <label>nickname</label>
           <div className="nickname-row">
@@ -67,13 +66,12 @@ const EditProfilePage = () => {
           </div>
 
           <label>email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <div className="read-only">{email}</div>
 
-          <label>password</label>
-          <div className="read-only">{password}</div>
-
-          <button className="save-button" onClick={() => navigate("/my")}>Back</button>
-          <button className="save-button" onClick={handleSave}>Save</button>
+          <div className="edit-button-row">
+            <button className="edit-button" onClick={() => navigate("/my")}>Back</button>
+            <button className="edit-button" onClick={handleSave}>Save</button>
+          </div>
           <div className="account-delete" onClick={handleDeleteAccount}>account delete</div>
         </div>
 

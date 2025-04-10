@@ -11,7 +11,7 @@ const dummyUsers = Array.from({ length: 10 }).map((_, i) => ({
   isBlocked: i % 2 === 0,
 }));
 
-const ManageUsers = () => {
+const ManageUsersPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredUsers = dummyUsers.filter(
@@ -45,4 +45,4 @@ const ManageUsers = () => {
   );
 };
 
-export default ManageUsers;
+export default ManageUsersPage;
