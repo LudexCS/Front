@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axiosInstance from "../api/axiosInstance";
+import { requestWalletNonce, verifyWalletOwnership } from "../api/walletAuth";
 
 const EditProfilePage = () => {
   const [nickname, setNickname] = useState("nickname");
@@ -15,13 +16,45 @@ const EditProfilePage = () => {
   const navigate = useNavigate();
 
   const handleNicknameCheck = () => {
-    alert("사용 가능한 닉네임입니다."); // TODO: 실제 중복 확인 API 연결
+    alert("사용 가능한 닉네임입니다."); // TODO
   };
 
-  const handleAddWallet = () => {
-    if (newWallet.trim()) {
-      setWallets([...wallets, newWallet]);
-      setNewWallet("");
+  const handleAddWallet = async () => {
+    if (!newWallet.trim()) return;
+
+    try {
+      // ✅ 지갑 연결된 메타마스크 계정 가져오기
+      if (!window.ethereum) throw new Error("MetaMask가 설치되어 있지 않습니다.");
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const walletAddress = accounts[0];
+
+      // ✅ nonce 요청
+      const userId = "user-id"; // 실제 유저 ID로 대체
+      const nonce = await requestWalletNonce(userId);
+
+      // ✅ 서명 요청
+      const signature = await window.ethereum.request({
+        method: "personal_sign",
+        params: [nonce, walletAddress],
+      });
+
+      // ✅ 검증 요청
+      const success = await verifyWalletOwnership({
+        userId,
+        address: walletAddress,
+        signature,
+      });
+
+      if (success) {
+        setWallets([...wallets, walletAddress]);
+        setNewWallet("");
+        alert("지갑이 성공적으로 인증되었습니다.");
+      } else {
+        alert("지갑 인증 실패");
+      }
+    } catch (err) {
+      console.error("지갑 인증 실패:", err);
+      alert("지갑 인증 중 오류 발생");
     }
   };
 
@@ -41,7 +74,6 @@ const EditProfilePage = () => {
   const confirmDelete = async () => {
     try {
       await axiosInstance.delete("/user/delete");
-
       await logout();
       navigate("/");
     } catch (err) {
@@ -98,10 +130,12 @@ const EditProfilePage = () => {
 
         {showDeleteConfirm && (
           <div className="delete-confirm-popup">
-            <p>정말 계정을 삭제하시겠습니까?</p>
             <div>
-              <button onClick={confirmDelete}>확인</button>
-              <button onClick={() => setShowDeleteConfirm(false)}>취소</button>
+              <p>정말 계정을 삭제하시겠습니까?</p>
+              <div className="confirm-button-group">
+                <button onClick={confirmDelete}>Yes</button>
+                <button onClick={() => setShowDeleteConfirm(false)}>No</button>
+              </div>
             </div>
           </div>
         )}

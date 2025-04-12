@@ -1,23 +1,21 @@
 .history-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .history-tabs button {
-    padding: 10px 20px;
-    border: none;
-    background: #6c757d;
-    color: white;
-    border-radius: 5apx;
-    cursor: pointer;
-  }
-  
-  .history-tabs button.active {
-    background: #007bff;
-  }
-  
-  .history-tabs button:hover {
-    background: #0056b3;
-  }  
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.history-tabs button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #b5b5b5;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.history-tabs button:hover,
+.history-tabs button.active {
+  background-color: #6a6a6a;
+}

@@ -24,19 +24,25 @@ const PurchaseHistory = ({ purchases, onDownload, onGoToSalesPage, onShowTerms }
           </div>
           {expandedId === item.id && (
             <div className="purchase-detail">
-              <img src={item.thumbnail} alt="thumbnail" className="thumbnail" />
-              <p>판매자: {item.seller}</p>
-              <p>설명: {item.description}</p>
-              <p>구동사양: {item.requirements}</p>
-              {item.type === "game" ? (
-                <button onClick={() => onGoToSalesPage(item)}>판매 페이지로 이동</button>
-              ) : (
-                <>
-                  <p>관련 게임: {item.gameRelated}</p>
-                  <button onClick={() => onShowTerms(item)}>이용조건 보기</button>
-                  <button onClick={() => onGoToSalesPage(item)}>해당 게임 판매페이지 이동</button>
-                </>
-              )}
+              <div className="history-content-row">
+                <div className="text-section">
+                  <p>판매자: {item.seller}</p>
+                  <p>설명: {item.description}</p>
+                  <p>구동사양: {item.requirements}</p>
+                  {item.type === "game" ? (
+                    <button onClick={() => onGoToSalesPage(item)}>판매 페이지로 이동</button>
+                  ) : (
+                    <>
+                      <p>관련 게임: {item.gameRelated}</p>
+                      <button onClick={() => onShowTerms(item)}>이용조건 보기</button>
+                      <button onClick={() => onGoToSalesPage(item)}>해당 게임 판매페이지 이동</button>
+                    </>
+                  )}
+                </div>
+                <div className="thumbnail-section">
+                  <img src={item.thumbnail} alt="thumbnail-img" className="thumbnail-img" />
+                </div>
+              </div>
             </div>
           )}
         </div>

@@ -35,7 +35,6 @@ const SignupPage = () => {
       <Navbar />
       <div className="signup-content">
         <h2>회원가입</h2>
-
         <div className="form-group">
           <input
             type="text"

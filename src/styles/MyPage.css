@@ -1,19 +1,32 @@
+.mypage-container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  font-size: 18px;
+}
+
 .mypage-content {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #f1f3f5;
+  width: 100%;
+  max-width: 1100px;
+  background-color: #ffffff;
+  border: 2px solid #ccc;
   border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 60px;
+  box-sizing: border-box;
+  position: relative;
+  margin: auto;
 }
 
-.mypage-content .logout-btn {
-  color: red;
+.logout-btn {
+  top: 20px;
+  right: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #e12f2f;
+  cursor: pointer;
+  transition: color 0.3s;
 }
-
-.mypage-container h2 {
-  text-align: center;
-}
-
-.history-tabs {
-  margin-bottom: 20px;
+.logout-btn:hover {
+  color: #862121;
 }

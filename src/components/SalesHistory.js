@@ -22,9 +22,15 @@ const SalesHistory = ({ sales, onEditGame, onSetDiscount }) => {
           </div>
           {expandedId === item.id && (
             <div className="sales-detail">
-              <img src={item.thumbnail} alt="thumbnail" className="thumbnail" />
-              <p>설명: {item.description}</p>
-              <p>구동사양: {item.requirements}</p>
+              <div className="history-content-row">
+                <div className="text-section">
+                  <p>설명: {item.description}</p>
+                  <p>구동사양: {item.requirements}</p>
+                </div>
+                <div className="thumbnail-section">
+                  <img src={item.thumbnail} alt="thumbnail-img" className="thumbnail-img" />
+                </div>
+              </div>
             </div>
           )}
         </div>
