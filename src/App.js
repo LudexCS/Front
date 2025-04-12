@@ -10,6 +10,7 @@ import EditProfilePage from "./pages/EditProfilePage";
 import GameUploadPage from "./pages/GameUploadPage";
 import DeleteAccount from "./components/DeleteAccount";
 import ManageUsersPage from "./pages/ManageUsersPage";
+import GameDetailPage from "./pages/GameDetailPage";
 
 function App() {
   console.log(Router);
@@ -26,6 +27,7 @@ function App() {
         <Route path="/submit-game" element={<GameUploadPage />}/>
         <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="/manage-users" element={<ManageUsersPage />} />
+        <Route path="/game/:gameId" element={<GameDetailPage />} />
       </Routes>
     </AuthProvider>
   );

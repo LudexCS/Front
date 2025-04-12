@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import SearchGameList from "../components/SearchGameList";
-import GameDetail from "../components/GameDetail";
+import GameDetailBar from "../components/GameDetailBar";
 import "../styles/SearchPage.css";
 
 const SearchPage = () => {
@@ -27,7 +27,7 @@ const SearchPage = () => {
     </div>
     <div className="content">
       <SearchGameList onSelectGame={handleGameSelect} />
-      <GameDetail game={selectedGame} />
+      <GameDetailBar game={selectedGame} />
     </div>
     </div>
   );

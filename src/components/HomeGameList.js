@@ -7,12 +7,12 @@ const generateDummyGames = () => {
   const games = [];
   for (let i = 1; i <= 30; i++) {
     const variantCount = Math.floor(Math.random() * 7) + 2; // 2~8개의 Variant
-    const variants = Array.from({ length: variantCount }, (_, idx) => `Variant ${idx + 1}`);
+    const variants = Array.from({ length: variantCount }, (_, idx) => `Variant ${idx + 1} gameId`);
     games.push({
       id: i,
       name: `Game ${i}`,
       thumbnail: `https://via.placeholder.com/100?text=Game${i}`,
-      variants: ["Origin", ...variants],
+      variants: ["Origin gameId", ...variants],
     });
   }
   return games;
@@ -35,10 +35,6 @@ const HomeGameList = () => {
 
   const handleGameClick = (game) => {
     setSelectedGame((prev) => (prev?.id === game.id ? null : game));
-  };
-
-  const handleVariantClick = (gameId, variant) => {
-    navigate(`/game/${gameId}/${variant.replace(/\s+/g, "").toLowerCase()}`);
   };
 
   return (
@@ -64,7 +60,7 @@ const HomeGameList = () => {
                   <div
                     key={index}
                     className="variant-item"
-                    onClick={() => handleVariantClick(selectedGame.id, variant)}
+                    onClick={() => navigate(`/game/${variant}`)}
                   >
                     <img src={selectedGame.thumbnail} alt={variant} className="variant-thumbnail" />
                     <div className="variant-title">{variant}</div>

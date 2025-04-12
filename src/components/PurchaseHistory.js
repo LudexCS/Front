@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/PurchaseHistory.css";
 
-const PurchaseHistory = ({ purchases, onDownload, onGoToSalesPage, onShowTerms }) => {
+const PurchaseHistory = ({ purchases, onDownload, onShowTerms }) => {
   const [expandedId, setExpandedId] = useState(null);
+  const navigate = useNavigate();
 
   const toggleExpand = (id) => {
     setExpandedId((prev) => (prev === id ? null : id));
@@ -30,12 +32,12 @@ const PurchaseHistory = ({ purchases, onDownload, onGoToSalesPage, onShowTerms }
                   <p>설명: {item.description}</p>
                   <p>구동사양: {item.requirements}</p>
                   {item.type === "game" ? (
-                    <button onClick={() => onGoToSalesPage(item)}>판매 페이지로 이동</button>
+                    <button onClick={() => navigate(`/game/${item.id}`)}>판매 페이지로 이동</button>
                   ) : (
                     <>
                       <p>관련 게임: {item.gameRelated}</p>
                       <button onClick={() => onShowTerms(item)}>이용조건 보기</button>
-                      <button onClick={() => onGoToSalesPage(item)}>해당 게임 판매페이지 이동</button>
+                      <button onClick={() => navigate(`/game/${item.id}`)}>해당 게임 판매페이지 이동</button>
                     </>
                   )}
                 </div>

@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/GameDetail.css";
 import { useNavigate } from "react-router-dom";
 
-const GameDetail = ({ game }) => {
+const GameDetailBar = ({ game }) => {
   const navigate = useNavigate();
 
   if (!game) {
@@ -16,7 +16,6 @@ const GameDetail = ({ game }) => {
       <p>{game.price}</p>
       <p>게임의 설명</p>
 
-      {/* ✅ 태그 클릭 시 검색 이동 */}
       <div className="tags">
         {game.tags.map((tag, index) => (
           <button key={index} className="tag" onClick={() => navigate(`/search/${tag}`)}>
@@ -25,7 +24,6 @@ const GameDetail = ({ game }) => {
         ))}
       </div>
 
-      {/* ✅ 상세 페이지 이동 버튼 추가 */}
       <button className="detail-button" onClick={() => navigate(`/game/${game.id}`)}>
         상세 페이지로 이동
       </button>
@@ -33,4 +31,4 @@ const GameDetail = ({ game }) => {
   );
 };
 
-export default GameDetail;
+export default GameDetailBar;
