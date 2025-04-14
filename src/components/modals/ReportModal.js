@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/ReportModal.css";
+import "../../styles/modals/ReportModal.css";
 
 const ReportModal = ({ gameId, onClose }) => {
   const [reason, setReason] = useState("");

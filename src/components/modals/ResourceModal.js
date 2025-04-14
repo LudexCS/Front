@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/ResourceModal.css";
+import "../../styles/modals/ResourceModal.css";
 
 const ResourceModal = ({ resources, onClose }) => (
   <div className="modal-overlay">

@@ -1,6 +1,6 @@
 import React from "react";
 import tags from "../../context/Tags";
-import "../../styles/TagSelector.css";
+import "../../styles/upload/TagSelector.css";
 
 const TagSelector = ({ selectedTags, setSelectedTags }) => {
   const toggleTag = (tag) => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TagBar from "./TagBar";
-import "../../styles/SearchBar.css";
+import "../../styles/layout/SearchBar.css";
 import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {

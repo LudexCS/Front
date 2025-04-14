@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/TagBar.css";
+import "../../styles/layout/TagBar.css";
 import { useNavigate } from "react-router-dom";
 import tags from "../../context/Tags";
 

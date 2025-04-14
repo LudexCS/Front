@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/GameDetailBar.css";
+import "../../styles/game/GameDetailBar.css";
 import { useNavigate } from "react-router-dom";
 
 const GameDetailBar = ({ game }) => {

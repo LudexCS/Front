@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/UserItem.css";
+import "../../styles/admin/UserItem.css";
 
 const UserHistoryModal = ({ type, onClose }) => {
   return (

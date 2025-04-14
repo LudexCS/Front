@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LicensingTabPane from "./LicensingTabPane";
 import LicensingHelpModal from "./LicensingHelpModal";
-import "../../styles/LicensingTabs.css";
+import "../../styles/upload/LicensingTabs.css";
 
 const TABS = [
   { key: "mode", label: "모드", defaultSplit: { seller: 30, buyer: 60 } },

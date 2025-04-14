@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/PaymentModal.css";
+import "../../styles/modals/PaymentModal.css";
 
 const PaymentModal = ({ game, onClose }) => (
   <div className="modal-overlay">

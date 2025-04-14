@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/HistoryTabs.css";
+import "../../styles/user/HistoryTabs.css";
 
 const HistoryTabs = ({ activeTab, setActiveTab }) => {
   return (
