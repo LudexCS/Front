@@ -1,4 +1,5 @@
 .search-container {
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -8,6 +9,7 @@
 .search-bar {
   display: flex;
   border-radius: 5px;
+  border: 1px solid #ccc;
   overflow: hidden;
 }
 

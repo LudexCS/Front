@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import "../styles/FileUploader.css";
 
-const FileUploader = ({ maxFiles }) => {
-  const [files, setFiles] = useState([]);
-
+const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
   const handleAddFile = (e) => {
     const selected = Array.from(e.target.files);
     if (files.length + selected.length <= maxFiles) {

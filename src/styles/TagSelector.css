@@ -1,0 +1,26 @@
+.tag-section {
+    margin-top: 20px;
+  }
+  
+  .tag-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .tag-button {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+  
+  .tag-button.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }  

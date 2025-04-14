@@ -12,11 +12,11 @@ const dummyGames = Array.from({ length: 30 }, (_, i) => ({
 
 const SearchGameList = ({ onSelectGame }) => {
   return (
-    <div className="game-grid">
+    <div className="search-game-grid">
       {dummyGames.map((game) => (
-        <div key={game.id} className="game-card" onClick={() => onSelectGame(game)}>
-          <img src={game.thumbnail} alt={game.name} className="game-thumbnail" />
-          <div className="game-title">{game.name}</div>
+        <div key={game.id} className="search-game-card" onClick={() => onSelectGame(game)}>
+          <img src={game.thumbnail} alt={game.name} className="search-game-thumbnail" />
+          <div className="search-game-title">{game.name}</div>
         </div>
       ))}
     </div>
