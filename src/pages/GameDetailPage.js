@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import ResourceModal from "../components/ResourceModal";
-import PaymentModal from "../components/PaymentModal";
-import ReportModal from "../components/ReportModal";
-import Navbar from "../components/Navbar";
+import ResourceModal from "../components/modals/ResourceModal";
+import PaymentModal from "../components/modals/PaymentModal";
+import ReportModal from "../components/modals/ReportModal";
+import Navbar from "../components/layout/Navbar";
 import defaultGameImage from "../assets/game-image.png";
-import "../styles/GameDetailPage.css";
+import "../styles/pages/GameDetailPage.css";
 
 const GameDetailPage = () => {
   const { gameId } = useParams();

@@ -1,7 +1,7 @@
 import React from "react";
-import "../styles/TagBar.css";
+import "../../styles/TagBar.css";
 import { useNavigate } from "react-router-dom";
-import tags from "../context/Tags";
+import tags from "../../context/Tags";
 
 const TagBar = ({ onTagClick }) => {
     const navigate = useNavigate();

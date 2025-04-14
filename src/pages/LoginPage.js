@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/layout/Navbar";
 import { loginUser } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
-import "../styles/LoginPage.css";
+import "../styles/pages/LoginPage.css";
 
 const LoginPage = () => {
   const navigate = useNavigate();

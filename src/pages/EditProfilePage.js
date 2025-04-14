@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "../styles/EditProfilePage.css";
-import Navbar from "../components/Navbar";
+import "../styles/pages/EditProfilePage.css";
+import Navbar from "../components/layout/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axiosInstance from "../api/axiosInstance";

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
-import FileUploader from "../components/FileUploader";
-import TagSelector from "../components/TagSelector";
-import CategorySelector from "../components/CategorySelector";
-import LicensingTabs from "../components/LicensingTabs";
-import LicensingHelpModal from "../components/LicensingHelpModal";
-import IPSelectorModal from "../components/IPSelectorModal";
-import "../styles/GameUploadPage.css";
+import { Navigate, useNavigate } from "react-router-dom";
+import Navbar from "../components/layout/Navbar";
+import FileUploader from "../components/upload/FileUploader";
+import TagSelector from "../components/upload/TagSelector";
+import CategorySelector from "../components/upload/CategorySelector";
+import LicensingTabs from "../components/upload/LicensingTabs";
+import LicensingHelpModal from "../components/upload/LicensingHelpModal";
+import IPSelectorModal from "../components/upload/IPSelectorModal";
+import "../styles/pages/GameUploadPage.css";
 
 const GameUploadPage = () => {
+  const navigate = useNavigate();
   const [category, setCategory] = useState("origin");
   const [showHelp, setShowHelp] = useState(false);
   const [showIPModal, setShowIPModal] = useState(false);
@@ -104,7 +106,7 @@ const GameUploadPage = () => {
         )}
 
         <div className="action-buttons">
-          <button>Back</button>
+          <button onClick={()=>navigate(-1)}>Back</button>
           <button onClick={handleSubmit}>Submit</button>
         </div>
 

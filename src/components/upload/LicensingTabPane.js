@@ -1,6 +1,6 @@
 import React from "react";
 import FileUploader from "./FileUploader";
-import "../styles/LicensingTabPane.css";
+import "../../styles/LicensingTabPane.css";
 
 const LicensingTabPane = ({
   type,

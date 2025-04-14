@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "../styles/UserItem.css"
-import UserHistoryModal from "./UserHistoryModal";
+import "../../styles/UserItem.css"
+import UserHistoryModal from "../modals/UserHistoryModal";
 
 const UserItem = ({ user }) => {
   const [blocked, setBlocked] = useState(user.isBlocked);

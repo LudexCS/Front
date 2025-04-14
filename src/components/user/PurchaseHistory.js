@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/PurchaseHistory.css";
+import "../../styles/PurchaseHistory.css";
 
 const PurchaseHistory = ({ purchases, onDownload, onShowTerms }) => {
   const [expandedId, setExpandedId] = useState(null);

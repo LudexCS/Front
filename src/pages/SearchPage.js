@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import SearchBar from "../components/SearchBar";
-import SearchGameList from "../components/SearchGameList";
-import GameDetailBar from "../components/GameDetailBar";
-import "../styles/SearchPage.css";
+import Navbar from "../components/layout/Navbar";
+import SearchBar from "../components/layout/SearchBar";
+import SearchGameList from "../components/game/SearchGameList";
+import GameDetailBar from "../components/game/GameDetailBar";
+import "../styles/pages/SearchPage.css";
 
 const SearchPage = () => {
   const { query } = useParams(); // URL에서 검색어 가져오기

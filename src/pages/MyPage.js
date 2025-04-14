@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import Navbar from "../components/Navbar";
-import UserInfo from "../components/UserInfo";
-import HistoryTabs from "../components/HistoryTabs";
-import PurchaseHistory from "../components/PurchaseHistory";
-import SalesHistory from "../components/SalesHistory";
-import "../styles/MyPage.css";
+import Navbar from "../components/layout/Navbar";
+import UserInfo from "../components/user/UserInfo";
+import HistoryTabs from "../components/user/HistoryTabs";
+import PurchaseHistory from "../components/user/PurchaseHistory";
+import SalesHistory from "../components/user/SalesHistory";
+import "../styles/pages/MyPage.css";
 import defaultGameImage from "../assets/game-image.png";
 
 const MyPage = () => {

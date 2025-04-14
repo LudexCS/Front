@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/LicensingHelpModal.css";
+import "../../styles/LicensingHelpModal.css";
 
 const LicensingHelpModal = ({ onClose }) => {
   return (

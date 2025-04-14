@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/CategorySelector.css";
+import "../../styles/CategorySelector.css";
 
 const CategorySelector = ({ category, setCategory }) => {
   return (

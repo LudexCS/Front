@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/IPSelectorModal.css";
+import "../../styles/IPSelectorModal.css";
 
 const availableIPs = [
   { id: "ip1", name: "구매한 게임 A", allowsDerivative: true },

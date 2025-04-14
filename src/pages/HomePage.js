@@ -1,9 +1,9 @@
 import React from "react";
-import Navbar from "../components/Navbar";
-import Banner from "../components/Banner";
-import HomeGameList from "../components/HomeGameList";
-import SearchBar from "../components/SearchBar";
-import "../styles/HomePage.css";
+import Navbar from "../components/layout/Navbar";
+import Banner from "../components/layout/Banner";
+import HomeGameList from "../components/game/HomeGameList";
+import SearchBar from "../components/layout/SearchBar";
+import "../styles/pages/HomePage.css";
 
 const HomePage = () => {
     return (

@@ -1,6 +1,6 @@
 import React from "react";
-import defaultGameImage from "../assets/game-image.png";
-import "../styles/SearchGameList.css";
+import defaultGameImage from "../../assets/game-image.png";
+import "../../styles/SearchGameList.css";
 
 const dummyGames = Array.from({ length: 30 }, (_, i) => ({
   id: `게임${i + 1}의 gameId`,

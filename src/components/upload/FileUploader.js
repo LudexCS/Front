@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/FileUploader.css";
+import "../../styles/FileUploader.css";
 
 const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
   const handleAddFile = (e) => {

@@ -8,7 +8,7 @@ import MyPage from "./pages/MyPage";
 import SearchPage from "./pages/SearchPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import GameUploadPage from "./pages/GameUploadPage";
-import DeleteAccount from "./components/DeleteAccount";
+import DeleteAccount from "./components/modals/DeleteAccount";
 import ManageUsersPage from "./pages/ManageUsersPage";
 import GameDetailPage from "./pages/GameDetailPage";
 

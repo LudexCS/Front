@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/SalesHistory.css";
+import "../../styles/SalesHistory.css";
 
 const SalesHistory = ({ sales, onEditGame, onSetDiscount }) => {
   const [expandedId, setExpandedId] = useState(null);

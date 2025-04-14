@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "../styles/ManageUsers.css";
-import Sidebar from "../components/Sidebar";
-import UserItem from "../components/UserItem";
-import NavbarManage from "../components/NavbarManage";
+import "../styles/pages/ManageUsersPage.css";
+import Sidebar from "../components/layout/Sidebar";
+import UserItem from "../components/admin/UserItem";
+import NavbarManage from "../components/layout/NavbarManage";
 
 const dummyUsers = Array.from({ length: 10 }).map((_, i) => ({
   id: i,

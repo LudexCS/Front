@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // ✅ AuthContext에서 상태 가져오기
-import "../styles/Navbar.css";
+import { useAuth } from "../../context/AuthContext";
+import "../../styles/Navbar.css";
 
 const Navbar = () => {
-  const { isLoggedIn } = useAuth(); // ✅ 전역 로그인 상태 사용
+  const { isLoggedIn } = useAuth();
 
   return (
     <nav className="navbar">
