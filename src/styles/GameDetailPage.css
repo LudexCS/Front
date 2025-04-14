@@ -1,0 +1,132 @@
+.game-detail-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.game-detail-right {
+  width: 50%;
+  height: 90%;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.game-detail-info {
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.game-detail-left {
+  padding: 20px;
+  width: 40%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.media-wrapper {
+  width: 100%;
+  border: 2px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.main-media-box {
+  width: 100%;
+  border: 1px solid #aaa;
+  margin-bottom: 10px;
+}
+
+.main-media {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.sub-media-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #aaa;
+  padding: 5px;
+  overflow-x: auto;
+}
+
+.scroll-button {
+  background: #eee;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 0 10px;
+}
+
+.report-button {
+  color: red;
+  font-size: 17px;
+  cursor: pointer;
+  text-align: right;
+  align-self: flex-end;
+  margin-bottom: 10px;
+}
+
+.resource-link {
+  color: blue;
+  cursor: pointer;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.action-buttons button {
+  margin-top: 40px;
+  width: 120px;
+  height: 55px;
+  background-color: #b5b5b5;
+  color: white;
+  padding: 12px 24px;
+  font-size: 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.action-buttons button:hover {
+  background-color: #6a6a6a;
+}
+
+.sub-media {
+  width: 120px;
+  height: 90px;
+  margin-right: 8px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #888;
+  transition: transform 0.2s ease;
+}
+
+.sub-media:hover {
+  transform: scale(1.05);
+}
+
+.sub-media.selected {
+  border: 3px solid #007bff;
+}

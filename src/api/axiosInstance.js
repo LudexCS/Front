@@ -23,7 +23,7 @@ instance.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      try {
+      try {//토큰 둘다 업뎃
         const newToken = await getNewAccessToken();
         localStorage.setItem("accessToken", newToken.accessToken);
         originalRequest.headers.Authorization = `Bearer ${newToken.accessToken}`;

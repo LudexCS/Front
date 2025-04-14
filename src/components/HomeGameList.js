@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/HomeGameList.css";
+import defaultGameImage from "../assets/game-image.png";
 
 // 더미 데이터 생성
 const generateDummyGames = () => {
@@ -11,7 +12,7 @@ const generateDummyGames = () => {
     games.push({
       id: i,
       name: `Game ${i}`,
-      thumbnail: `https://via.placeholder.com/100?text=Game${i}`,
+      thumbnail: defaultGameImage,
       variants: ["Origin gameId", ...variants],
     });
   }
@@ -38,32 +39,32 @@ const HomeGameList = () => {
   };
 
   return (
-    <div className="game-list-container">
+    <div className="home-game-list-container">
       {gameRows.map((row, rowIndex) => {
         // 행(row) 안에서 선택된 게임이 있는지 확인
         const selectedInRow = row.find(game => selectedGame && game.id === selectedGame.id);
         return (
           <React.Fragment key={rowIndex}>
             {/* 게임 카드가 5개씩 나오는 행 */}
-            <div className="game-grid-row">
+            <div className="home-game-grid-row">
               {row.map((game) => (
-                <div key={game.id} className="game-card" onClick={() => handleGameClick(game)}>
-                  <img src={game.thumbnail} alt={game.name} className="game-thumbnail" />
-                  <div className="game-title">{game.name}</div>
+                <div key={game.id} className="home-game-card" onClick={() => handleGameClick(game)}>
+                  <img src={game.thumbnail} alt={game.name} className="home-game-thumbnail" />
+                  <div className="home-game-title">{game.name}</div>
                 </div>
               ))}
             </div>
             {/* 해당 행에 선택된 게임이 있으면, 그 행 바로 아래에 Variant 목록 표시 */}
             {selectedInRow && (
-              <div className="variant-list">
+              <div className="home-variant-list">
                 {selectedGame.variants.map((variant, index) => (
                   <div
                     key={index}
-                    className="variant-item"
+                    className="home-variant-item"
                     onClick={() => navigate(`/game/${variant}`)}
                   >
-                    <img src={selectedGame.thumbnail} alt={variant} className="variant-thumbnail" />
-                    <div className="variant-title">{variant}</div>
+                    <img src={selectedGame.thumbnail} alt={variant} className="home-variant-thumbnail" />
+                    <div className="home-variant-title">{variant}</div>
                   </div>
                 ))}
               </div>

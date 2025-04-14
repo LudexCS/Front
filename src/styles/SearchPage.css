@@ -1,19 +1,30 @@
+.search-page-container {
+}
+
 .search-page {
   display: flex;
   flex-direction: column;
   padding-left: 15%;
-  height: 100px;
+  /* height: 100px; */
   /* align-items: center; */
 }
 
 .search-page .search-bar {
-  padding: 10px;
+  padding-top: 10px;
   width: 80%;
 }
 
-.content {
+.search-page .tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  width: 80%;
+}
+
+.search-content {
   display: flex;
   align-items: flex-start; /* 상단 정렬 */
+  /* margin-top: 20px; */
   padding-left: 10%;
   padding-right: 10%;
 }

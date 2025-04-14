@@ -1,10 +1,11 @@
 import React from "react";
+import defaultGameImage from "../assets/game-image.png";
 import "../styles/SearchGameList.css";
 
 const dummyGames = Array.from({ length: 30 }, (_, i) => ({
-  id: i + 1,
+  id: `게임${i + 1}의 gameId`,
   name: `게임${i + 1}`,
-  thumbnail: `https://via.placeholder.com/100?text=Game${i + 1}`,
+  thumbnail: defaultGameImage,
   price: `${(i + 1) * 1000} ₩`,
   tags: ["origin", "tag1", "tag2", "tag3"],
 }));

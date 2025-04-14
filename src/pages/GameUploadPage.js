@@ -48,7 +48,7 @@ const GameUploadPage = () => {
           <label>게임설명:</label>
           <textarea />
           <label>구동사양:</label>
-          <textarea />
+          <input type="text" />
         </div>
 
         <div className="tag-section">

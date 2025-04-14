@@ -21,14 +21,16 @@ const SearchPage = () => {
 
   return (
     <div>
-    <Navbar />
-    <div className="search-page">
-      <SearchBar/>
-    </div>
-    <div className="content">
-      <SearchGameList onSelectGame={handleGameSelect} />
-      <GameDetailBar game={selectedGame} />
-    </div>
+      <Navbar />
+      <div className="search-page-container">
+        <div className="search-page">
+          <SearchBar/>
+        </div>
+        <div className="search-content">
+          <SearchGameList onSelectGame={handleGameSelect} />
+          <GameDetailBar game={selectedGame} />
+        </div>
+      </div>
     </div>
   );
 };

@@ -6,17 +6,18 @@
   }
   
   .tag {
-    background-color: #a9a9a9;
+    background-color: #cfcfcf;
     color: #000000;
     border: none;
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
     white-space: nowrap;
+    font-size: 16px;
   }
   
   .tag:hover {
     color: aliceblue;
-    background-color: #333333;
+    background-color: #6f6f6f;
   }
   

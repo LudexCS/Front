@@ -2,12 +2,11 @@
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  /* align-items: center; */
+  padding-left: 10px;
 }
 
 .search-bar {
   display: flex;
-  border: 1px solid #ccc;
   border-radius: 5px;
   overflow: hidden;
 }
@@ -16,16 +15,16 @@
   flex: 1;
   padding: 8px;
   border: none;
+  height: 30px;
+  font-size: 18px;
 }
 
 .search-bar button {
+  height: 30px;
   padding: 8px;
   background-color: #ffffff;
   color: rgb(255, 255, 255);
   border: none;
   cursor: pointer;
-}
-
-.search-bar button:hover {
-  background-color: #bbbbbb;
+  font-size: 18px;
 }

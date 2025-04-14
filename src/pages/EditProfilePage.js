@@ -37,6 +37,13 @@ const EditProfilePage = () => {
         method: "personal_sign",
         params: [nonce, walletAddress],
       });
+      /* 
+      const { message } = await requestWalletNonce(userId);
+      const signature = await window.ethereum.request({
+        method: "personal_sign",
+        params: [message, walletAddress],
+      });
+      */
 
       // ✅ 검증 요청
       const success = await verifyWalletOwnership({

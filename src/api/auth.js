@@ -8,5 +8,12 @@ export const loginUser = async (id, password) => {
 
 export const getNewAccessToken = async () => {
   const response = await axiosInstance.get("/auth/reissue");
-  return response.data; 
+
+  // 헤더에서 access token 추출
+  const authHeader = response.headers["authorization"];
+  const accessToken = authHeader?.split(" ")[1];
+
+  if (!accessToken) throw new Error("access token 재발급 실패");
+
+  return { accessToken };
 };

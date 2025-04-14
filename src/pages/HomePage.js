@@ -8,16 +8,17 @@ import "../styles/HomePage.css";
 const HomePage = () => {
     return (
         <div>
-        <Navbar />
-        <div className="home-container">
-        <div className="top-section">
-          <Banner />
-          <SearchBar />
-        </div>
-        <div className="bottom-section">
-          <HomeGameList />
-        </div>
-        </div>
+          <Navbar />
+          <div className="home-container">
+            <div className="home-top-section">
+              <Banner />
+              <SearchBar />
+            </div>
+            <div className="bottom-section">
+              <HomeGameList />
+            </div>
+            
+          </div>
         </div>
     );
 };

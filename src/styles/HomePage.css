@@ -5,44 +5,43 @@
     padding: 20px;
   }
   
-  /* 상단 레이아웃 (배너 + 검색창) */
-  .top-section {
+  .home-top-section {
     display:flex;
     justify-content: space-between;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1800px;
     margin-bottom: 20px;
     align-items: center;
   }
   
-  .top-section .banner {
+  .home-top-section .banner {
     flex: 2;
-    height: 200px;
-    width: 400px;
+    height: 300px;
+    width: 300px;
     background-color: #eee;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
-  .top-section .search-bar {
-    /* margin-left: 20px; */
+  .home-top-section .search-bar {
     width: 100%;
-    max-width: 300px; 
+    max-width: 400px;
   }
-  .top-section .tag-container {
+
+  .home-top-section .tag-container {
     display: flex;
-    flex-wrap: wrap; /* ✅ 넘치면 자동 줄바꿈 */
+    flex-wrap: wrap;
     gap: 10px;
     margin-top: 10px;
     justify-content: center;
     width: 100%;
-    max-width: 300px; /* ✅ 검색창과 같은 너비 */
+    max-width: 400px;
   }
   
   /* 하단 게임 리스트 */
   .bottom-section {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1800px;
   }
   

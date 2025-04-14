@@ -1,8 +1,9 @@
 // src/constants/tags.js
 const tags = [
-    "origin", "action", "adventure", "arcade", "battle", "card",
-    "casual", "co-op", "cyberpunk", "dungeon", "fantasy", "fighting"
-    // , "fps", "horror", ...
+    "action", "adventure", "arcade", "battle", "card",
+    "casal", "c-op", "cyberunk", "duneon", "fanasy", "fightng",
+    "casual", "co-op", "cyberpunk", "dungeon", "fantasy", "fighting",
+    "cual", "cop", "cyrpunk", "dunon", "ntasy", "ghting"
   ];
   
   export default tags;

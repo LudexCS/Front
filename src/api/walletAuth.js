@@ -1,14 +1,14 @@
 import axiosInstance from "./axiosInstance";
 
-// step 1: nonce 요청
+// step 1: nonce 요청(사용자인증)
 export const requestWalletNonce = async (userId) => {
-  const res = await axiosInstance.post("/nonce", { userId });
+  const res = await axiosInstance.post("/protected/auth/siwe", { userId });
   return res.data.nonce;
 };
 
 // step 2~3: 서명 → 검증
 export const verifyWalletOwnership = async ({ userId, address, signature }) => {
-  const res = await axiosInstance.post("/link-wallet", {
+  const res = await axiosInstance.post("/protected/auth/wallet", {
     userId,
     address,
     signature,
