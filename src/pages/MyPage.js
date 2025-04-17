@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useUser } from "../context/UserContext";
 import Navbar from "../components/layout/Navbar";
 import UserInfo from "../components/user/UserInfo";
 import HistoryTabs from "../components/user/HistoryTabs";
@@ -13,13 +14,11 @@ const MyPage = () => {
   const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState("purchase");
   const navigate = useNavigate();
+  const { user } = useUser();
 
-  const userInfo = {
-    nickname: "LudexUser",
-    email: "ludex@example.com",
-    password: "password123",
-    wallets: ["0xABC123", "0xDEF456"],
-  };
+  if (!user) {
+    return <div>회원 정보를 로드하는 중...</div>
+  }
 
   const purchaseHistory = [
     {
@@ -82,7 +81,7 @@ const MyPage = () => {
         <p className="logout-btn" onClick={handleLogout}>
           logout
         </p>
-        <UserInfo userInfo={userInfo} onEdit={() => navigate("/edit-profile")} />
+        <UserInfo userInfo={user} onEdit={() => navigate("/edit-profile")} />
         <HistoryTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === "purchase" ? (
           <PurchaseHistory purchases={purchaseHistory} />

@@ -3,13 +3,15 @@ import "../styles/pages/EditProfilePage.css";
 import Navbar from "../components/layout/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useUser } from "../context/UserContext";
 import axiosInstance from "../api/axiosInstance";
 import { requestWalletNonce, verifyWalletOwnership } from "../api/walletAuth";
 
 const EditProfilePage = () => {
-  const [nickname, setNickname] = useState("nickname");
-  const [email] = useState("email@example.com");
-  const [wallets, setWallets] = useState(["0x1234...abcd"]);
+  const { user, setUser } = useUser();
+  const [nickname, setNickname] = useState(user ? user.nickname : "");
+  const [email] = useState(user ? user.email : "");
+  const [wallets, setWallets] = useState(user ? user.cryptoWallet : []);
   const [newWallet, setNewWallet] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { logout } = useAuth();
@@ -23,36 +25,30 @@ const EditProfilePage = () => {
     if (!newWallet.trim()) return;
 
     try {
-      // ✅ 지갑 연결된 메타마스크 계정 가져오기
+      // 지갑 연결된 메타마스크 계정 가져오기
       if (!window.ethereum) throw new Error("MetaMask가 설치되어 있지 않습니다.");
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       const walletAddress = accounts[0];
 
-      // ✅ nonce 요청
-      const userId = "user-id"; // 실제 유저 ID로 대체
-      const nonce = await requestWalletNonce(userId);
+      // nonce 요청
+      const nonce = await requestWalletNonce({
+        address: walletAddress,
+        uri: "ludex.io/mypage/wallet",
+      });
 
-      // ✅ 서명 요청
+      // 서명 요청
       const signature = await window.ethereum.request({
         method: "personal_sign",
         params: [nonce, walletAddress],
       });
-      /* 
-      const { message } = await requestWalletNonce(userId);
-      const signature = await window.ethereum.request({
-        method: "personal_sign",
-        params: [message, walletAddress],
-      });
-      */
 
-      // ✅ 검증 요청
-      const success = await verifyWalletOwnership({
-        userId,
+      // 검증 요청
+      const result = await verifyWalletOwnership({
         address: walletAddress,
         signature,
       });
 
-      if (success) {
+      if (result.message === "Wallet Successfully Registered") {
         setWallets([...wallets, walletAddress]);
         setNewWallet("");
         alert("지갑이 성공적으로 인증되었습니다.");
@@ -80,9 +76,10 @@ const EditProfilePage = () => {
 
   const confirmDelete = async () => {
     try {
-      await axiosInstance.delete("/user/delete");
+      const res = await axiosInstance.delete("/protected/account/delete");
+      setUser(null);
       await logout();
-      navigate("/");
+      navigate("/", { state: { message: res.data.message } });
     } catch (err) {
       alert("계정 삭제 중 오류가 발생했습니다.");
       console.error(err);

@@ -1,4 +1,3 @@
-// src/api/auth.js 토큰 갱신 API 추가
 import axiosInstance from "./axiosInstance";
 
 export const loginUser = async (id, password) => {

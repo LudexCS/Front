@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/pages/SignupPage.css";
 import Navbar from "../components/layout/Navbar";
+import {
+  checkNickname,
+  checkEmail,
+  sendVerificationCode,
+  verifyEmailCode,
+  signupUser,
+} from "../api/signupApi";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -11,23 +18,56 @@ const SignupPage = () => {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
+  const [emailVerified, setEmailVerified] = useState(false);
 
-  const checkNickname = () => {
-    alert("닉네임 사용 가능!");
+  const handleNicknameCheck = async () => {
+    try {
+      const res = await checkNickname(nickname);
+      alert(res.message);
+    } catch (err) {
+      alert("중복된 nickname입니다.");
+    }
+  };
+  
+  const handleEmailCheckAndSendCode = async () => {
+    try {
+      await checkEmail(email);  // 이메일 중복 체크
+      const res = await sendVerificationCode(email);  // 인증 이메일 발송
+      alert(res.message);
+      setShowVerification(true);
+    } catch (err) {
+      alert("중복된 email입니다.");
+    }
   };
 
-  const sendVerificationCode = () => {
-    alert("이메일로 인증코드가 전송되었습니다.");
-    setShowVerification(true);
+  const handleVerifyCode = async () => {
+    try {
+      const res = await verifyEmailCode(email, verificationCode);
+      alert(res.message);
+      setEmailVerified(true);
+    } catch (err) {
+      alert("잘못된 인증 코드입니다.");
+    }
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
+    if (!emailVerified) {
+      alert("이메일 인증이 필요합니다.");
+      return;
+    }
+
     if (password !== repeatPassword) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-    alert("회원가입 성공!");
-    navigate("/login");
+
+    try {
+      const res = await signupUser({ nickname, email, password, repeatPassword });
+      alert(res.message);
+      navigate("/login");
+    } catch (err) {
+      alert("회원가입 실패. 다시 시도해주세요.");
+    }
   };
 
   return (
@@ -42,7 +82,7 @@ const SignupPage = () => {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
-          <button onClick={checkNickname}>Check</button>
+          <button onClick={handleNicknameCheck}>Check</button>
         </div>
 
         <div className="form-group">
@@ -52,7 +92,7 @@ const SignupPage = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button onClick={sendVerificationCode}>Send</button>
+          <button onClick={handleEmailCheckAndSendCode}>Send</button>
         </div>
 
         {showVerification && (
@@ -63,7 +103,7 @@ const SignupPage = () => {
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
             />
-            <button onClick={() => alert("인증 확인 완료")}>Check</button>
+            <button onClick={handleVerifyCode}>Check</button>
           </div>
         )}
 
