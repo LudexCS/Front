@@ -83,7 +83,31 @@ const GameDetailPage = () => {
           </div>
         </div>
 
-        {showResourceModal && <ResourceModal resources={game.resources} onClose={() => setShowResourceModal(false)} />}
+        {showResourceModal && (
+          <ResourceModal
+            game={{
+              name: game.name,
+              resources: {
+                모드: [
+                  { name: "space_theme.mp3", desc: "우주 테마 배경음악", previewUrl: "/preview/space_theme" },
+                  { name: "alien_pack.zip", desc: "외계인 캐릭터 리소스", previewUrl: "/preview/alien_pack" },
+                ],
+                확장판: [
+                  { name: "level2_map.json", desc: "레벨 2 확장 맵", previewUrl: "/preview/level2_map" },
+                ],
+                후속작: [
+                  { name: "new_story.pdf", desc: "후속작 스토리 시놉시스", previewUrl: "/preview/new_story" },
+                ],
+              },
+              contracts: {
+                모드: "수익 분배: ludex 10%, 판매자 30%, 구매자 70%\n2차 파생 허용: 예\n외부 업로드 제한: 있음",
+                확장판: "수익 분배: ludex 10%, 판매자 20%, 구매자 80%\n2차 파생 허용: 아니오\n외부 업로드 제한: 없음",
+                후속작: "수익 분배: ludex 10%, 판매자 10%, 구매자 90%\n2차 파생 허용: 예\n외부 업로드 제한: 있음",
+              }
+            }}
+            onClose={() => setShowResourceModal(false)}
+          />
+        )}
         {showPaymentModal && <PaymentModal game={game} onClose={() => setShowPaymentModal(false)} />}
         {showReportModal && <ReportModal gameId={gameId} onClose={() => setShowReportModal(false)} />}
       </div>

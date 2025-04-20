@@ -3,7 +3,7 @@ import axios from "axios";
 import { getNewAccessToken } from "./auth";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL:  "http://3.37.46.45:30300/api",
   withCredentials: true,
 });
 

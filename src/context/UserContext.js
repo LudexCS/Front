@@ -30,7 +30,7 @@ const UserProvider = ({ children }) => {
   }, [logout]);  // logout 의존성 추가 (useCallback이므로 안전함)
 
   if (loading) return <div>회원 정보를 불러오는 중입니다...</div>;
-//   if (error) return <div>회원 정보를 불러올 수 없습니다. 다시 로그인해주세요.</div>;
+  // if (error) return <div>회원 정보를 불러올 수 없습니다. 다시 로그인해주세요.</div>;
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
