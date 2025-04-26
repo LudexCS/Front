@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
-import { AuthProvider } from "./context/AuthContext";
 import UserProvider from './context/UserContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -17,8 +16,7 @@ function App() {
   console.log(Router);
 
   return (
-    <AuthProvider>
-      <UserProvider>
+    <UserProvider>
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<LoginPage/>} />
@@ -31,8 +29,7 @@ function App() {
         <Route path="/manage-users" element={<ManageUsersPage />} />
         <Route path="/game/:gameId" element={<GameDetailPage />} />
       </Routes>
-      </UserProvider>
-      </AuthProvider>
+    </UserProvider>
   );
 }
 

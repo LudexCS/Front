@@ -1,6 +1,6 @@
 // src/api/axiosInstance.js
 import axios from "axios";
-import { getNewAccessToken } from "./auth";
+import { getNewAccessToken } from "./userApi";
 
 const instance = axios.create({
   baseURL:  "http://3.37.46.45:30300/api",
@@ -11,7 +11,10 @@ const instance = axios.create({
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers = {
+      ...config.headers,
+      authorization: `Bearer ${token}`,
+    };
   }
   return config;
 });
@@ -24,12 +27,13 @@ instance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {//토큰 둘다 업뎃
-        const newToken = await getNewAccessToken();
-        localStorage.setItem("accessToken", newToken.accessToken);
-        originalRequest.headers.Authorization = `Bearer ${newToken.accessToken}`;
+        const { newToken } = await getNewAccessToken();
+        localStorage.setItem("accessToken", newToken);
+        console.log("newToken: ", newToken);
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return instance(originalRequest);
-      } catch (e) {
-        return Promise.reject(e);
+      } catch (err) {
+        return Promise.reject(err);
       }
     }
     return Promise.reject(error);

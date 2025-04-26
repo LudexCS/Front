@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
-import { useAuth } from "../../context/AuthContext";
+import { useUser } from "../../context/UserContext";
 
 const DeleteAccount = () => {
-  const { logout } = useAuth();
+  const { logout } = useUser();
   const navigate = useNavigate();
   const [confirmText, setConfirmText] = useState("");
   const [error, setError] = useState("");

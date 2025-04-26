@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
-import { loginUser } from "../api/auth";
-import { useAuth } from "../context/AuthContext";
+import { loginUser } from "../api/userApi";
+import { useUser } from "../context/UserContext";
 import "../styles/pages/LoginPage.css";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useAuth();
+  const { setIsLoggedIn } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      const data = await loginUser(email, password);
+      const { accessToken } = await loginUser(email, password);
       
-      // access token 저장
-      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("accessToken", accessToken);
 
       // 전역 로그인 상태 업데이트
       setIsLoggedIn(true);

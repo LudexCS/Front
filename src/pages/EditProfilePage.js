@@ -2,19 +2,18 @@ import React, { useState } from "react";
 import "../styles/pages/EditProfilePage.css";
 import Navbar from "../components/layout/Navbar";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { useUser } from "../context/UserContext";
 import axiosInstance from "../api/axiosInstance";
 import { requestWalletNonce, verifyWalletOwnership } from "../api/walletAuth";
+import { logout } from "../api/userApi";
 
 const EditProfilePage = () => {
-  const { user, setUser } = useUser();
+  const { user, setUser, setIsLoggedIn } = useUser();
   const [nickname, setNickname] = useState(user ? user.nickname : "");
   const [email] = useState(user ? user.email : "");
   const [wallets, setWallets] = useState(user ? user.cryptoWallet : []);
   const [newWallet, setNewWallet] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleNicknameCheck = () => {
@@ -78,7 +77,7 @@ const EditProfilePage = () => {
     try {
       const res = await axiosInstance.delete("/protected/account/delete");
       setUser(null);
-      await logout();
+      await logout(setIsLoggedIn);
       navigate("/", { state: { message: res.data.message } });
     } catch (err) {
       alert("계정 삭제 중 오류가 발생했습니다.");

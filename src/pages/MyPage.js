@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { useUser } from "../context/UserContext";
+import { logout } from "../api/userApi";
 import Navbar from "../components/layout/Navbar";
 import UserInfo from "../components/user/UserInfo";
 import HistoryTabs from "../components/user/HistoryTabs";
@@ -11,10 +11,9 @@ import "../styles/pages/MyPage.css";
 import defaultGameImage from "../assets/game-image.png";
 
 const MyPage = () => {
-  const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState("purchase");
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, setIsLoggedIn } = useUser();
 
   if (!user) {
     return <div>회원 정보를 로드하는 중...</div>
@@ -70,7 +69,7 @@ const MyPage = () => {
   ];
 
   const handleLogout = async () => {
-    await logout();
+    await logout(setIsLoggedIn);
     navigate("/");
   };
 

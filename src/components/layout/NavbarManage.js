@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useUser } from "../../context/UserContext";
 import "../../styles/layout/Navbar.css";
 
 const NavbarManage = () => {
-  const { logout } = useAuth();
-  // const { isLoggedIn, logout } = useAuth();
+  const { logout } = useUser();
+  // const { isLoggedIn, logout } = useUser();
 
   return (
     <nav className="navbar">
