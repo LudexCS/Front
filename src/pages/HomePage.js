@@ -1,18 +1,18 @@
 import React from "react";
-import Navbar from "../components/layout/Navbar";
+import NavbarSearch from "../components/layout/NavbarSearch";
 import Banner from "../components/layout/Banner";
 import HomeGameList from "../components/game/HomeGameList";
-import SearchBar from "../components/layout/SearchBar";
+import TagBar from "../components/layout/TagBar";
 import "../styles/pages/HomePage.css";
 
 const HomePage = () => {
     return (
         <div>
-          <Navbar />
+          <NavbarSearch />
           <div className="home-container">
             <div className="home-top-section">
               <Banner />
-              <SearchBar />
+              <TagBar/>
             </div>
             <div className="bottom-section">
               <HomeGameList />

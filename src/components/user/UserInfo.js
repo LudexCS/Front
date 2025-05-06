@@ -13,7 +13,9 @@ const UserInfo = ({ userInfo, onEdit }) => {
         <p>Cryptocurrency wallet address</p>
         <ul>
           {userInfo.cryptoWallet.map((wallet, idx) => (
-            <li key={idx}>{wallet}</li>
+            <li key={idx}>
+              {wallet.address}
+            </li>
           ))}
         </ul>
       </div>

@@ -4,6 +4,7 @@ import Navbar from "../components/layout/Navbar";
 import SearchBar from "../components/layout/SearchBar";
 import SearchGameList from "../components/game/SearchGameList";
 import GameDetailBar from "../components/game/GameDetailBar";
+import TagBar from "../components/layout/TagBar";
 import "../styles/pages/SearchPage.css";
 
 const SearchPage = () => {
@@ -25,10 +26,15 @@ const SearchPage = () => {
       <div className="search-page-container">
         <div className="search-page">
           <SearchBar/>
+          <TagBar/>
         </div>
         <div className="search-content">
-          <SearchGameList onSelectGame={handleGameSelect} />
-          <GameDetailBar game={selectedGame} />
+          <div className="search-content-left">
+            <SearchGameList onSelectGame={handleGameSelect} />
+          </div>
+          <div className="search-content-right">
+            <GameDetailBar game={selectedGame} />
+          </div>
         </div>
       </div>
     </div>

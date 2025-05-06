@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import ResourceModal from "../components/modals/ResourceModal";
 import PaymentModal from "../components/modals/PaymentModal";
 import ReportModal from "../components/modals/ReportModal";
-import Navbar from "../components/layout/Navbar";
+import NavbarSearch from "../components/layout/NavbarSearch";
 import defaultGameImage from "../assets/game-image.png";
 import "../styles/pages/GameDetailPage.css";
 
@@ -44,7 +44,7 @@ const GameDetailPage = () => {
 
   return (
     <div>
-      <Navbar />
+      <NavbarSearch />
       <div className="game-detail-container">
         <div className="game-detail-left">
           <div className="media-wrapper">

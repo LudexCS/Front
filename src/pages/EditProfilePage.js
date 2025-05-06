@@ -1,63 +1,76 @@
 import React, { useState } from "react";
 import "../styles/pages/EditProfilePage.css";
-import Navbar from "../components/layout/Navbar";
+import NavbarSearch from "../components/layout/NavbarSearch";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import axiosInstance from "../api/axiosInstance";
 import { requestWalletNonce, verifyWalletOwnership } from "../api/walletAuth";
 import { logout } from "../api/userApi";
+import { checkNickname } from "../api/signupApi";
 
 const EditProfilePage = () => {
-  const { user, setUser, setIsLoggedIn } = useUser();
+  const { user, setUser, setIsLoggedIn, setIsFetch } = useUser();
   const [nickname, setNickname] = useState(user ? user.nickname : "");
   const [email] = useState(user ? user.email : "");
   const [wallets, setWallets] = useState(user ? user.cryptoWallet : []);
   const [newWallet, setNewWallet] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const navigate = useNavigate();
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  setIsFetch(false);
 
-  const handleNicknameCheck = () => {
-    alert("사용 가능한 닉네임입니다."); // TODO
-  };
+  const handleNicknameCheck = async () => {
+      if (nickname.length < 2 || nickname.length > 20) {
+        alert("닉네임은 2자 이상 20자 이하로 입력해주세요.");
+        return;
+      }
+      try {
+        const res = await checkNickname(nickname);
+        alert(res.message);
+        setIsNicknameChecked(true);
+      } catch (err) {
+        const msg = err.response?.data?.message || err.message;
+        alert(`실패: ${msg}`);
+      }
+    };
 
   const handleAddWallet = async () => {
     if (!newWallet.trim()) return;
 
-    try {
-      // 지갑 연결된 메타마스크 계정 가져오기
-      if (!window.ethereum) throw new Error("MetaMask가 설치되어 있지 않습니다.");
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      const walletAddress = accounts[0];
+    // 지갑 연결된 메타마스크 계정 가져오기
+    console.log("지갑 연결된 메타마스크 계정 가져오기");
+    if (!window.ethereum) alert("MetaMask가 설치되어 있지 않습니다. 설치 후 새로고침해주세요");
+    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    const walletAddress = accounts[0];
 
-      // nonce 요청
-      const nonce = await requestWalletNonce({
-        address: walletAddress,
-        uri: "ludex.io/mypage/wallet",
-      });
+    // nonce 요청
+    console.log("nonce 요청");
+    const nonce = await requestWalletNonce({
+      address: walletAddress,
+      url: window.location.origin + window.location.pathname,
+    });      
 
-      // 서명 요청
-      const signature = await window.ethereum.request({
-        method: "personal_sign",
-        params: [nonce, walletAddress],
-      });
+    // 서명 요청
+    console.log("nonce:", nonce);
+    const signature = await window.ethereum.request({
+      method: "personal_sign",
+      params: [nonce, walletAddress],
+    });
 
-      // 검증 요청
-      const result = await verifyWalletOwnership({
-        address: walletAddress,
-        signature,
-      });
+    console.log(signature);
 
-      if (result.message === "Wallet Successfully Registered") {
-        setWallets([...wallets, walletAddress]);
-        setNewWallet("");
-        alert("지갑이 성공적으로 인증되었습니다.");
-      } else {
-        alert("지갑 인증 실패");
-      }
-    } catch (err) {
-      console.error("지갑 인증 실패:", err);
-      alert("지갑 인증 중 오류 발생");
-    }
+    // 검증 요청
+    console.log("검증 요청");
+    const result = await verifyWalletOwnership({
+      address: walletAddress,
+      signature,
+    });
+
+    alert(result);
+    console.log(result);
+    setIsFetch(true);
+    setWallets([...wallets, { address: walletAddress, createdAt: new Date().toISOString() }]);
+    setNewWallet("");
   };
 
   const handleDeleteWallet = (index) => {
@@ -65,8 +78,12 @@ const EditProfilePage = () => {
   };
 
   const handleSave = () => {
-    alert("저장되었습니다.");
-    navigate("/my");
+    if(!isNicknameChecked){
+      alert("닉네임 중복체크를 확인주세요.");
+    } else {
+      alert("저장되었습니다.");
+      navigate("/my");
+    }
   };
 
   const handleDeleteAccount = () => {
@@ -87,15 +104,19 @@ const EditProfilePage = () => {
 
   return (
     <div className="edit-profile-page">
-      <Navbar />
+      <NavbarSearch />
       <div className="edit-profile">
         <div className="left-panel">
           <label>nickname</label>
           <div className="nickname-row">
             <input
-              type="text"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+            type="text"
+            placeholder="nickname"
+            value={nickname}
+            onChange={(e) => {
+              setNickname(e.target.value);
+              setIsNicknameChecked(false);
+            }}
             />
             <button onClick={handleNicknameCheck}>Check</button>
           </div>
@@ -113,9 +134,10 @@ const EditProfilePage = () => {
         <div className="right-panel">
           <label>cryptocurrency wallet address</label>
           <ul>
-            {wallets.map((address, i) => (
+            {wallets.map((wallet, i) => (
               <li key={i}>
-                {address}
+                {wallet.address}
+                {/* (created at {wallet.createdAt}) */}
                 <button className="delete-wallet" onClick={() => handleDeleteWallet(i)}>x</button>
               </li>
             ))}

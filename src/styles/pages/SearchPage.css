@@ -2,7 +2,7 @@
 }
 
 .search-page {
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   padding-left: 15%;
   /* height: 100px; */
@@ -23,8 +23,18 @@
 
 .search-content {
   display: flex;
-  align-items: flex-start; /* 상단 정렬 */
-  /* margin-top: 20px; */
-  padding-left: 10%;
-  padding-right: 10%;
+  align-items: flex-start;
+  height: max-content;
+  /* border: 1px solid #ccc; */
+}
+
+.search-content-left {
+  flex: 7;
+}
+
+.search-content-right {
+  flex: 3;
+  align-items: flex-start;
+  height: 1200px;
+  /* border: 1px solid #ff0000; */
 }

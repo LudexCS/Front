@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { logout } from "../api/userApi";
-import Navbar from "../components/layout/Navbar";
+import NavbarSearch from "../components/layout/NavbarSearch";
 import UserInfo from "../components/user/UserInfo";
 import HistoryTabs from "../components/user/HistoryTabs";
 import PurchaseHistory from "../components/user/PurchaseHistory";
@@ -75,7 +75,7 @@ const MyPage = () => {
 
   return (
     <div className="mypage-container">
-      <Navbar />
+      <NavbarSearch />
       <div className="mypage-content">
         <p className="logout-btn" onClick={handleLogout}>
           logout

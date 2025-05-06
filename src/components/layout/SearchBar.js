@@ -1,16 +1,20 @@
-import React, { useState } from "react";
-import TagBar from "./TagBar";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import "../../styles/layout/SearchBar.css";
 import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
+  const { query } = useParams();
+
+  useEffect(() => {
+    setSearchText(query);
+    }, [query]);
 
   const handleSearch = () => {
     if (searchText.trim()) {
       navigate(`/search/${searchText}`);
-      setSearchText("");
     }
   };
 
@@ -26,7 +30,6 @@ const SearchBar = () => {
         />
         <button onClick={handleSearch}>🔍</button>
       </div>
-      <TagBar/>
     </div>
   );
 };

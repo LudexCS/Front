@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/layout/Navbar";
+import NavbarSearch from "../components/layout/NavbarSearch";
 import FileUploader from "../components/upload/FileUploader";
 import TagSelector from "../components/upload/TagSelector";
 import CategorySelector from "../components/upload/CategorySelector";
 import LicensingTabs from "../components/upload/LicensingTabs";
 import LicensingHelpModal from "../components/upload/LicensingHelpModal";
 import IPSelectorModal from "../components/upload/IPSelectorModal";
+import TermsAgreementModal from "../components/upload/TermsAgreementModal";
 import "../styles/pages/GameUploadPage.css";
 
 const GameUploadPage = () => {
@@ -22,8 +23,38 @@ const GameUploadPage = () => {
     expansion: [],
     sequel: []
   });
+  const [thumbnail, setThumbnail] = useState(null);
+  const [agreed, setAgreed] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  const [specFields, setSpecFields] = useState({
+    os: true,
+    cpu: false,
+    gpu: false,
+    ram: false,
+    storage: false,
+    network: false,
+  });
+  
+  const [specValues, setSpecValues] = useState({
+    os: "",
+    cpu: "",
+    gpu: "",
+    ram: "",
+    storage: "",
+    network: "",
+  });
+  
+  const toggleSpecField = (key) => {
+    setSpecFields({ ...specFields, [key]: !specFields[key] });
+  };
+  
 
   const handleSubmit = () => {
+    if (!agreed) {
+      alert("약관에 동의해야 합니다.");
+      return;
+    }
+
     if (selectedTags.length === 0) {
       alert("태그를 하나 이상 선택해주세요.");
       return;
@@ -62,21 +93,54 @@ const GameUploadPage = () => {
 
   return (
     <div>
-      <Navbar />
+      <NavbarSearch />
       <div className="upload-page">
+        <h2>썸네일 이미지 업로드</h2>
+        <FileUploader maxFiles={1} files={thumbnail ? [thumbnail] : []} setFiles={(f) => setThumbnail(f[0])} />
         <h2>이미지&영상 파일 업로드</h2>
         <FileUploader maxFiles={5} files={mediaFiles} setFiles={setMediaFiles} />
 
         <div className="form-section">
           <label>게임명:</label>
           <input type="text" />
+
           <label>가격:</label>
           <input type="text" />
+
           <label>게임설명:</label>
           <textarea />
-          <label>구동사양:</label>
-          <input type="text" />
+
+          <label>구동사양 (하나 이상 선택):</label>
+          <div className="spec-checkboxes">
+            {["os", "cpu", "gpu", "ram", "storage", "network"].map((key) => (
+              <label key={key}>
+                <input
+                  type="checkbox"
+                  checked={specFields[key]}
+                  onChange={() => toggleSpecField(key)}
+                />
+                {key.toUpperCase()}
+              </label>
+            ))}
+          </div>
+
+          {Object.entries(specFields).map(
+            ([key, enabled]) =>
+              enabled && (
+                <div key={key}>
+                  <label>{key.toUpperCase()}:</label>
+                  <input
+                    type="text"
+                    value={specValues[key]}
+                    onChange={(e) =>
+                      setSpecValues({ ...specValues, [key]: e.target.value })
+                    }
+                  />
+                </div>
+              )
+          )}
         </div>
+
 
         <TagSelector selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
 
@@ -105,11 +169,20 @@ const GameUploadPage = () => {
           />
         )}
 
-        <div className="action-buttons">
-          <button onClick={()=>navigate(-1)}>Back</button>
-          <button onClick={handleSubmit}>Submit</button>
+        <div className="agreement-section">
+          <label>
+            <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+            약관에 동의합니다.
+          </label>
+          <button onClick={() => setShowTerms(true)}>약관 보기</button>
         </div>
 
+        <div className="action-buttons">
+          <button onClick={()=>navigate(-1)}>Back</button>
+          <button onClick={handleSubmit} disabled={!agreed}>Submit</button>
+        </div>
+
+        {showTerms && <TermsAgreementModal onClose={() => setShowTerms(false)} />}
         {showHelp && <LicensingHelpModal onClose={() => setShowHelp(false)} />}
         {showIPModal && <IPSelectorModal onClose={() => setShowIPModal(false)} setSelectedIPs={setSelectedIPs} />}
       </div>

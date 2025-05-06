@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/layout/Navbar";
+import NavbarSearch from "../components/layout/NavbarSearch";
 import { loginUser } from "../api/userApi";
 import { useUser } from "../context/UserContext";
 import "../styles/pages/LoginPage.css";
@@ -29,7 +29,7 @@ const LoginPage = () => {
 
   return (
     <div>
-      <Navbar />
+      <NavbarSearch />
       <div className="login-container">
         <div className="login-content">
           <h2>로그인</h2>

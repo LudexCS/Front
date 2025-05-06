@@ -1,6 +1,6 @@
 .bar-game-detail {
   text-align: center;
-  padding: 30px;
+  padding: 10px;
   background: rgb(240, 240, 240);
   border-radius: 10px;
   font-size: 20px;
@@ -52,4 +52,10 @@
 
 .bar-detail-button:hover {
   background-color: #989898;
+}
+
+.bar-game-detail-thumbnail {
+  max-width: 100%;
+  /* height: auto; */
+  /* object-fit: contain; */
 }

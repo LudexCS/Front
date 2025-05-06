@@ -29,8 +29,11 @@ const LicensingTabPane = ({
         <>
           <p>상속된 리소스 목록:</p>
           <ul className="file-list">
-            {inheritedFiles.map((f, idx) => (
-              <li key={idx}>{f.name}</li>
+            {inheritedFiles.map((entry, idx) => (
+              <li key={idx}>
+                {entry.file.name}
+                {entry.description && <span> - {entry.description}</span>}
+              </li>
             ))}
           </ul>
         </>
@@ -60,6 +63,14 @@ const LicensingTabPane = ({
           onChange={() => setAllowDerivative(!allowDerivative)}
         />
         2차 파생 허용
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          checked={allowDerivative}
+          onChange={() => setAllowDerivative(!allowDerivative)}
+        />
+        외부 업로드 제한
       </label>
 
       <label>추가 조건:</label>

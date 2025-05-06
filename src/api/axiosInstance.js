@@ -33,6 +33,7 @@ instance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return instance(originalRequest);
       } catch (err) {
+        console.log("refresh token으로 갱신 오류: ", err);
         return Promise.reject(err);
       }
     }

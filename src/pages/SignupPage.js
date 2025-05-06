@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/pages/SignupPage.css";
-import Navbar from "../components/layout/Navbar";
+import NavbarSearch from "../components/layout/NavbarSearch";
 import {
   checkNickname,
   checkEmail,
@@ -79,6 +79,10 @@ const SignupPage = () => {
       alert("비밀번호는 8~16자 사이이며, 영문자와 숫자를 포함해야 합니다.");
       return;
     }
+    if (!isNicknameChecked) {
+      alert("닉네임 확인이 필요합니다.");
+      return;
+    }
     if (!emailVerified) {
       alert("이메일 인증이 필요합니다.");
       return;
@@ -100,7 +104,7 @@ const SignupPage = () => {
 
   return (
     <div className="signup-container">
-      <Navbar />
+      <NavbarSearch />
       <div className="signup-content">
         <h2>회원가입</h2>
         <div className="form-group">

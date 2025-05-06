@@ -11,7 +11,7 @@ const GameDetailBar = ({ game }) => {
 
   return (
     <div className="bar-game-detail">
-      <img src={game.thumbnail} alt={game.name} className="bar-game-thumbnail" />
+      <img src={game.thumbnail} alt={game.name} className="bar-game-detail-thumbnail" />
       <h2>{game.name}</h2>
       <p>{game.price}</p>
       <p>게임의 설명</p>

@@ -6,6 +6,7 @@ const UserContext = createContext();
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isFetch, setIsFetch] = useState(false);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -19,10 +20,10 @@ const UserProvider = ({ children }) => {
       }
     };
     fetchUser();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, isFetch]);
 
   return (
-    <UserContext.Provider value={{ user, setUser, isLoggedIn, setIsLoggedIn }}>
+    <UserContext.Provider value={{ user, setUser, isLoggedIn, setIsLoggedIn, setIsFetch }}>
       {children}
     </UserContext.Provider>
   );

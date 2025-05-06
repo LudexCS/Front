@@ -3,7 +3,7 @@ import "../../styles/upload/FileUploader.css";
 
 const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
   const handleAddFile = (e) => {
-    const selected = Array.from(e.target.files);
+    const selected = Array.from(e.target.files).map(file => ({ file, description: "" }));
     if (files.length + selected.length <= maxFiles) {
       setFiles([...files, ...selected]);
     } else {
@@ -17,14 +17,28 @@ const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
     setFiles(updated);
   };
 
+  const handleDescriptionChange = (index, desc) => {
+    const updated = [...files];
+    updated[index].description = desc;
+    setFiles(updated);
+  };
+
   return (
     <div className="file-uploader">
       <input type="file" multiple onChange={handleAddFile} />
       <ul>
-        {files.map((file, idx) => (
+        {files.map((entry, idx) => (
           <li key={idx}>
-            {file.name} ({(file.size / 1024).toFixed(1)} KB)
-            <button onClick={() => handleRemove(idx)}>삭제</button>
+            <div>
+              {entry.file.name} ({(entry.file.size / 1024).toFixed(1)} KB)
+              <button onClick={() => handleRemove(idx)}>삭제</button>
+            </div>
+            <input
+              type="text"
+              placeholder="설명 입력"
+              value={entry.description}
+              onChange={(e) => handleDescriptionChange(idx, e.target.value)}
+            />
           </li>
         ))}
       </ul>
