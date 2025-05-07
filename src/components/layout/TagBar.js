@@ -8,9 +8,9 @@ const TagBar = ({ onTagClick }) => {
 
     return (
         <div className="tag-container">
-        {tags.map((tag, index) => (
-            <button key={index} className="tag" onClick={() => navigate(`/search/${tag}`)}>
-            #{tag}
+        {tags.map((tag) => (
+            <button key={tag.tagId} className="tag" onClick={() => navigate(`/search/${tag.name}`)}>
+            #{tag.name}
             </button>
         ))}
         </div>

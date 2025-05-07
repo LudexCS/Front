@@ -179,7 +179,7 @@ const GameUploadPage = () => {
 
         <div className="action-buttons">
           <button onClick={()=>navigate(-1)}>Back</button>
-          <button onClick={handleSubmit} disabled={!agreed}>Submit</button>
+          <button onClick={handleSubmit}>Submit</button>
         </div>
 
         {showTerms && <TermsAgreementModal onClose={() => setShowTerms(false)} />}
