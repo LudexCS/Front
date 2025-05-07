@@ -27,8 +27,8 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
         {tags.map((tag) => (
           <button
             key={tag.id}
-            className={`tag-button ${selectedTags.includes(tag.tagId) ? "selected" : ""}`}
-            onClick={() => toggleTag(tag.tagId)}
+            className={`tag-button ${selectedTags.includes(tag.id) ? "selected" : ""}`}
+            onClick={() => toggleTag(tag.id)}
           >
             #{tag.name}
           </button>
