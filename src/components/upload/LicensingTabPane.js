@@ -24,6 +24,7 @@ const LicensingTabPane = ({
         files={uploadedFiles}
         setFiles={onFilesChange}
         maxFiles={10}
+        showDescriptionInput={true}
       />
 
       {inheritedFiles.length > 0 && (

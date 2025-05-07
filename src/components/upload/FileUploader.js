@@ -1,10 +1,10 @@
 import React from "react";
 import "../../styles/upload/FileUploader.css";
 
-const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
+const FileUploader = ({ maxFiles = 5, files = [], setFiles, showDescriptionInput = false }) => {
   const handleAddFile = (e) => {
     const selected = Array.from(e.target.files)
-      .filter((file) => file instanceof File) // ✅ File 인스턴스만 필터링
+      .filter((file) => file instanceof File)
       .map((file) => ({ file, description: "" }));
 
     if (files.length + selected.length <= maxFiles) {
@@ -39,12 +39,14 @@ const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
               {entry.file.name} ({(entry.file.size / 1024).toFixed(1)} KB)
               <button onClick={() => handleRemove(idx)}>삭제</button>
             </div>
-            <input
-              type="text"
-              placeholder="설명 입력"
-              value={entry.description}
-              onChange={(e) => handleDescriptionChange(idx, e.target.value)}
-            />
+            {showDescriptionInput && (
+              <input
+                type="text"
+                placeholder="설명 입력"
+                value={entry.description}
+                onChange={(e) => handleDescriptionChange(idx, e.target.value)}
+              />
+            )}
           </li>
         ))}
       </ul>

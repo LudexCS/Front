@@ -62,7 +62,6 @@ const GameUploadPage = () => {
 
     const requirements = [
       {
-        isMinimum: true,
         ...Object.fromEntries(
           Object.entries(specFields)
             .filter(([key, enabled]) => enabled)
@@ -73,14 +72,17 @@ const GameUploadPage = () => {
 
     const payload = {
       ...gameForm,
-      userId: 1,
+      price: parseFloat(gameForm.price),
       isOrigin: category === "origin",
-      originGameIds: category === "variant" ? gameForm.originGameIds : [],
+      originGameIds: category === "variant" ? selectedIPs : [],
       tags: selectedTags.map((tagId) => ({ tagId, priority: 10 })),
       requirements,
+      thumbnail: gameForm.thumbnail,
+      mediaFiles: gameForm.mediaFiles,
     };
     
     console.log("payload: ", payload);
+    
     try {
       await uploadGame(payload);
       alert("게임이 등록되었습니다.");
@@ -101,6 +103,7 @@ const GameUploadPage = () => {
           maxFiles={1}
           files={gameForm.thumbnail ? [gameForm.thumbnail] : []}
           setFiles={(f) => setGameForm({ ...gameForm, thumbnail: f[0] })}
+          showDescriptionInput={false}
         />
 
         <h2>이미지&영상 파일 업로드</h2>
@@ -108,6 +111,7 @@ const GameUploadPage = () => {
           maxFiles={5}
           files={gameForm.mediaFiles}
           setFiles={(files) => setGameForm({ ...gameForm, mediaFiles: files })}
+          showDescriptionInput={false}
         />
 
         <div className="form-section">

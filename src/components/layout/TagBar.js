@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/layout/TagBar.css";
 import { useNavigate } from "react-router-dom";
-import tags from "../../context/Tags";
+import { getAllTags } from "../../api/tagsApi";
 
 const TagBar = ({ onTagClick }) => {
     const navigate = useNavigate();
+    const [tags, setTags] = useState([]);
+
+    useEffect(() => {
+        (async () => {
+            const result = await getAllTags();
+            setTags(result);
+        })();
+    }, []);
 
     return (
         <div className="tag-container">
         {tags.map((tag) => (
-            <button key={tag.tagId} className="tag" onClick={() => navigate(`/search/${tag.name}`)}>
+            <button key={tag.id} className="tag" onClick={() => navigate(`/search/${tag.name}`)}>
             #{tag.name}
             </button>
         ))}
