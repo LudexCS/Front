@@ -11,12 +11,14 @@ import GameUploadPage from "./pages/GameUploadPage";
 import DeleteAccount from "./components/modals/DeleteAccount";
 import ManageUsersPage from "./pages/ManageUsersPage";
 import GameDetailPage from "./pages/GameDetailPage";
+import { UploadProvider } from "./context/UploadContext";
 
 function App() {
   console.log(Router);
 
   return (
     <UserProvider>
+    <UploadProvider>
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<LoginPage/>} />
@@ -29,6 +31,7 @@ function App() {
         <Route path="/manage-users" element={<ManageUsersPage />} />
         <Route path="/game/:gameId" element={<GameDetailPage />} />
       </Routes>
+    </UploadProvider>
     </UserProvider>
   );
 }

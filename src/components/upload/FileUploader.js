@@ -3,12 +3,18 @@ import "../../styles/upload/FileUploader.css";
 
 const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
   const handleAddFile = (e) => {
-    const selected = Array.from(e.target.files).map(file => ({ file, description: "" }));
+    const selected = Array.from(e.target.files)
+      .filter((file) => file instanceof File) // ✅ File 인스턴스만 필터링
+      .map((file) => ({ file, description: "" }));
+
     if (files.length + selected.length <= maxFiles) {
       setFiles([...files, ...selected]);
     } else {
       alert(`최대 ${maxFiles}개의 파일만 업로드할 수 있습니다.`);
     }
+
+    // 선택 후 초기화
+    e.target.value = null;
   };
 
   const handleRemove = (index) => {

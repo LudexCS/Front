@@ -9,7 +9,7 @@ const tags = [
   { tagId: 8, name: "competitive", priority: 10 },
   { tagId: 9, name: "crafting", priority: 10 },
   { tagId: 10, name: "cyberpunk", priority: 10 },
-  { tagId: 11, name: "dungeon", priority: 10 },
+  { tagId: 11, name: "dungeon", priority: 1 },
   { tagId: 12, name: "fantasy", priority: 10 },
   { tagId: 13, name: "fighting", priority: 10 },
   { tagId: 14, name: "horror", priority: 10 },

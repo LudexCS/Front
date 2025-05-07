@@ -14,6 +14,7 @@ const LicensingTabPane = ({
   const [buyerShare, setBuyerShare] = React.useState(defaultSplit.buyer);
   const [extra, setExtra] = React.useState("");
   const [allowDerivative, setAllowDerivative] = React.useState(false);
+  const [blockExport, setblockExport] = React.useState(false);
 
   return (
     <div className="licensing-pane">
@@ -67,8 +68,8 @@ const LicensingTabPane = ({
       <label>
         <input
           type="checkbox"
-          checked={allowDerivative}
-          onChange={() => setAllowDerivative(!allowDerivative)}
+          checked={blockExport}
+          onChange={() => setblockExport(!blockExport)}
         />
         외부 업로드 제한
       </label>
