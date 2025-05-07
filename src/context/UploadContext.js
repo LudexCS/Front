@@ -11,6 +11,8 @@ export const UploadProvider = ({ children }) => {
     tags: [],
     requirements: [],
     originGameIds: [],
+    thumbnail: null, // { url, description }
+    mediaFiles: [],  // [{ url, description }]
   });
 
   return (
