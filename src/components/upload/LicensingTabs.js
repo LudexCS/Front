@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import LicensingTabPane from "./LicensingTabPane";
-import LicensingHelpModal from "./LicensingHelpModal";
+import LicensingHelpModal from "../modals/LicensingHelpModal";
 import "../../styles/upload/LicensingTabs.css";
 
 const TABS = [
