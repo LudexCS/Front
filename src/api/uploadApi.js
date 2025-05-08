@@ -1,5 +1,9 @@
 import gameManageInstance from "./Instance/gameManageInstance";
 
+function sanitizeFilename(name) {
+  return name.replace(/[^\w.-]+/g, "_"); // 한글, 공백, 특수문자 제거
+}
+
 export const uploadGame = async ({
   title,
   price,
@@ -20,38 +24,49 @@ export const uploadGame = async ({
     requirements,
     tags,
     isOrigin,
-    originGameIds,
   };
 
-  const jsonBlob = new Blob([JSON.stringify(jsonData)], {
-    type: "application/json",
-  });
-
-  formData.append("json", jsonBlob);
-
-  if (thumbnail?.file instanceof File) {
-    formData.append("thumbnailUrl", thumbnail.file);
+  if (!isOrigin) {
+    jsonData.originGameIds = originGameIds;
   }
 
+  formData.append("json", JSON.stringify(jsonData));
+
+  // 썸네일 파일 첨부
+  if (thumbnail?.file instanceof File) {
+    const safeThumb = new File(
+      [thumbnail.file],
+      sanitizeFilename(thumbnail.file.name),
+      { type: thumbnail.file.type }
+    );
+    formData.append("thumbnail", safeThumb);
+  }
+
+  // 이미지들 첨부
   mediaFiles.forEach(({ file }) => {
     if (file instanceof File) {
-      formData.append("imageUrls", file);
+      const safeFile = new File(
+        [file],
+        sanitizeFilename(file.name),
+        { type: file.type }
+      );
+      formData.append("images", safeFile);
     }
   });
 
-  for (const [key, val] of formData.entries()) {
-    console.log("FormData:", key, val);
-  }
+  // // 디버깅 로그
+  // for (const [key, value] of formData.entries()) {
+  //   if (value instanceof File) {
+  //     console.log(`[FormData] ${key}: ${value.name}, ${value.size} bytes`);
+  //   } else {
+  //     console.log(`[FormData] ${key}:`, value);
+  //   }
+  // }
 
   try {
     const response = await gameManageInstance.post(
       "/protected/game/create",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
+      formData
     );
     return response.data;
   } catch (error) {

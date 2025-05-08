@@ -14,7 +14,7 @@ const LicensingTabPane = ({
   const [buyerShare, setBuyerShare] = React.useState(defaultSplit.buyer);
   const [extra, setExtra] = React.useState("");
   const [allowDerivative, setAllowDerivative] = React.useState(false);
-  const [blockExport, setblockExport] = React.useState(false);
+  // const [blockExport, setblockExport] = React.useState(false);
 
   return (
     <div className="licensing-pane">
@@ -66,14 +66,14 @@ const LicensingTabPane = ({
         />
         2차 파생 허용
       </label>
-      <label>
+      {/* <label>
         <input
           type="checkbox"
           checked={blockExport}
           onChange={() => setblockExport(!blockExport)}
         />
         외부 업로드 제한
-      </label>
+      </label> */}
 
       <label>추가 조건:</label>
       <textarea value={extra} onChange={(e) => setExtra(e.target.value)} />

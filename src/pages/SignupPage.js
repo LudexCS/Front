@@ -38,7 +38,7 @@ const SignupPage = () => {
 
   const checkEmailDuplicate = async () => {
     try {
-      const res = await checkEmail(email);  // 이메일 중복 체크
+      const res = await checkEmail(email);
       alert(`${res.message} 잠시 기다려주세요.`);
       return true;
     } catch (err) {
@@ -52,8 +52,7 @@ const SignupPage = () => {
     try {
       const isEmailValid = await checkEmailDuplicate();
       if (!isEmailValid) return;
-  
-      const res = await sendVerificationCode(email);  // 인증 이메일 발송
+      const res = await sendVerificationCode(email);
       alert(res.message);
       setShowVerification(true);
     } catch (err) {

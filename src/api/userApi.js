@@ -8,6 +8,8 @@ export const loginUser = async (email, password) => {
     { withCredentials: true }    // refreshToken 쿠키 수신용
   );
 
+  console.log("accessToken: ", response);
+
   // 헤더에서 Bearer 토큰 파싱
   const authHeader = response.headers["authorization"];
   if (!authHeader) {

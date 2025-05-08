@@ -7,7 +7,6 @@ export const UploadProvider = ({ children }) => {
     title: "",
     price: "",
     description: "",
-    category: "origin",
     tags: [],
     requirements: [],
     originGameIds: [],

@@ -74,8 +74,11 @@ const GameUploadPage = () => {
       ...gameForm,
       price: parseFloat(gameForm.price),
       isOrigin: category === "origin",
-      originGameIds: category === "variant" ? selectedIPs : [],
-      tags: selectedTags.map((tagId) => ({ tagId, priority: 10 })),
+      originGameIds: selectedIPs.map(ip => {
+          const match = ip.match(/\d+/);
+          return match ? parseInt(match[0], 10) : null;
+        }).filter(id => id !== null),
+      tags: selectedTags.map((tagId) => ({tagId, priority: 10})),
       requirements,
       thumbnail: gameForm.thumbnail,
       mediaFiles: gameForm.mediaFiles,
