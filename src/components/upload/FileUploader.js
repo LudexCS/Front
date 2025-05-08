@@ -5,7 +5,7 @@ const FileUploader = ({ maxFiles = 5, files = [], setFiles}) => {
   const handleAddFile = (e) => {
     const selected = Array.from(e.target.files)
       .filter((file) => file instanceof File)
-      .map((file) => ({ file, description: "" }));
+      .map((file) => ({ file }));
 
     if (files.length + selected.length <= maxFiles) {
       setFiles([...files, ...selected]);

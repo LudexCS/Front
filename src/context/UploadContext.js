@@ -10,13 +10,17 @@ export const UploadProvider = ({ children }) => {
     tags: [],
     requirements: [],
     originGameIds: [],
+    gameFile: null,
   });
   const [resourceForm, setResourceForm] = useState({
+    gameId: 0,
     allowDerivation: true,
     sellerRatio: 30,
     creatorRatio: 60,
     additionalCondition: "",
-    description: ""
+    description: "",
+    imageFiles: [],
+    resourceFile: null,
   })
 
   return (
