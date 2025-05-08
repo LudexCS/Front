@@ -11,9 +11,16 @@ export const UploadProvider = ({ children }) => {
     requirements: [],
     originGameIds: [],
   });
+  const [resourceForm, setResourceForm] = useState({
+    allowDerivation: true,
+    sellerRatio: 30,
+    creatorRatio: 60,
+    additionalCondition: "",
+    description: ""
+  })
 
   return (
-    <UploadContext.Provider value={{ gameForm, setGameForm }}>
+    <UploadContext.Provider value={{ gameForm, setGameForm, resourceForm, setResourceForm }}>
       {children}
     </UploadContext.Provider>
   );

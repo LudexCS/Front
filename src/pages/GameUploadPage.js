@@ -4,7 +4,7 @@ import NavbarSearch from "../components/layout/NavbarSearch";
 import FileUploader from "../components/upload/FileUploader";
 import TagSelector from "../components/upload/TagSelector";
 import CategorySelector from "../components/upload/CategorySelector";
-import LicensingTabs from "../components/upload/LicensingTabs";
+import LicensingTab from "../components/upload/LicensingTab";
 import LicensingHelpModal from "../components/modals/LicensingHelpModal";
 import IPSelectorModal from "../components/upload/IPSelectorModal";
 import TermsAgreementModal from "../components/modals/TermsAgreementModal";
@@ -106,7 +106,6 @@ const GameUploadPage = () => {
           maxFiles={1}
           files={gameForm.thumbnail ? [gameForm.thumbnail] : []}
           setFiles={(f) => setGameForm({ ...gameForm, thumbnail: f[0] })}
-          showDescriptionInput={false}
         />
 
         <h2>이미지&영상 파일 업로드</h2>
@@ -114,7 +113,6 @@ const GameUploadPage = () => {
           maxFiles={5}
           files={gameForm.mediaFiles}
           setFiles={(files) => setGameForm({ ...gameForm, mediaFiles: files })}
-          showDescriptionInput={false}
         />
 
         <div className="form-section">
@@ -188,7 +186,7 @@ const GameUploadPage = () => {
         )}
 
         {(category === "origin" || (selectedIPs.every(ip => ip.includes("2차 허용")) && selectedIPs.length > 0)) && (
-          <LicensingTabs licensingFiles={licensingFiles} setLicensingFiles={setLicensingFiles} />
+          <LicensingTab licensingFiles={licensingFiles} setLicensingFiles={setLicensingFiles} />
         )}
 
         <div className="agreement-section">

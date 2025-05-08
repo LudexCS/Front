@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "../../styles/upload/IPSelectorModal.css";
 
 const availableIPs = [
-  { id: "ip1", name: "구매한 게임 A", allowsDerivative: true },
-  { id: "ip2", name: "구매한 게임 B", allowsDerivative: false },
-  { id: "ip3", name: "구매한 게임 C", allowsDerivative: true },
+  { id: "111", name: "구매한 게임 A", allowsDerivative: true },
+  { id: "222", name: "구매한 게임 B", allowsDerivative: false },
+  { id: "333", name: "구매한 게임 C", allowsDerivative: true },
   // 실제 API로 불러올 수 있음
 ];
 
