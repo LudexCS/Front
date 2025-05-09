@@ -1,57 +1,48 @@
 import React, { useState } from "react";
 import "../../styles/modals/ResourceModal.css";
+import PreviewModal from "./PreviewModal";
 
-const ResourceModal = ({ game, onClose }) => {
-  const [activeTab, setActiveTab] = useState("모드");
-
-  const currentResources = game.resources[activeTab];
-  const currentContract = game.contracts[activeTab];
-
-  const handlePreview = (url) => {
-    window.open(url, "_blank");
-  };
+const ResourceModal = ({ resource, onClose }) => {
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h2>{game.name}</h2>
+    <>
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h2>{resource.game}</h2>
 
-        <div className="tab-header">
-          {["모드", "확장판", "후속작"].map((tab) => (
-            <button
-              key={tab}
-              className={tab === activeTab ? "active" : ""}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+          <button onClick={() => setShowPreviewModal(true)}>미리보기 imgaes</button>
 
-        <div className="resource-section">
-          <h3>리소스 목록</h3>
-          <ul className="resource-list">
-            {currentResources.map((res, i) => (
-              <li key={i} className="resource-row">
-                <span className="resource-name">{res.name}</span>
-                <span className="resource-desc">{res.desc}</span>
-                <button onClick={() => handlePreview(res.previewUrl)}>미리보기</button>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <div className="resource-section">
+            <h3>리소스 설명</h3>
+            <pre>{resource.description}</pre>
+          </div>
 
-        <div className="contract-section">
-          <h3>계약 내용</h3>
-          <pre>{currentContract}</pre>
-        </div>
+          <div className="contract-section">
+            <h3>계약 조건</h3>
+            <p>
+            아래 명시된 계약 조건을 확인 후 Checkout을 진행해 주세요.<br />
+            위반 시 서비스 이용이 제한되며, 법적 책임이 발생할 수 있습니다.
+            </p>
+            <pre>수익 분배: ludex 10%, 판매자 {resource.sellerRatio}%, 구매자 {resource.creatorRatio}%
+              2차 파생 허용: {resource.allowDerivation}</pre>
+            <pre>{resource.additionalCondition}</pre>
+          </div>
 
-        <div className="modal-actions">
-          <button onClick={onClose}>Back</button>
-          <button className="checkout">Checkout</button>
+          <div className="modal-actions">
+            <button onClick={onClose}>Back</button>
+            <button className="checkout">Checkout</button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {showPreviewModal && (
+        <PreviewModal
+          images={resource.imageUrls}
+          onClose={() => setShowPreviewModal(false)}
+        />
+      )}
+    </>
   );
 };
 

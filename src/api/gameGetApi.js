@@ -12,7 +12,7 @@ export const fetchGameList = async ({ page, limit }) => {
     throw error;
   }
 };
-
+ 
 //원본,파생 게임 목록 조회
 export const fetchOriginVariantGameList = async ({ title }) => {
   try {
@@ -40,10 +40,10 @@ export const fetchGamesByTags = async ({ tags }) => {
 };
 
 //게임 상세 정보 조회
-export const fetchGameDetail = async ({ title }) => {
+export const fetchGameDetail = async ({ gameId }) => {
   try {
     const response = await gameManageInstance.get("/games/get/gameDetail", {
-      params: { title },
+      params: { gameId },
     });
     return response.data;
   } catch (error) {

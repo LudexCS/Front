@@ -176,7 +176,7 @@ const GameUploadPage = () => {
             onChange={(e) => setGameForm({ ...gameForm, title: e.target.value })}
           />
 
-          <label>가격:</label>
+          <label>가격(USD):</label>
           <input
             type="text"
             value={gameForm.price}

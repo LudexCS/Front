@@ -18,11 +18,6 @@ export const uploadGameFile = async (gameId, gameFileInput) => {
     const response = await uploadInstance.post(
       `/protected/game/upload/${gameId}`,
       gameFile
-      // ,{
-      //   headers: {
-      //     "Content-Type": "application/octet-stream",
-      //   },
-      // }
     );
     console.log("uploadGameFile 됨");
     return response.data;
@@ -39,11 +34,6 @@ export const uploadResourceFile = async (resourceId, resourceFileInput) => {
     const response = await uploadInstance.post(
       `/protected/resource/upload/${resourceId}`,
       resourceFile
-      // ,{
-      //   headers: {
-      //     "Content-Type": "application/octet-stream",
-      //   },
-      // }
     );
     console.log("uploadResourceFile 됨");
     return response.data;

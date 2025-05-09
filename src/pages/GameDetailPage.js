@@ -1,30 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ResourceModal from "../components/modals/ResourceModal";
 import PaymentModal from "../components/modals/PaymentModal";
 import ReportModal from "../components/modals/ReportModal";
 import NavbarSearch from "../components/layout/NavbarSearch";
 import defaultGameImage from "../assets/game-image.png";
+import { fetchGameDetail } from "../api/gameGetApi";
 import "../styles/pages/GameDetailPage.css";
 
-const GameDetailPage = () => {
+const GameDetailPage = () => { 
   const { gameId } = useParams();
+  // const [ game, setGame] = useState(null);
+  // const [ resource, setResource] = useState(null);
   const navigate = useNavigate();
 
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
+  // useEffect(() => {
+  //   (async () => {
+  //     const result1 = await fetchGameDetail(gameId);
+  //     setGame(result1);
+  //     const result2 = await fetchGameResource(gameId);
+  //     setResource(result2);
+  //   })();
+  // }, [gameId]);
+
   // TODO: API 호출하여 데이터 불러오기
-  const game = {
-    name: gameId,
+  const game =   {
+    id: 1,
+    title: gameId,
     seller: "판매자",
-    price: 10000,
-    description: `${gameId}의 설명, ${gameId}의 설명, ${gameId}의 설명, ${gameId}의 설명, ${gameId}의 설명, ${gameId}의 설명, ${gameId}의 설명 `,
-    tags: ["origin", "tag1", "tag2", "tag3", "ip001"],
-    requirements: "Windows 10, 8GB RAM",
-    resources: ["Resource1.png", "CharacterSet.wav"],
-    gallery: [
+    price: 10,
+    description: `${gameId}의 설명`,
+    tags: ["origin", "tag1", "tag2"],
+    requirements: [{
+      os: "Windows 10",
+      cpu: "Intel i5",
+      gpu: "NVIDIA GTX 1050",
+      ram: "8GB",
+      storage: "15GB",
+      network: "Broadband Internet"
+    }],
+    imageUrls: [
       defaultGameImage,
       defaultGameImage,
       defaultGameImage,
@@ -37,8 +56,24 @@ const GameDetailPage = () => {
     ],
   };
 
-  const mediaList = game.gallery;
-  const [selectedMediaIndex, setSelectedMediaIndex] = useState(0); // ✅ 초기값 0 → 첫번째 썸네일
+  const resource={
+    game: game.title,
+    description: "High-resolution character sprites for use in RPGs.High-resolution character sprites for use in RPGs.High-resolution character sprites for use in RPGs.High-resolution character sprites for use in RPGs.", 
+    imageUrls: [
+      defaultGameImage,
+      defaultGameImage,
+      defaultGameImage,
+      "https://ludex-cdn.s3.ap-northeast-2.amazonaws.com/images/12_1.jpg?X-Amz-Signature=...",
+      "https://ludex-cdn.s3.ap-northeast-2.amazonaws.com/images/12_2.jpg?X-Amz-Signature=..."
+    ],
+    sellerRatio: 30,
+    creatorRatio: 70,
+    allowDerivation: true,
+    additionalCondition: "You must credit the original creator.",
+  };
+
+  const mediaList = game.imageUrls;
+  const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
 
   const mainMedia = mediaList[selectedMediaIndex];
 
@@ -67,14 +102,25 @@ const GameDetailPage = () => {
         <div className="game-detail-right">
           <p className="report-button" onClick={() => setShowReportModal(true)}>report</p>
           <div className="game-detail-info">
-            <h2>{game.name}</h2>
-            <p><strong>{game.price.toLocaleString()} ₩</strong></p>
+            <h2>{game.title}</h2>
+            <p><strong>{game.price.toLocaleString()} $</strong></p>
             <p>{game.description}</p>
             <div className="tags">
               {game.tags.map((tag, idx) => <span key={idx}>#{tag} </span>)}
             </div>
             <p>구동사양</p>
-            <p>{game.requirements}</p>
+            <ul className="game-detail-requirement-list">
+              {game.requirements.map((req, idx) => (
+                <p key={idx}>
+                  <div>OS: {req.os}</div>
+                  <div>CPU: {req.cpu}</div>
+                  <div>GPU: {req.gpu}</div>
+                  <div>RAM: {req.ram}</div>
+                  <div>저장공간: {req.storage}</div>
+                  <div>네트워크: {req.network}</div>
+                </p>
+              ))}
+            </ul>
             <p className="resource-link" onClick={() => setShowResourceModal(true)}>리소스</p>
           </div>
           <div className="action-buttons">
@@ -85,26 +131,7 @@ const GameDetailPage = () => {
 
         {showResourceModal && (
           <ResourceModal
-            game={{
-              name: game.name,
-              resources: {
-                모드: [
-                  { name: "space_theme.mp3", desc: "우주 테마 배경음악", previewUrl: "/preview/space_theme" },
-                  { name: "alien_pack.zip", desc: "외계인 캐릭터 리소스", previewUrl: "/preview/alien_pack" },
-                ],
-                확장판: [
-                  { name: "level2_map.json", desc: "레벨 2 확장 맵", previewUrl: "/preview/level2_map" },
-                ],
-                후속작: [
-                  { name: "new_story.pdf", desc: "후속작 스토리 시놉시스", previewUrl: "/preview/new_story" },
-                ],
-              },
-              contracts: {
-                모드: "수익 분배: ludex 10%, 판매자 30%, 구매자 70%\n2차 파생 허용: 예\n외부 업로드 제한: 있음",
-                확장판: "수익 분배: ludex 10%, 판매자 20%, 구매자 80%\n2차 파생 허용: 아니오\n외부 업로드 제한: 없음",
-                후속작: "수익 분배: ludex 10%, 판매자 10%, 구매자 90%\n2차 파생 허용: 예\n외부 업로드 제한: 있음",
-              }
-            }}
+            resource={resource}
             onClose={() => setShowResourceModal(false)}
           />
         )}

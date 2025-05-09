@@ -1,0 +1,1 @@
+import { fetchOriginVariantGameList } from "../api/gameGetApi";
