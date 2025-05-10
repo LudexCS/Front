@@ -22,9 +22,10 @@ export const UploadProvider = ({ children }) => {
     imageFiles: [],
     resourceFile: null,
   })
+  const [sharerIds, setSharerIds] = useState([]);
 
   return (
-    <UploadContext.Provider value={{ gameForm, setGameForm, resourceForm, setResourceForm }}>
+    <UploadContext.Provider value={{ gameForm, setGameForm, resourceForm, setResourceForm, sharerIds, setSharerIds }}>
       {children}
     </UploadContext.Provider>
   );

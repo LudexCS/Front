@@ -10,13 +10,17 @@ import IPSelectorModal from "../components/upload/IPSelectorModal";
 import TermsAgreementModal from "../components/modals/TermsAgreementModal";
 import { useUpload } from "../context/UploadContext";
 import { useRecord } from "../context/RecordContext";
+import { useUser } from "../context/UserContext";
+import { registerGame } from "../api/walletAuth";
 import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
+import { ensureSellerRegistration } from "../api/SellerRegistration";
 import "../styles/pages/GameUploadPage.css";
 
 const GameUploadPage = () => {
   const navigate = useNavigate();
-  const { gameForm, setGameForm, resourceForm, setResourceForm } = useUpload();
+  const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds } = useUpload();
   const { setIsFetch } = useRecord();
+  const { user } = useUser();
   setIsFetch(false);
   const [category, setCategory] = useState("origin");
   const [showHelp, setShowHelp] = useState(false);
@@ -106,6 +110,14 @@ const GameUploadPage = () => {
       return;
     }
 
+    const sellerAddress = user.cryptoWallet[0];
+    // const registered = await ensureSellerRegistration(sellerAddress);
+
+    // if (!registered) {
+    //   alert("판매자 등록에 실패했습니다. 전자지갑 주소를 확인해주세요.");
+    //   return;
+    // }
+
     const requirements = [
       {
         ...Object.fromEntries(
@@ -116,14 +128,18 @@ const GameUploadPage = () => {
       },
     ];
 
+    if(category === "origin"){
+      setGameForm({ ...gameForm, originGameIds:[]})
+    };
+
     const payload = {
       ...gameForm,
       price: parseFloat(gameForm.price),
       isOrigin: category === "origin",
-      originGameIds: selectedIPs.map(ip => {
-          const match = ip.match(/\d+/);
-          return match ? parseInt(match[0], 10) : null;
-        }).filter(id => id !== null),
+      // originGameIds: selectedIPs.map(ip => {
+      //     const match = ip.match(/\d+/);
+      //     return match ? parseInt(match[0], 10) : null;
+      //   }).filter(id => id !== null),
       tags: selectedTags.map((tagId) => ({tagId, priority: 10})),
       requirements,
       thumbnail: gameForm.thumbnail,
@@ -138,6 +154,15 @@ const GameUploadPage = () => {
       });
       await uploadGameFile(responseGame.gameId, gameForm.gameFile);
       await uploadResourceFile(responseResource.resourceId, resourceForm.resourceFile);
+      const item = {
+        gameId: responseGame.gameId,
+        itemName: gameForm.title,
+        seller: sellerAddress,
+        sharers: sharerIds,
+        itemPrice: gameForm.price,
+        shareTerms: [resourceForm.sellerRatio*100]
+      };
+      await registerGame(item);
       setIsFetch(true);
       alert("게임이 등록되었습니다.");
       navigate("/");
@@ -242,7 +267,7 @@ const GameUploadPage = () => {
           </div>
         )}
 
-        {(category === "origin" || (selectedIPs.every(ip => ip.includes("2차 허용")) && selectedIPs.length > 0)) && (
+        {(category === "origin" || (selectedIPs.every(ip => ip.includes("2차 제작 허용")) && selectedIPs.length > 0)) && (
           <LicensingTab/>
         )}
 

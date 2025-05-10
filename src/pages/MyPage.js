@@ -49,6 +49,7 @@ const MyPage = () => {
           description: "Character sprites for Game B",
           seller_ratio: "30",
           creater_ratio: "60",
+          sharer_id: 1,
           image_url: defaultGameImage, //미리보기 이미지.. -> 게임 썸네일 이미지로
           game_id: 1, //+게임 타이틀
         },
@@ -62,6 +63,7 @@ const MyPage = () => {
           price: "5000",
           description: "My first published game",
           thumbnail_url: defaultGameImage,
+          item_id: 3,
           requirement: [
             {
               os: "Windows 10",

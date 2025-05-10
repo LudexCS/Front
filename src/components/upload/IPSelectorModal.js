@@ -1,27 +1,40 @@
 import React, { useState } from "react";
+import { useUpload } from "../../context/UploadContext";
+import { useRecord } from "../../context/RecordContext";
 import "../../styles/upload/IPSelectorModal.css";
 
 const availableIPs = [
-  { id: "111", name: "구매한 게임 A", allowsDerivative: true },
-  { id: "222", name: "구매한 게임 B", allowsDerivative: false },
-  { id: "333", name: "구매한 게임 C", allowsDerivative: true },
+  { resource_id: 111, game_title: "구매한 게임 A", allowsDerivative: true, sharer_id: 1 },
+  { resource_id: 222, game_title: "구매한 게임 B", allowsDerivative: false, sharer_id: 2 },
+  { resource_id: 333, game_title: "구매한 게임 C", allowsDerivative: true, sharer_id: 3 },
   // 실제 API로 불러올 수 있음
 ];
 
 const IPSelectorModal = ({ onClose, setSelectedIPs }) => {
   const [checked, setChecked] = useState({});
+  const { setSharerIds, gameForm, setGameForm } = useUpload();
+  // const { recordData } = useRecord(); //.purchased.resources
 
-  const handleCheck = (id) => {
+  const handleCheck = (resource_id) => {
     setChecked((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [resource_id]: !prev[resource_id],
     }));
   };
 
   const handleConfirm = () => {
     const selected = availableIPs
-      .filter((ip) => checked[ip.id])
-      .map((ip) => `${ip.name}${ip.allowsDerivative ? " (2차 허용)" : " (2차 금지)"}`);
+      .filter((ip) => checked[ip.resource_id])
+      .map((ip) => `${ip.game_title}${ip.allowsDerivative ? " (2차 제작 허용)" : " (2차 제작 금지)"}`);
+
+    setGameForm({ ...gameForm, originGameIds: availableIPs
+      .filter((ip) => checked[ip.resource_id])
+      .map((ip) => ip.resource_id)});
+
+    setSharerIds(availableIPs
+      .filter((ip) => checked[ip.resource_id])
+      .map((ip) => ip.sharer_id));
+      
     setSelectedIPs(selected);
     onClose();
   };
@@ -32,14 +45,14 @@ const IPSelectorModal = ({ onClose, setSelectedIPs }) => {
         <h3>사용할 게임 IP 선택</h3>
         <ul className="ip-list">
           {availableIPs.map((ip) => (
-            <li key={ip.id}>
+            <li key={ip.resource_id}>
               <label>
                 <input
                   type="checkbox"
-                  checked={!!checked[ip.id]}
-                  onChange={() => handleCheck(ip.id)}
+                  checked={!!checked[ip.resource_id]}
+                  onChange={() => handleCheck(ip.resource_id)}
                 />
-                {ip.name} {ip.allowsDerivative}
+                {ip.game_title} {ip.allowsDerivative}
               </label>
             </li>
           ))}
