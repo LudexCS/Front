@@ -1,6 +1,7 @@
 // src/api/axiosInstance.js
 import axios from "axios";
 import { getNewAccessToken } from "./userApi";
+import { loginUser } from "../api/userApi";
 
 const instance = axios.create({
   baseURL:  "http://3.37.46.45:30300/api",
@@ -27,9 +28,13 @@ instance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {//토큰 둘다 업뎃
-        const { newToken } = await getNewAccessToken();
+
+        const { newToken } = await loginUser("guu7898@gmail.com", "test1234");
         localStorage.setItem("accessToken", newToken);
-        console.log("newToken: ", newToken);
+
+        // const { newToken } = await getNewAccessToken();
+        // localStorage.setItem("accessToken", newToken);
+        // console.log("newToken: ", newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return instance(originalRequest);
       } catch (err) {

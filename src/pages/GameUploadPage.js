@@ -9,12 +9,15 @@ import LicensingHelpModal from "../components/modals/LicensingHelpModal";
 import IPSelectorModal from "../components/upload/IPSelectorModal";
 import TermsAgreementModal from "../components/modals/TermsAgreementModal";
 import { useUpload } from "../context/UploadContext";
+import { useRecord } from "../context/RecordContext";
 import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
 import "../styles/pages/GameUploadPage.css";
 
 const GameUploadPage = () => {
   const navigate = useNavigate();
   const { gameForm, setGameForm, resourceForm, setResourceForm } = useUpload();
+  const { setIsFetch } = useRecord();
+  setIsFetch(false);
   const [category, setCategory] = useState("origin");
   const [showHelp, setShowHelp] = useState(false);
   const [showIPModal, setShowIPModal] = useState(false);
@@ -135,6 +138,7 @@ const GameUploadPage = () => {
       });
       await uploadGameFile(responseGame.gameId, gameForm.gameFile);
       await uploadResourceFile(responseResource.resourceId, resourceForm.resourceFile);
+      setIsFetch(true);
       alert("게임이 등록되었습니다.");
       navigate("/");
     } catch (err) {

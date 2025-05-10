@@ -10,3 +10,14 @@ export const getAllTags = async () => {
     throw error;
   }
 };
+
+export const getBanner = async () => {
+  try {
+    const response = await platformAdminInstance.get("/get/banner");
+    // console.log("tags response: ", response);
+    return response.data;
+  } catch (error) {
+    console.error("banner를 가져오는데 실패:", error);
+    throw error;
+  }
+};

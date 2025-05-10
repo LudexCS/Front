@@ -6,23 +6,23 @@ import { useUser } from "./UserContext";
 const RecordContext = createContext();
 
 export const RecordProvider = ({ children }) => {
-  const { user } = useUser();
+  const { isLoggedIn } = useUser();
   const [recordData, setRecordData] = useState(null);
-  const [isFetch, setIsFetch] = useState(false);
+  const [isFetch, setIsFetch] = useState(false);// 게임등록, 게임구매 시 변경
 
   useEffect(() => {
     const fetchTradeInfo = async () => {
-      if (!user?.email) return;
+      if (!isLoggedIn) return;
       try {
-        const data = await getTradeInfo(user.email);
+        const data = await getTradeInfo();
         setRecordData(data);
       } catch (err) {
-        console.error("거래 정보 조회 실패:", err);
+        // console.error("거래 정보 조회 실패:", err);
       }
     };
 
     fetchTradeInfo();
-  }, [user, isFetch]);
+  }, [isLoggedIn, isFetch]);
 
   return (
     <RecordContext.Provider value={{ recordData, setIsFetch }}>

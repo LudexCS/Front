@@ -7,6 +7,7 @@ import UserInfo from "../components/user/UserInfo";
 import HistoryTabs from "../components/user/HistoryTabs";
 import PurchaseHistory from "../components/user/PurchaseHistory";
 import SalesHistory from "../components/user/SalesHistory";
+import { useRecord } from "../context/RecordContext";
 import "../styles/pages/MyPage.css";
 import defaultGameImage from "../assets/game-image.png";
 
@@ -14,59 +15,66 @@ const MyPage = () => {
   const [activeTab, setActiveTab] = useState("purchase");
   const navigate = useNavigate();
   const { user, setIsLoggedIn } = useUser();
+  const { recordData } = useRecord();
 
   if (!user) {
-    return <div>회원 정보를 로드하는 중...</div>
+    navigate("/");
   }
 
-  const purchaseHistory = [
-    {
-      id: 1,
-      type: "game",
-      name: "Game A",
-      seller: "Seller1",
-      price: 10000,
-      thumbnail: defaultGameImage,
-      description: "This is a fun game A!",
-      requirements: "Windows 10, 8GB RAM",
-      tags: ["#origin", "#tag1", "#tag2"],
+  const dummyRecord = {
+    purchased: {
+      games: [
+        {
+          game_id: 1,
+          user_id: 100,//판매자
+          title: "Game A",
+          price: "10000",
+          description: "This is a fun game A!",
+          thumbnail_url: defaultGameImage,
+          requirement: [
+            {
+              os: "Windows 10",
+              cpu: "i5",
+              ram: "8GB",
+              gpu: "GTX 1060",
+              storage: "20GB",
+            },
+          ],
+        },
+      ],
+      resources: [
+        {
+          resource_id: 2,
+          user_id: 101,//판매자
+          description: "Character sprites for Game B",
+          seller_ratio: "30",
+          creater_ratio: "60",
+          image_url: defaultGameImage, //미리보기 이미지.. -> 게임 썸네일 이미지로
+          game_id: 1, //+게임 타이틀
+        },
+      ],
     },
-    {
-      id: 2,
-      type: "resource",
-      name: "Resource Pack 1",
-      seller: "Seller2",
-      price: 2000,
-      thumbnail: defaultGameImage,
-      description: "Character sprites for Game B",
-      requirements: "No additional requirements",
-      usageTerms: "You must not redistribute these assets separately.",
-      gameRelated: "Game B",
+    sold: {
+      games: [
+        {
+          game_id: 3,
+          title: "My Awesome Game",
+          price: "5000",
+          description: "My first published game",
+          thumbnail_url: defaultGameImage,
+          requirement: [
+            {
+              os: "Windows 10",
+              cpu: "i3",
+              ram: "4GB",
+              gpu: "GTX 750",
+              storage: "10GB",
+            },
+          ],
+        },
+      ],
     },
-  ];
-
-  const salesHistory = [
-    {
-      id: 1,
-      name: "My Awesome Game",
-      seller: "LudexUser",
-      price: 5000,
-      thumbnail: defaultGameImage,
-      description: "My first published game",
-      requirements: "Windows 10, 4GB RAM",
-      resources: ["Resource1.png", "Resource2.wav"],
-    },
-    {
-      id: 2,
-      name: "My Second Game",
-      seller: "LudexUser",
-      price: 8000,
-      thumbnail: defaultGameImage,
-      description: "An even cooler game!",
-      requirements: "Windows 10, 8GB RAM",
-      resources: ["ResourcePack.zip"],
-    },
-  ];
+  };
 
   const handleLogout = async () => {
     await logout(setIsLoggedIn);
@@ -77,15 +85,13 @@ const MyPage = () => {
     <div className="mypage-container">
       <NavbarSearch />
       <div className="mypage-content">
-        <p className="logout-btn" onClick={handleLogout}>
-          logout
-        </p>
+        <p className="logout-btn" onClick={handleLogout}>logout</p>
         <UserInfo userInfo={user} onEdit={() => navigate("/edit-profile")} />
         <HistoryTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === "purchase" ? (
-          <PurchaseHistory purchases={purchaseHistory} />
+          <PurchaseHistory purchases={dummyRecord.purchased} />
         ) : (
-          <SalesHistory sales={salesHistory} />
+          <SalesHistory sales={dummyRecord.sold} />
         )}
       </div>
     </div>
