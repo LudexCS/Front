@@ -72,6 +72,6 @@ const FileUploader = ({ maxFiles = 5, files = [], setFiles}) => {
       </ul>
     </div>
   );
-};
+}};
 
 export default FileUploader;
