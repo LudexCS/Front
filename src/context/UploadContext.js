@@ -7,16 +7,25 @@ export const UploadProvider = ({ children }) => {
     title: "",
     price: "",
     description: "",
-    category: "origin",
     tags: [],
     requirements: [],
     originGameIds: [],
-    thumbnail: null, // { url, description }
-    mediaFiles: [],  // [{ url, description }]
+    gameFile: null,
   });
+  const [resourceForm, setResourceForm] = useState({
+    gameId: 0,
+    allowDerivation: true,
+    sellerRatio: 30,
+    creatorRatio: 60,
+    additionalCondition: "",
+    description: "",
+    imageFiles: [],
+    resourceFile: null,
+  })
+  const [sharerIds, setSharerIds] = useState([]);
 
   return (
-    <UploadContext.Provider value={{ gameForm, setGameForm }}>
+    <UploadContext.Provider value={{ gameForm, setGameForm, resourceForm, setResourceForm, sharerIds, setSharerIds }}>
       {children}
     </UploadContext.Provider>
   );

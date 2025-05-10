@@ -1,32 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavbarSearch from "../components/layout/NavbarSearch";
 import FileUploader from "../components/upload/FileUploader";
 import TagSelector from "../components/upload/TagSelector";
 import CategorySelector from "../components/upload/CategorySelector";
-import LicensingTabs from "../components/upload/LicensingTabs";
+import LicensingTab from "../components/upload/LicensingTab";
 import LicensingHelpModal from "../components/modals/LicensingHelpModal";
 import IPSelectorModal from "../components/upload/IPSelectorModal";
 import TermsAgreementModal from "../components/modals/TermsAgreementModal";
 import { useUpload } from "../context/UploadContext";
-// import { useUser } from "../context/UserContext";
-import { uploadGame } from "../api/uploadApi";
+import { useRecord } from "../context/RecordContext";
+import { useUser } from "../context/UserContext";
+import { registerGame } from "../api/walletAuth";
+import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
+import { ensureSellerRegistration } from "../api/SellerRegistration";
 import "../styles/pages/GameUploadPage.css";
 
 const GameUploadPage = () => {
   const navigate = useNavigate();
-  // const { user } = useUser();
-  const { gameForm, setGameForm } = useUpload();
+  const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds } = useUpload();
+  const { setIsFetch } = useRecord();
+  const { user } = useUser();
+  setIsFetch(false);
   const [category, setCategory] = useState("origin");
   const [showHelp, setShowHelp] = useState(false);
   const [showIPModal, setShowIPModal] = useState(false);
   const [selectedIPs, setSelectedIPs] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-  const [licensingFiles, setLicensingFiles] = useState({
-    mode: [],
-    expansion: [],
-    sequel: []
-  });
   const [agreed, setAgreed] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [specFields, setSpecFields] = useState({
@@ -46,6 +46,56 @@ const GameUploadPage = () => {
     network: "",
   });
 
+  const resetUploadForm = () => {
+    setGameForm({
+      title: "",
+      price: "",
+      description: "",
+      tags: [],
+      requirements: [],
+      originGameIds: [],
+      gameFile: null,
+      thumbnail: null,
+      mediaFiles: [],
+    });
+  
+    setResourceForm({
+      gameId: 0,
+      allowDerivation: true,
+      sellerRatio: 30,
+      creatorRatio: 60,
+      additionalCondition: "",
+      description: "",
+      imageFiles: [],
+      resourceFile: null,
+    });
+  
+    setSelectedTags([]);
+    setSelectedIPs([]);
+    setAgreed(false);
+    setCategory("origin");
+    setSpecFields({
+      os: true,
+      cpu: false,
+      gpu: false,
+      ram: false,
+      storage: false,
+      network: false,
+    });
+    setSpecValues({
+      os: "",
+      cpu: "",
+      gpu: "",
+      ram: "",
+      storage: "",
+      network: "",
+    });
+  };  
+
+  useEffect(() => {
+    resetUploadForm();
+  }, []);
+
   const toggleSpecField = (key) => {
     setSpecFields({ ...specFields, [key]: !specFields[key] });
   };
@@ -60,9 +110,16 @@ const GameUploadPage = () => {
       return;
     }
 
+    const sellerAddress = user.cryptoWallet[0];
+    // const registered = await ensureSellerRegistration(sellerAddress);
+
+    // if (!registered) {
+    //   alert("판매자 등록에 실패했습니다. 전자지갑 주소를 확인해주세요.");
+    //   return;
+    // }
+
     const requirements = [
       {
-        isMinimum: true,
         ...Object.fromEntries(
           Object.entries(specFields)
             .filter(([key, enabled]) => enabled)
@@ -71,20 +128,43 @@ const GameUploadPage = () => {
       },
     ];
 
+    if(category === "origin"){
+      setGameForm({ ...gameForm, originGameIds:[]})
+    };
+
     const payload = {
       ...gameForm,
-      userId: 1,
+      price: parseFloat(gameForm.price),
       isOrigin: category === "origin",
-      originGameIds: category === "variant" ? gameForm.originGameIds : [],
-      tags: selectedTags.map((tagId) => ({ tagId, priority: 10 })),
+      // originGameIds: selectedIPs.map(ip => {
+      //     const match = ip.match(/\d+/);
+      //     return match ? parseInt(match[0], 10) : null;
+      //   }).filter(id => id !== null),
+      tags: selectedTags.map((tagId) => ({tagId, priority: 10})),
       requirements,
+      thumbnail: gameForm.thumbnail,
+      mediaFiles: gameForm.mediaFiles,
     };
-    
-    console.log("payload: ", payload);
+        
     try {
-      await uploadGame(payload);
+      const responseGame = await uploadGameData(payload);
+      const responseResource = await uploadResourceData({
+        ...resourceForm,
+        gameId: responseGame.gameId
+      });
+      await uploadGameFile(responseGame.gameId, gameForm.gameFile);
+      await uploadResourceFile(responseResource.resourceId, resourceForm.resourceFile);
+      const item = {
+        gameId: responseGame.gameId,
+        itemName: gameForm.title,
+        seller: sellerAddress,
+        sharers: sharerIds,
+        itemPrice: gameForm.price,
+        shareTerms: [resourceForm.sellerRatio*100]
+      };
+      await registerGame(item);
+      setIsFetch(true);
       alert("게임이 등록되었습니다.");
-      //payload reset
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -96,14 +176,21 @@ const GameUploadPage = () => {
     <div>
       <NavbarSearch />
       <div className="upload-page">
-        <h2>썸네일 이미지 업로드</h2>
+        <h2>게임 파일 업로드(압축파일 형태 업로드 권장)</h2>
+        <FileUploader
+          maxFiles={1}
+          files={gameForm.gameFile ? [{ file: gameForm.gameFile }] : []}
+          setFiles={(files) => setGameForm({ ...gameForm, gameFile: files[0]?.file || null })}
+        />
+
+        <h2>썸네일 업로드</h2>
         <FileUploader
           maxFiles={1}
           files={gameForm.thumbnail ? [gameForm.thumbnail] : []}
           setFiles={(f) => setGameForm({ ...gameForm, thumbnail: f[0] })}
         />
 
-        <h2>이미지&영상 파일 업로드</h2>
+        <h2>추가 이미지 업로드</h2>
         <FileUploader
           maxFiles={5}
           files={gameForm.mediaFiles}
@@ -118,7 +205,7 @@ const GameUploadPage = () => {
             onChange={(e) => setGameForm({ ...gameForm, title: e.target.value })}
           />
 
-          <label>가격:</label>
+          <label>가격(USD):</label>
           <input
             type="text"
             value={gameForm.price}
@@ -131,7 +218,7 @@ const GameUploadPage = () => {
             onChange={(e) => setGameForm({ ...gameForm, description: e.target.value })}
           />
 
-          <label>구동사양 (하나 이상 선택):</label>
+          <label>권장 구동사양 (하나 이상 선택):</label>
           <div className="spec-checkboxes">
             {Object.keys(specFields).map((key) => (
               <label key={key}>
@@ -180,8 +267,8 @@ const GameUploadPage = () => {
           </div>
         )}
 
-        {(category === "origin" || (selectedIPs.every(ip => ip.includes("2차 허용")) && selectedIPs.length > 0)) && (
-          <LicensingTabs licensingFiles={licensingFiles} setLicensingFiles={setLicensingFiles} />
+        {(category === "origin" || (selectedIPs.every(ip => ip.includes("2차 제작 허용")) && selectedIPs.length > 0)) && (
+          <LicensingTab/>
         )}
 
         <div className="agreement-section">

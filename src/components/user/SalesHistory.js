@@ -10,25 +10,32 @@ const SalesHistory = ({ sales, onEditGame, onSetDiscount }) => {
 
   return (
     <div className="sales-history">
-      {sales.map((item) => (
-        <div key={item.id} className="sales-item">
+      {sales.games.map((game) => (
+        <div key={game.game_id} className="sales-item">
           <div className="sales-summary">
-            <span>{item.name} | {item.price.toLocaleString()} 원</span>
+            <span>{game.title} | {Number(game.price).toLocaleString()} $</span>
             <div>
-                <button className="expand-btn" onClick={() => onEditGame(item)}>Edit</button>
-                <button className="expand-btn" onClick={() => onSetDiscount(item)}>Set Discount</button>
-                <button className="expand-btn" onClick={() => toggleExpand(item.id)}>V</button>
+              <button className="expand-btn" onClick={() => onEditGame(game)}>Edit</button>
+              <button className="expand-btn" onClick={() => onSetDiscount(game)}>Set Discount</button>
+              <button className="expand-btn" onClick={() => toggleExpand(game.game_id)}>V</button>
             </div>
           </div>
-          {expandedId === item.id && (
+          {expandedId === game.game_id && (
             <div className="sales-detail">
               <div className="history-content-row">
                 <div className="text-section">
-                  <p>설명: {item.description}</p>
-                  <p>구동사양: {item.requirements}</p>
+                  <p>설명: {game.description}</p>
+                  <div>
+                    <p>구동사양:</p>
+                    {game.requirement?.map((req, i) => (
+                      <div key={i}>
+                        {req.os}, {req.cpu}, {req.ram}, {req.gpu}, {req.storage}
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div className="thumbnail-section">
-                  <img src={item.thumbnail} alt="thumbnail-img" className="thumbnail-img" />
+                  <img src={game.thumbnail_url} alt="thumbnail-img" className="thumbnail-img" />
                 </div>
               </div>
             </div>

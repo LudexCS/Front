@@ -1,14 +1,13 @@
-// src/api/gameManageInstance.js
 import axios from "axios";
 import { getNewAccessToken } from "../userApi";
 
-const gameManageInstance = axios.create({
-  baseURL: "http://3.37.46.45:30353/api",
+const uploadInstance = axios.create({
+  baseURL: "http://3.37.46.45:30355/api",
   withCredentials: true,
 });
 
 // 요청 시 access token 자동 첨부
-gameManageInstance.interceptors.request.use((config) => {
+uploadInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -17,7 +16,7 @@ gameManageInstance.interceptors.request.use((config) => {
 });
 
 // 401 에러 발생 시 토큰 재발급 시도
-gameManageInstance.interceptors.response.use(
+uploadInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -27,7 +26,7 @@ gameManageInstance.interceptors.response.use(
         const { newToken } = await getNewAccessToken();
         localStorage.setItem("accessToken", newToken);
         originalRequest.headers.authorization = `Bearer ${newToken}`;
-        return gameManageInstance(originalRequest);
+        return uploadInstance(originalRequest);
       } catch (err) {
         console.error("refresh token으로 갱신 실패:", err);
         return Promise.reject(err);
@@ -37,4 +36,4 @@ gameManageInstance.interceptors.response.use(
   }
 );
 
-export default gameManageInstance;
+export default uploadInstance;

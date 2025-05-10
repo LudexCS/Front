@@ -2,11 +2,11 @@ import React from "react";
 import { getPresignedUrl } from "../../api/uploadApi";
 import "../../styles/upload/FileUploader.css";
 
-const FileUploader = ({ maxFiles , files = [], setFiles }) => {
-  // const handleAddFile = (e) => {
-  //   const selected = Array.from(e.target.files)
-  //     .filter((file) => file instanceof File) // ✅ File 인스턴스만 필터링
-  //     .map((file) => ({ file, description: "" }));
+const FileUploader = ({ maxFiles = 5, files = [], setFiles}) => {
+  const handleAddFile = (e) => {
+    const selected = Array.from(e.target.files)
+      .filter((file) => file instanceof File)
+      .map((file) => ({ file }));
 
   //   if (files.length + selected.length <= maxFiles) {
   //     setFiles([...files, ...selected]);
@@ -57,12 +57,6 @@ const FileUploader = ({ maxFiles , files = [], setFiles }) => {
     setFiles(updated);
   };
 
-  const handleDescriptionChange = (index, desc) => {
-    const updated = [...files];
-    updated[index].description = desc;
-    setFiles(updated);
-  };
-
   return (
     <div className="file-uploader">
       <input type="file" multiple onChange={handleAddFile} />
@@ -73,12 +67,6 @@ const FileUploader = ({ maxFiles , files = [], setFiles }) => {
               {entry.url.split("/").pop()}
               <button onClick={() => handleRemove(idx)}>삭제</button>
             </div>
-            <input
-              type="text"
-              placeholder="설명 입력"
-              value={entry.description}
-              onChange={(e) => handleDescriptionChange(idx, e.target.value)}
-            />
           </li>
         ))}
       </ul>

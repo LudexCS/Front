@@ -7,13 +7,13 @@ export const loginUser = async (email, password) => {
     { email, password },
     { withCredentials: true }    // refreshToken 쿠키 수신용
   );
-
   // 헤더에서 Bearer 토큰 파싱
   const authHeader = response.headers["authorization"];
   if (!authHeader) {
     throw new Error("로그인에 실패했습니다: 액세스 토큰이 없습니다.");
   }
   const accessToken = authHeader.split(" ")[1];
+  console.log("accessToken: ", accessToken);
   return { accessToken };
 };
 

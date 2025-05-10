@@ -67,3 +67,7 @@
   display: block;
   object-fit: contain;
 }
+
+.text-section button {
+  margin-top: 10px;
+}

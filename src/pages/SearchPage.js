@@ -30,7 +30,7 @@ const SearchPage = () => {
         </div>
         <div className="search-content">
           <div className="search-content-left">
-            <SearchGameList onSelectGame={handleGameSelect} />
+            <SearchGameList onSelectGame={handleGameSelect} query={query} />
           </div>
           <div className="search-content-right">
             <GameDetailBar game={selectedGame} />

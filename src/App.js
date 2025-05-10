@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
-import UserProvider from './context/UserContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -11,7 +10,10 @@ import GameUploadPage from "./pages/GameUploadPage";
 import DeleteAccount from "./components/modals/DeleteAccount";
 import ManageUsersPage from "./pages/ManageUsersPage";
 import GameDetailPage from "./pages/GameDetailPage";
+import UserProvider from './context/UserContext';
 import { UploadProvider } from "./context/UploadContext";
+import { RecordProvider } from "./context/RecordContext";
+import { GameProvider } from "./context/gameContext";
 
 function App() {
   console.log(Router);
@@ -19,6 +21,8 @@ function App() {
   return (
     <UserProvider>
     <UploadProvider>
+    <RecordProvider>
+    <GameProvider>
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<LoginPage/>} />
@@ -31,6 +35,8 @@ function App() {
         <Route path="/manage-users" element={<ManageUsersPage />} />
         <Route path="/game/:gameId" element={<GameDetailPage />} />
       </Routes>
+    </GameProvider>
+    </RecordProvider>
     </UploadProvider>
     </UserProvider>
   );
