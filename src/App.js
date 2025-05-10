@@ -13,6 +13,7 @@ import GameDetailPage from "./pages/GameDetailPage";
 import UserProvider from './context/UserContext';
 import { UploadProvider } from "./context/UploadContext";
 import { RecordProvider } from "./context/RecordContext";
+import { GameProvider } from "./context/gameContext";
 
 function App() {
   console.log(Router);
@@ -21,6 +22,7 @@ function App() {
     <UserProvider>
     <UploadProvider>
     <RecordProvider>
+    <GameProvider>
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<LoginPage/>} />
@@ -33,6 +35,7 @@ function App() {
         <Route path="/manage-users" element={<ManageUsersPage />} />
         <Route path="/game/:gameId" element={<GameDetailPage />} />
       </Routes>
+    </GameProvider>
     </RecordProvider>
     </UploadProvider>
     </UserProvider>

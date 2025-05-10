@@ -5,66 +5,49 @@ import PaymentModal from "../components/modals/PaymentModal";
 import ReportModal from "../components/modals/ReportModal";
 import NavbarSearch from "../components/layout/NavbarSearch";
 import defaultGameImage from "../assets/game-image.png";
+import RelatedGameList from "../components/game/RelatedGameList";
 import { fetchGameDetail } from "../api/gameGetApi";
 import "../styles/pages/GameDetailPage.css";
 
 const GameDetailPage = () => { 
   const { gameId } = useParams();
-  // const [ game, setGame] = useState(null);
-  // const [ resource, setResource] = useState(null);
+  const [game, setGame] = useState(null);
   const navigate = useNavigate();
 
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const result1 = await fetchGameDetail(gameId);
-  //     setGame(result1);
-  //     const result2 = await fetchGameResource(gameId);
-  //     setResource(result2);
-  //   })();
-  // }, [gameId]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const result = await fetchGameDetail({ gameId });
+        setGame(result);
+      } catch (err) {
+        console.error("게임 상세 정보를 불러오는 데 실패했습니다", err);
+        navigate("/"); // optional: 실패 시 이동
+      }
+    })();
+  }, [gameId, navigate]);
 
-  // TODO: API 호출하여 데이터 불러오기
-  const game =   {
-    id: 1,
-    title: gameId,
-    seller: "판매자",
-    price: 10,
-    description: `${gameId}의 설명`,
-    tags: ["origin", "tag1", "tag2"],
-    requirements: [{
-      os: "Windows 10",
-      cpu: "Intel i5",
-      gpu: "NVIDIA GTX 1050",
-      ram: "8GB",
-      storage: "15GB",
-      network: "Broadband Internet"
-    }],
-    imageUrls: [
-      defaultGameImage,
-      defaultGameImage,
-      defaultGameImage,
-      defaultGameImage,
-      defaultGameImage,
-      defaultGameImage,
-      defaultGameImage,
-      defaultGameImage,
-      defaultGameImage,
-    ],
-  };
+  if (!game) {
+    return (
+      <div>
+        <NavbarSearch />
+        <div className="game-detail-container">Loading...</div>
+      </div>
+    );
+  }
 
-  const resource={
+  const resource = {
     game: game.title,
-    description: "High-resolution character sprites for use in RPGs.High-resolution character sprites for use in RPGs.High-resolution character sprites for use in RPGs.High-resolution character sprites for use in RPGs.", 
+    description: "High-resolution character sprites for use in RPGs.",
     imageUrls: [
       defaultGameImage,
       defaultGameImage,
-      defaultGameImage,
-      "https://ludex-cdn.s3.ap-northeast-2.amazonaws.com/images/12_1.jpg?X-Amz-Signature=...",
-      "https://ludex-cdn.s3.ap-northeast-2.amazonaws.com/images/12_2.jpg?X-Amz-Signature=..."
+      "https://ludex-cdn.s3.ap-northeast-2.amazonaws.com/images/12_1.jpg",
+      "https://ludex-cdn.s3.ap-northeast-2.amazonaws.com/images/12_2.jpg"
     ],
     sellerRatio: 30,
     creatorRatio: 70,
@@ -72,10 +55,8 @@ const GameDetailPage = () => {
     additionalCondition: "You must credit the original creator.",
   };
 
-  const mediaList = game.imageUrls;
-  const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
-
-  const mainMedia = mediaList[selectedMediaIndex];
+  const mediaList = game.imageUrls?.length ? game.imageUrls : [defaultGameImage];
+  const mainMedia = mediaList[selectedMediaIndex] || defaultGameImage;
 
   return (
     <div>
@@ -111,14 +92,14 @@ const GameDetailPage = () => {
             <p>구동사양</p>
             <ul className="game-detail-requirement-list">
               {game.requirements.map((req, idx) => (
-                <p key={idx}>
+                <li key={idx}>
                   <div>OS: {req.os}</div>
                   <div>CPU: {req.cpu}</div>
                   <div>GPU: {req.gpu}</div>
                   <div>RAM: {req.ram}</div>
                   <div>저장공간: {req.storage}</div>
                   <div>네트워크: {req.network}</div>
-                </p>
+                </li>
               ))}
             </ul>
             <p className="resource-link" onClick={() => setShowResourceModal(true)}>리소스</p>
@@ -130,14 +111,16 @@ const GameDetailPage = () => {
         </div>
 
         {showResourceModal && (
-          <ResourceModal
-            resource={resource}
-            onClose={() => setShowResourceModal(false)}
-          />
+          <ResourceModal resource={resource} onClose={() => setShowResourceModal(false)} />
         )}
-        {showPaymentModal && <PaymentModal game={game} onClose={() => setShowPaymentModal(false)} />}
-        {showReportModal && <ReportModal gameId={gameId} onClose={() => setShowReportModal(false)} />}
+        {showPaymentModal && (
+          <PaymentModal game={game} onClose={() => setShowPaymentModal(false)} />
+        )}
+        {showReportModal && (
+          <ReportModal gameId={gameId} onClose={() => setShowReportModal(false)} />
+        )}
       </div>
+      <RelatedGameList gameId={gameId} />
     </div>
   );
 };
