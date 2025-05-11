@@ -16,7 +16,10 @@
   
   .search-game-thumbnail {
     width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover; /* 또는 contain */
     border-radius: 5px;
+    display: block;
   }
   
   .search-game-title {

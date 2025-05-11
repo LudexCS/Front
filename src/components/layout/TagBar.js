@@ -3,7 +3,7 @@ import "../../styles/layout/TagBar.css";
 import { useNavigate } from "react-router-dom";
 import { getAllTags } from "../../api/tagsApi";
 
-const TagBar = ({ onTagClick }) => {
+const TagBar = () => {
     const navigate = useNavigate();
     const [tags, setTags] = useState([]);
 

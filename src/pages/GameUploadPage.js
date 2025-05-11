@@ -14,13 +14,15 @@ import { useUser } from "../context/UserContext";
 import { registerGame } from "../api/walletAuth";
 import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
 import { ensureSellerRegistration } from "../api/SellerRegistration";
+import LoadingModal from "../components/modals/LoadingModal";
 import "../styles/pages/GameUploadPage.css";
 
 const GameUploadPage = () => {
   const navigate = useNavigate();
   const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds } = useUpload();
   const { setIsFetch } = useRecord();
-  const { user } = useUser();
+  const { user, isLoggedIn } = useUser();
+  const [isUploading, setIsUploading] = useState(false);
   setIsFetch(false);
   const [category, setCategory] = useState("origin");
   const [showHelp, setShowHelp] = useState(false);
@@ -96,6 +98,12 @@ const GameUploadPage = () => {
     resetUploadForm();
   }, []);
 
+  useEffect(() => {
+      if (!isLoggedIn) {
+        navigate("/login");
+      }
+    }, [isLoggedIn, navigate]);
+
   const toggleSpecField = (key) => {
     setSpecFields({ ...specFields, [key]: !specFields[key] });
   };
@@ -110,7 +118,10 @@ const GameUploadPage = () => {
       return;
     }
 
-    const sellerAddress = user.cryptoWallet[0];
+    alert(" 등록을 시도합니다. 완료 될 때까지 잠시 기다려주세요. ");
+    setIsUploading(true);
+
+    // const sellerAddress = user.cryptoWallet[0];
     // const registered = await ensureSellerRegistration(sellerAddress);
 
     // if (!registered) {
@@ -148,33 +159,44 @@ const GameUploadPage = () => {
         
     try {
       const responseGame = await uploadGameData(payload);
-      const responseResource = await uploadResourceData({
-        ...resourceForm,
-        gameId: responseGame.gameId
-      });
+      console.log("const responseGame = await uploadGameData(payload);");
+
       await uploadGameFile(responseGame.gameId, gameForm.gameFile);
-      await uploadResourceFile(responseResource.resourceId, resourceForm.resourceFile);
-      const item = {
-        gameId: responseGame.gameId,
-        itemName: gameForm.title,
-        seller: sellerAddress,
-        sharers: sharerIds,
-        itemPrice: gameForm.price,
-        shareTerms: [resourceForm.sellerRatio*100]
-      };
-      await registerGame(item);
+      console.log("await uploadGameFile(responseGame.gameId, gameForm.gameFile);");
+
+      if (resourceForm.resourceFile !== null) {
+        const responseResource = await uploadResourceData({
+          ...resourceForm,
+          gameId: responseGame.gameId
+        });
+        console.log("const responseResource = await uploadResourceData({");
+        
+        await uploadResourceFile(responseResource.resourceId, resourceForm.resourceFile);
+      }
+      // const item = {
+      //   gameId: responseGame.gameId,
+      //   itemName: gameForm.title,
+      //   seller: sellerAddress,
+      //   sharers: sharerIds,
+      //   itemPrice: gameForm.price,
+      //   shareTerms: [resourceForm.sellerRatio*100]
+      // };
+      // await registerGame(item);
       setIsFetch(true);
       alert("게임이 등록되었습니다.");
       navigate("/");
     } catch (err) {
       console.error(err);
       alert("게임 등록에 실패했습니다.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
   return (
     <div>
       <NavbarSearch />
+      {isUploading && <LoadingModal />}
       <div className="upload-page">
         <h2>게임 파일 업로드(압축파일 형태 업로드 권장)</h2>
         <FileUploader

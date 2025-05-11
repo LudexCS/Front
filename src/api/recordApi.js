@@ -4,6 +4,7 @@ import gameManageInstance from "./Instance/gameManageInstance";
 export const getTradeInfo = async () => {
   try {
     const response = await gameManageInstance.get("/protected/get/tradeInfo");
+    console.log("거래내역: ", response.data);
     return response.data;
   } catch (err) {
     const msg = err.response?.data?.message || err.message;

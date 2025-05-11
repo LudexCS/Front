@@ -28,8 +28,10 @@
 
 .home-game-thumbnail {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover; /* 또는 contain */
   border-radius: 8px;
+  display: block;
 }
 
 .home-game-title {

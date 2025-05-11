@@ -20,7 +20,7 @@ const PurchaseHistory = ({ purchases, onDownload }) => {
               게임 | {game.title} | {Number(game.price).toLocaleString()} $
             </span>
             <div>
-              <button className="download-btn" onClick={() => onDownload(game)}>Download</button>
+              <button className="download-btn" onClick={() => onDownload(game.id, "game")}>Download</button>
               <button className="expand-btn" onClick={() => toggleExpand(`game-${game.game_id}`)}>V</button>
             </div>
           </div>
@@ -57,7 +57,7 @@ const PurchaseHistory = ({ purchases, onDownload }) => {
               리소스 | 리소스 ID {resource.resource_id}
             </span>
             <div>
-              <button className="download-btn" onClick={() => onDownload(resource)}>Download</button>
+              <button className="download-btn" onClick={() => onDownload(resource.id, "resource")}>Download</button>
               <button className="expand-btn" onClick={() => toggleExpand(`resource-${resource.resource_id}`)}>V</button>
             </div>
           </div>

@@ -6,14 +6,14 @@ import ReportModal from "../components/modals/ReportModal";
 import NavbarSearch from "../components/layout/NavbarSearch";
 import defaultGameImage from "../assets/game-image.png";
 import RelatedGameList from "../components/game/RelatedGameList";
-import { fetchGameDetail } from "../api/gameGetApi";
+import { fetchGameDetail, fetchGameResource } from "../api/gameGetApi";
 import "../styles/pages/GameDetailPage.css";
 
 const GameDetailPage = () => { 
   const { gameId } = useParams();
   const [game, setGame] = useState(null);
+  const [resource, setResource] = useState(null);
   const navigate = useNavigate();
-
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -28,6 +28,13 @@ const GameDetailPage = () => {
         console.error("게임 상세 정보를 불러오는 데 실패했습니다", err);
         navigate("/"); // optional: 실패 시 이동
       }
+      try {
+        const result = await fetchGameResource({ gameId });
+        setResource(result);
+      } catch (err) {
+        console.error("게임 리소스 정보를 불러오는 데 실패했습니다", err);
+        // navigate("/"); // optional: 실패 시 이동
+      }
     })();
   }, [gameId, navigate]);
 
@@ -39,22 +46,7 @@ const GameDetailPage = () => {
       </div>
     );
   }
-
-  const resource = {
-    game: game.title,
-    description: "High-resolution character sprites for use in RPGs.",
-    imageUrls: [
-      defaultGameImage,
-      defaultGameImage,
-      "https://ludex-cdn.s3.ap-northeast-2.amazonaws.com/images/12_1.jpg",
-      "https://ludex-cdn.s3.ap-northeast-2.amazonaws.com/images/12_2.jpg"
-    ],
-    sellerRatio: 30,
-    creatorRatio: 70,
-    allowDerivation: true,
-    additionalCondition: "You must credit the original creator.",
-  };
-
+  
   const mediaList = game.imageUrls?.length ? game.imageUrls : [defaultGameImage];
   const mainMedia = mediaList[selectedMediaIndex] || defaultGameImage;
 
@@ -84,7 +76,8 @@ const GameDetailPage = () => {
           <p className="report-button" onClick={() => setShowReportModal(true)}>report</p>
           <div className="game-detail-info">
             <h2>{game.title}</h2>
-            <p><strong>{game.price.toLocaleString()} $</strong></p>
+            <p><strong>가격: {game.price.toLocaleString()} $</strong></p>
+            <p><strong>제작자: {game.nickName}</strong></p>
             <p>{game.description}</p>
             <div className="tags">
               {game.tags.map((tag, idx) => <span key={idx}>#{tag} </span>)}
