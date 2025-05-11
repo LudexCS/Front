@@ -110,7 +110,14 @@ const GameUploadPage = () => {
       return;
     }
 
-    const sellerAddress = user.cryptoWallet[0];
+    //const sellerAddress = user.cryptoWallet[0];
+    const wallet = await ludex.BrowserWalletConnection.create(chainConfig);
+    const sellerAddress = (await wallet.getCurrentAddress()).stringValue;
+
+    // sellerAddress가 user.cryptoWallet 배열에 없다면 알림.
+    if (!user.cryptoWallet.includes(sellerAddress)) {
+      alert(`해당 메타마스크 지갑 주소(${sellerAddress})는 등록된 판매자 지갑이 아닙니다. 주소를 등록해주세요.`);
+    }
     // const registered = await ensureSellerRegistration(sellerAddress);
 
     // if (!registered) {
@@ -162,6 +169,7 @@ const GameUploadPage = () => {
         itemPrice: gameForm.price,
         shareTerms: [resourceForm.sellerRatio*100]
       };
+
       await registerGame(item);
       setIsFetch(true);
       alert("게임이 등록되었습니다.");

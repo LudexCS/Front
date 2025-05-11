@@ -2,7 +2,7 @@ import web3Instance from "./web3GatewayInstance";
 
 export const registerGame = async (item) => {
   try {
-  const res = await web3Instance.post("/protected/auth/siwe", item);
+  const res = await web3Instance.post("/protected/register/item", item);
   return res.message;
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
