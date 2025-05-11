@@ -137,16 +137,18 @@ const GameUploadPage = () => {
 
     if(category === "origin"){
       setGameForm({ ...gameForm, originGameIds:[]})
-    };
+    }
 
     const payload = {
       ...gameForm,
       price: parseFloat(gameForm.price),
       isOrigin: category === "origin",
-      // originGameIds: selectedIPs.map(ip => {
-      //     const match = ip.match(/\d+/);
-      //     return match ? parseInt(match[0], 10) : null;
-      //   }).filter(id => id !== null),
+
+      originGameIds: selectedIPs.map(ip => {
+        const match = ip.match(/\d+/);
+        return match ? parseInt(match[0], 10) : null;
+      }).filter(id => id !== null),
+
       tags: selectedTags.map((tagId) => ({tagId, priority: 10})),
       requirements,
       thumbnail: gameForm.thumbnail,
@@ -165,7 +167,7 @@ const GameUploadPage = () => {
         gameId: responseGame.gameId,
         itemName: gameForm.title,
         seller: sellerAddress,
-        sharers: sharerIds,
+        sharers: sharerIds, // 구매한 resource의 sharerId[]를 가져오게 수정해야 합니다.
         itemPrice: gameForm.price,
         shareTerms: [resourceForm.sellerRatio*100]
       };
