@@ -20,25 +20,25 @@ instance.interceptors.request.use((config) => {
 });
 
 // 응답에서 401 발생 시 refresh token으로 갱신 시도
-instance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {//토큰 둘다 업뎃
-        const { newToken } = await getNewAccessToken();
-        localStorage.setItem("accessToken", newToken);
-        console.log("newToken: ", newToken);
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return instance(originalRequest);
-      } catch (err) {
-        console.log("refresh token으로 갱신 오류: ", err);
-        return Promise.reject(err);
-      }
-    }
-    return Promise.reject(error);
-  }
-);
+// instance.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     const originalRequest = error.config;
+//     if (error.response?.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true;
+//       try {//토큰 둘다 업뎃
+//         const { newToken } = await getNewAccessToken();
+//         localStorage.setItem("accessToken", newToken);
+//         console.log("newToken: ", newToken);
+//         originalRequest.headers.Authorization = `Bearer ${newToken}`;
+//         return instance(originalRequest);
+//       } catch (err) {
+//         console.log("refresh token으로 갱신 오류: ", err);
+//         return Promise.reject(err);
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 export default instance;

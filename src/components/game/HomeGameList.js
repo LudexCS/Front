@@ -2,7 +2,6 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/game/HomeGameList.css";
-import defaultGameImage from "../../assets/game-image.png";
 import { useGameContext } from "../../context/gameContext";
 
 const HomeGameList = () => {
@@ -40,7 +39,7 @@ const HomeGameList = () => {
                 onClick={() => handleGameClick(game.game_id)}
               >
                 <img
-                  src={game.thumbnailUrl || defaultGameImage}
+                  src={game.thumbnail_url}
                   alt={game.title}
                   className="home-game-thumbnail"
                 />

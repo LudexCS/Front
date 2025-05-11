@@ -16,24 +16,24 @@ uploadInstance.interceptors.request.use((config) => {
 });
 
 // 401 에러 발생 시 토큰 재발급 시도
-uploadInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const { newToken } = await getNewAccessToken();
-        localStorage.setItem("accessToken", newToken);
-        originalRequest.headers.authorization = `Bearer ${newToken}`;
-        return uploadInstance(originalRequest);
-      } catch (err) {
-        console.error("refresh token으로 갱신 실패:", err);
-        return Promise.reject(err);
-      }
-    }
-    return Promise.reject(error);
-  }
-);
+// uploadInstance.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     const originalRequest = error.config;
+//     if (error.response?.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true;
+//       try {
+//         const { newToken } = await getNewAccessToken();
+//         localStorage.setItem("accessToken", newToken);
+//         originalRequest.headers.authorization = `Bearer ${newToken}`;
+//         return uploadInstance(originalRequest);
+//       } catch (err) {
+//         console.error("refresh token으로 갱신 실패:", err);
+//         return Promise.reject(err);
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 export default uploadInstance;
