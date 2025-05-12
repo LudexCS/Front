@@ -11,7 +11,7 @@ import TermsAgreementModal from "../components/modals/TermsAgreementModal";
 import { useUpload } from "../context/UploadContext";
 import { useRecord } from "../context/RecordContext";
 import { useUser } from "../context/UserContext";
-import { useConfig } from "../context/ConfigContext";
+import { useConfig } from "../context/configContext";
 import { registerGame } from "../api/walletAuth";
 import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
 import LoadingModal from "../components/modals/LoadingModal";
@@ -123,12 +123,51 @@ const GameUploadPage = () => {
     alert(" 등록을 시도합니다. 완료 될 때까지 잠시 기다려주세요. ");
     setIsUploading(true);
 
+    const chainIdHex = chainConfig.chainId.toLowerCase();
+
+    try {
+      const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+
+      if (currentChainId !== chainIdHex) {
+        try {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: chainIdHex }]
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
+            // 체인 추가 시도
+            try {
+              await window.ethereum.request({
+                method: "wallet_addEthereumChain",
+                params: [chainConfig]
+              });
+            } catch (addError) {
+              console.warn("Add chain failed:", addError);
+              const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
+              if (nowChainId.toLowerCase() !== chainIdHex) {
+                alert("이더리움 네트워크 전환에 실패했습니다.");
+                setIsUploading(false);
+                return;
+              }
+            }
+          } else {
+            throw switchError;
+          }
+        }
+      }
+    } catch (err) {
+      console.error("MetaMask 네트워크 연결 실패:", err);
+    }
+
     const wallet = await ludex.BrowserWalletConnection.create(chainConfig);
     const sellerAddress = (await wallet.getCurrentAddress()).stringValue;
 
     // sellerAddress가 user.cryptoWallet 배열에 없다면 알림.
-    if (!user.cryptoWallet.includes(sellerAddress)) {
+    if (!user.cryptoWallet.some(wallet => wallet.address?.toLowerCase() === sellerAddress.toLowerCase())) {
       alert(`해당 메타마스크 지갑 주소(${sellerAddress})는 등록된 판매자 지갑이 아닙니다. 주소를 등록해주세요.`);
+      setIsUploading(false);
+      return;
     }
 
     const requirements = [
