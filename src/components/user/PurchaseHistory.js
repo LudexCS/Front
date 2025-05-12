@@ -66,7 +66,7 @@ const PurchaseHistory = ({ purchases, showNft, onDownload }) => {
               리소스 | 리소스 ID {resource.resourceId}
             </span>
             <div>
-              <button className="download-btn" onClick={() => onDownload(resource.id, "resource")}>Download</button>
+              <button className="download-btn" onClick={() => onDownload(resource.resourceId, "resource")}>Download</button>
               <button className="expand-btn" onClick={() => toggleExpand(`resource-${resource.resourceId}`)}>V</button>
             </div>
           </div>

@@ -126,6 +126,10 @@ const GameUploadPage = () => {
       alert("태그를 하나 이상 선택해주세요.");
       return;
     }
+    if (category === "variant" && sharerIds.length === 0) {
+      alert("게임 IP를 하나 이상 선택해주세요.");
+      return;
+    }
 
     alert(" 등록을 시도합니다. 완료 될 때까지 잠시 기다려주세요. ");
     setIsUploading(true);
@@ -136,10 +140,17 @@ const GameUploadPage = () => {
     // sellerAddress가 user.cryptoWallet 배열에 없다면 알림.
     if (!user.cryptoWallet.includes(sellerAddress)) {
       alert(`해당 메타마스크 지갑 주소(${sellerAddress})는 등록된 판매자 지갑이 아닙니다. 주소를 등록해주세요.`);
+      // navigate("/my");
     }
+
+    if(category === "origin"){
+      setGameForm({ ...gameForm, originGameIds:[]})
+      setSharerIds([]);
+    };
 
     const requirements = [
       {
+        isMinimum: false, 
         ...Object.fromEntries(
           Object.entries(specFields)
             .filter(([key, enabled]) => enabled)
@@ -148,26 +159,16 @@ const GameUploadPage = () => {
       },
     ];
 
-    if(category === "origin"){
-      setGameForm({ ...gameForm, originGameIds:[]})
-      setSharerIds([]);
-    };
-
     const payload = {
       ...gameForm,
       price: parseFloat(gameForm.price),
       isOrigin: category === "origin",
-
-      originGameIds: selectedIPs.map(ip => {
-        const match = ip.match(/\d+/);
-        return match ? parseInt(match[0], 10) : null;
-      }).filter(id => id !== null),
-
       tags: selectedTags.map((tagId) => ({tagId, priority: 10})),
-      requirements,
+      requirements: requirements,
       thumbnail: gameForm.thumbnail,
       mediaFiles: gameForm.mediaFiles,
     };
+    console.log("payload: ", payload);
         
     try {
       const responseGame = await uploadGameData(payload);

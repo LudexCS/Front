@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import "../../styles/modals/ResourceModal.css";
 import PreviewModal from "./PreviewModal";
+import { useNavigate } from "react-router-dom";
 import { purchaseResource } from "../../api/purchaseApi";
+import { useUser } from "../../context/UserContext";
 
 const ResourceModal = ({ resource, onClose }) => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const { isLoggedIn } = useUser();
+  const navigate = useNavigate();
 
   const handleCheckout = async () => {
+    if(!isLoggedIn){
+      alert("회원 정보가 필요합니다.");
+      navigate("/login");
+    }
     try {
       await purchaseResource({ resourceId: resource.id });
       alert("리소스 구매가 완료되었습니다.");
@@ -33,7 +41,7 @@ const ResourceModal = ({ resource, onClose }) => {
     <>
       <div className="modal-overlay">
         <div className="modal-content">
-          <h2>{resource.gameId}</h2>  {/* title */}
+          {/* <h2>{resource.gameId}</h2> */}
 
           <button onClick={() => setShowPreviewModal(true)}>미리보기 imgaes</button>
 
