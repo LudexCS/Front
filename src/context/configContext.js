@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getConfig } from "../api/walletAuth";
-import * as ludex from "ludex";
 
 const ConfigContext = createContext({
     chainConfig: null,
@@ -8,8 +7,8 @@ const ConfigContext = createContext({
 });
 
 const ConfigProvider = ({ children }) => {
-    const [chainConfig, setChainConfig] = useState<ludex.configs.ChainConfig | null>null;
-    const [ludexConfig, setLudexConfig] = useState<ludex.configs.LudexConfig | null>null;
+    const [chainConfig, setChainConfig] = useState(null);
+    const [ludexConfig, setLudexConfig] = useState(null);
 
     useEffect(() => {
         (async () => {
