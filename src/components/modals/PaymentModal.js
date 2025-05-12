@@ -1,12 +1,37 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "../../styles/modals/PaymentModal.css";
 import { useUser } from "../../context/UserContext";
-import { purchaseGame } from "../../api/purchaseApi";
+import { useConfig } from "../../context/configContext";
+import * as ludex from "ludex";
+import {getTokenAddress, requestRelay} from "../../api/walletAuth";
+import {registerPurchase} from "../../api/purchaseApi";
 
 const PaymentModal = ({ game, onClose }) => {
   const [activeTab, setActiveTab] = useState("wallet"); // 'card' or 'wallet'
   const { user } = useUser();
   const [selectedWallet, setSelectedWallet] = useState(null);
+  const { chainConfig, ludexConfig } = useConfig();
+  const [tokenAmount, setTokenAmount] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      if (!chainConfig || !ludexConfig || !game?.itemId) return;
+
+      const itemId = game.itemId;
+      //const connection = await ludex.BrowserWalletConnection.create(chainConfig);
+      const facade = ludex.facade.createWeb2UserFacade(chainConfig, ludexConfig);
+      const priceTable = facade.readonlyAccessPriceTable();
+
+      const priceInfoListRaw = await priceTable.getPriceInfoList(itemId);
+      const priceInfoList = priceInfoListRaw.map(entry => ({
+        token: entry.token.stringValue,
+        tokenAmount: entry.tokenAmount.toString()
+      }));
+
+      const priceInfo = priceInfoList[0];
+      setTokenAmount(priceInfo?.tokenAmount ?? "");
+    })();
+  }, [chainConfig, ludexConfig, game]);
 
   const handleConfirm = async () => {
     if (activeTab === "card") {
@@ -20,18 +45,67 @@ const PaymentModal = ({ game, onClose }) => {
         return;
       }
       console.log("선택된 지갑 주소:", selectedWallet);
-      try {
-        await purchaseGame({ 
-          gameId: game.id,
-          pricePaid: game.price,
-          isNftIssued: false,
-          purchaseId: 9876543210 //Todo
-        });
-        alert("게임 구매가 완료되었습니다.");
-        onClose();
-      } catch (err) {
-        alert("게임 구매에 실패했습니다.");
+
+      const connection = await ludex.BrowserWalletConnection.create(chainConfig);
+      const signer = await connection.getSigner();
+
+      const address = await signer.getAddress();
+      if (address !== selectedWallet) {
+        alert("MetaMask와 지갑 주소가 일치하지 않습니다. 주소를 확인해주세요.");
+        return;
       }
+
+      const facade =
+          ludex.facade.createWeb3UserFacade(
+              chainConfig,
+              ludexConfig,
+              signer);
+
+      const store = facade.metaTXAccessStore();
+
+      const token = await (async function () {
+        const tokenString =
+            await getTokenAddress();
+        if (!tokenString) {
+          return undefined;
+        }
+
+        return ludex.Address.create(tokenString);
+      })();
+      if (!token)
+      {
+        console.log("No token.");
+        return;
+      }
+
+      const relayRequest =
+          await store.purchaseItemRequest(
+              BigInt(game.itemId),
+              token,
+              30000000n);
+
+      const { args, error } = await requestRelay(relayRequest);
+
+      if (error)
+      {
+        console.error(`message: ${error.message}`);
+        alert("Server 에러입니다. 관리자에게 문의해주세요.");
+        return;
+      }
+
+      const purchaseId = relayRequest.onResponse(args);
+
+      const purchasedGame = {
+        gameId: game.itemId,
+        pricePaid: game.price.toString(),
+        isNftIssued: true,
+        pruchaseId: purchaseId
+      }
+
+      const message = await registerPurchase(purchasedGame);
+      console.log(message);
+
+      alert("지갑 결제가 처리되었습니다.");
     }
   };
 
@@ -56,7 +130,7 @@ const PaymentModal = ({ game, onClose }) => {
 
         {activeTab === "card" && (
           <div className="payment-tab-content">
-            <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()}$에 구매하시겠습니까?</p>
+            <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()}$ 토큰에 구매하시겠습니까?</p>
             <form className="payment-form">
               <label>카드 번호<input type="text" placeholder="1234 5678 9012 3456" /></label>
               <label>유효기간<input type="text" placeholder="MM/YY" /></label>
@@ -69,7 +143,7 @@ const PaymentModal = ({ game, onClose }) => {
 
         {activeTab === "wallet" && (
           <div className="payment-tab-content">
-            <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()}₩에 구매하시겠습니까?</p>
+            <p><strong>{game.title}</strong>을(를) {tokenAmount} 토큰에 구매하시겠습니까?</p>
             <p>지갑 주소를 선택해주세요:</p>
             <ul className="payment-wallet-list">
               {user?.cryptoWallet?.map((wallet, idx) => (

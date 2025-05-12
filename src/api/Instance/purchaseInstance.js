@@ -2,37 +2,33 @@ import axios from "axios";
 import { getNewAccessToken } from "../userApi";
 
 const purchaseInstance = axios.create({
-  baseURL:  "http://3.37.46.45:30356/api",
-  withCredentials: true,
+    baseURL: "http://3.37.46.45:30356/api",
+    withCredentials: true,
 });
 
-// 요청 시 access token 붙이기
+// 요청 시 access token 자동 첨부
 purchaseInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    config.headers = {
-      ...config.headers,
-      authorization: `Bearer ${token}`,
-    };
-  }
-  return config;
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
 });
 
-// 응답에서 401 발생 시 refresh token으로 갱신 시도
-// instance.interceptors.response.use(
+// 401 에러 발생 시 토큰 재발급 시도
+// purchaseInstance.interceptors.response.use(
 //   (response) => response,
 //   async (error) => {
 //     const originalRequest = error.config;
 //     if (error.response?.status === 401 && !originalRequest._retry) {
 //       originalRequest._retry = true;
-//       try {//토큰 둘다 업뎃
+//       try {
 //         const { newToken } = await getNewAccessToken();
 //         localStorage.setItem("accessToken", newToken);
-//         console.log("newToken: ", newToken);
-//         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-//         return instance(originalRequest);
+//         originalRequest.headers.authorization = `Bearer ${newToken}`;
+//         return purchaseInstance(originalRequest);
 //       } catch (err) {
-//         console.log("refresh token으로 갱신 오류: ", err);
+//         console.error("refresh token으로 갱신 실패:", err);
 //         return Promise.reject(err);
 //       }
 //     }
