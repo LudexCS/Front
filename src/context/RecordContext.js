@@ -7,7 +7,15 @@ const RecordContext = createContext();
 
 export const RecordProvider = ({ children }) => {
   const { isLoggedIn } = useUser();
-  const [recordData, setRecordData] = useState(null);
+  const [recordData, setRecordData] = useState({
+    purchased: {
+      games: [],
+      resources: []
+    },
+    sold: {
+      games: []
+    }
+  });
   const [isFetch, setIsFetch] = useState(false);// 게임등록, 게임구매 시 변경
 
   useEffect(() => {

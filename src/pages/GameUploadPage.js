@@ -95,6 +95,10 @@ const GameUploadPage = () => {
     });
   };
 
+  const isMetaMaskInstalled = () => {
+    return typeof window.ethereum !== "undefined" && window.ethereum.isMetaMask;
+  };
+
   useEffect(() => {
     setIsFetch(false);
     resetUploadForm();
@@ -103,6 +107,9 @@ const GameUploadPage = () => {
   useEffect(() => {
       if (!isLoggedIn) {
         navigate("/login");
+    } else if (!isMetaMaskInstalled()) {
+      alert("MetaMask가 설치되어 있지 않습니다. MetaMask를 설치해주세요.");
+      navigate("/");
       }
     }, [isLoggedIn, navigate]);
 

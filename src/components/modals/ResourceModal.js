@@ -16,6 +16,19 @@ const ResourceModal = ({ resource, onClose }) => {
     }
   };
 
+  if (!resource) {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <p>리소스가 없습니다.</p>
+          <div className="modal-actions">
+            <button onClick={onClose}>닫기</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="modal-overlay">
