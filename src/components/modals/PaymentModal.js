@@ -29,7 +29,15 @@ const PaymentModal = ({ game, onClose }) => {
       }));
 
       const priceInfo = priceInfoList[0];
-      setTokenAmount(priceInfo?.tokenAmount ?? "");
+      if (priceInfo?.tokenAmount) {
+        const raw = priceInfo.tokenAmount;
+        const padded = raw.padStart(7, "0");
+        const integerPart = padded.slice(0, -6);
+        const decimalPart = padded.slice(-6).replace(/0+$/, ""); // remove trailing zeros
+        setTokenAmount(decimalPart ? `${integerPart}.${decimalPart}` : integerPart);
+      } else {
+        setTokenAmount("");
+      }
     })();
   }, [chainConfig, ludexConfig, game]);
 
@@ -46,14 +54,51 @@ const PaymentModal = ({ game, onClose }) => {
       }
       console.log("선택된 지갑 주소:", selectedWallet);
 
-      const connection = await ludex.BrowserWalletConnection.create(chainConfig);
-      const signer = await connection.getSigner();
+      const chainIdHex = chainConfig.chainId.toLowerCase();
 
-      const address = await signer.getAddress();
-      if (address !== selectedWallet) {
+      try {
+        const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+
+        if (currentChainId !== chainIdHex) {
+          try {
+            await window.ethereum.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: chainIdHex }]
+            });
+          } catch (switchError) {
+            if (switchError.code === 4902) {
+              // 체인 추가 시도
+              try {
+                await window.ethereum.request({
+                  method: "wallet_addEthereumChain",
+                  params: [chainConfig]
+                });
+              } catch (addError) {
+                console.warn("Add chain failed:", addError);
+                const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
+                if (nowChainId.toLowerCase() !== chainIdHex) {
+                  alert("이더리움 네트워크 전환에 실패했습니다.");
+                  return;
+                }
+              }
+            } else {
+              throw switchError;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("MetaMask 네트워크 연결 실패:", err);
+      }
+
+      const connection = await ludex.BrowserWalletConnection.create(chainConfig);
+      const address = (await connection.getCurrentAddress()).stringValue;
+
+      if (address.toLowerCase() !== selectedWallet.toLowerCase()) {
         alert("MetaMask와 지갑 주소가 일치하지 않습니다. 주소를 확인해주세요.");
         return;
       }
+
+      const signer = await connection.getSigner();
 
       const facade =
           ludex.facade.createWeb3UserFacade(
@@ -99,7 +144,7 @@ const PaymentModal = ({ game, onClose }) => {
         gameId: game.itemId,
         pricePaid: game.price.toString(),
         isNftIssued: true,
-        pruchaseId: purchaseId
+        purchaseId: purchaseId
       }
 
       const message = await registerPurchase(purchasedGame);

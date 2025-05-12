@@ -6,7 +6,6 @@ import * as ludex from "ludex";
 
 const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
   const { chainConfig, ludexConfig } = useConfig();
-  console.log(purchaseInfo);
 
   const [nftData, setNftData] = useState({
     tokenId: null,
@@ -15,81 +14,90 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
     timestamp: null
   });
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    const run = async () => {
+      if (!isOpen) return;
 
-  useEffect(async () => {
-    const chainIdHex = chainConfig.chainId.toLowerCase();
+      const chainIdHex = chainConfig.chainId.toLowerCase();
 
-    try {
-      const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+      try {
+        const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
 
-      if (currentChainId !== chainIdHex) {
-        try {
-          await window.ethereum.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: chainIdHex }]
-          });
-        } catch (switchError) {
-          if (switchError.code === 4902) {
-            // 체인 추가 시도
-            try {
-              await window.ethereum.request({
-                method: "wallet_addEthereumChain",
-                params: [chainConfig]
-              });
-            } catch (addError) {
-              console.warn("Add chain failed:", addError);
-              const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
-              if (nowChainId.toLowerCase() !== chainIdHex) {
-                alert("이더리움 네트워크 전환에 실패했습니다.");
-                setIsUploading(false);
-                return;
+        if (currentChainId !== chainIdHex) {
+          try {
+            await window.ethereum.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: chainIdHex }]
+            });
+          } catch (switchError) {
+            if (switchError.code === 4902) {
+              // 체인 추가 시도
+              try {
+                await window.ethereum.request({
+                  method: "wallet_addEthereumChain",
+                  params: [chainConfig]
+                });
+              } catch (addError) {
+                console.warn("Add chain failed:", addError);
+                const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
+                if (nowChainId.toLowerCase() !== chainIdHex) {
+                  alert("이더리움 네트워크 전환에 실패했습니다.");
+                  return;
+                }
               }
+            } else {
+              throw switchError;
             }
-          } else {
-            throw switchError;
           }
         }
+      } catch (err) {
+        console.error("MetaMask 네트워크 연결 실패:", err);
       }
-    } catch (err) {
-      console.error("MetaMask 네트워크 연결 실패:", err);
-    }
 
-    const wallet = await ludex.BrowserWalletConnection.create(chainConfig);
-    const address = (await wallet.getCurrentAddress()).stringValue;
+      const wallet = await ludex.BrowserWalletConnection.create(chainConfig);
+      const address = (await wallet.getCurrentAddress()).stringValue;
 
-    const tokenIDNumber = BigInt("0x" + purchaseInfo);
+      if(purchaseInfo === null) {
+        return;
+      }
 
-    const ledger =
-        ludex.facade.createWeb2UserFacade(chainConfig, ludexConfig)
-            .readonlyAccessLedger();
+      const tokenIDNumber = BigInt("0x" + purchaseInfo);
 
-    const isOwner = await
-        ledger.proveOwnership(
-            ludex.Address.create(address),
-            tokenIDNumber);
+      const ledger =
+          ludex.facade.createWeb2UserFacade(chainConfig, ludexConfig)
+              .readonlyAccessLedger();
 
-    if (isOwner)
-    {
-      const purchaseLog = await ledger.getPurchaseInfo(tokenIDNumber);
+      const isOwner = await
+          ledger.proveOwnership(
+              ludex.Address.create(address),
+              tokenIDNumber);
 
-      setNftData({
-        tokenId: purchaseLog.tokenID.toString(16),
-        itemId: purchaseLog.itemID.toString(),
-        buyer: purchaseLog.buyer.stringValue,
-        timestamp: purchaseLog.timestamp
-      });
-    }
-    else
-    {
-      setNftData({
-        tokenId: null,
-        itemId: null,
-        buyer: null,
-        timestamp: null
-      });
-    }
-  }, [chainConfig, ludexConfig, purchaseInfo]);
+      if (isOwner)
+      {
+        const purchaseLog = await ledger.getPurchaseInfo(tokenIDNumber);
+
+        setNftData({
+          tokenId: purchaseLog.tokenID.toString(16),
+          itemId: purchaseLog.itemID.toString(),
+          buyer: purchaseLog.buyer.stringValue,
+          timestamp: purchaseLog.timestamp
+        });
+      }
+      else
+      {
+        setNftData({
+          tokenId: null,
+          itemId: null,
+          buyer: null,
+          timestamp: null
+        });
+      }
+    };
+
+    run();
+  }, [isOpen, chainConfig, ludexConfig, purchaseInfo]);
+
+  if (!isOpen) return null;
 
   const { tokenId, itemId, buyer, timestamp } = nftData;
 

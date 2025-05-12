@@ -42,7 +42,6 @@ const PayoutModal = ({ isOpen, onClose }) => {
               const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
               if (nowChainId.toLowerCase() !== chainIdHex) {
                 alert("이더리움 네트워크 전환에 실패했습니다.");
-                setIsUploading(false);
                 return;
               }
             }
