@@ -94,7 +94,7 @@ const PayoutModal = ({ isOpen, onClose }) => {
       return;
     }
 
-    alert(args + "금액의 정산 요청이 처리되었습니다.");
+    alert(args + " 금액의 정산 요청이 처리되었습니다.");
     onClose();
   };
 
