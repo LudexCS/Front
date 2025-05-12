@@ -20,7 +20,7 @@ const PurchaseHistory = ({ purchases, showNft, onDownload }) => {
               게임 | {game.title} | {Number(game.price).toLocaleString()} $
             </span>
             <div>
-              <button className="download-btn" onClick={() => showNft(game.itemId)}>Nft</button>
+              <button className="download-btn" onClick={() => showNft(game.purchaseId)}>Nft</button>
               <button className="download-btn" onClick={() => onDownload(game.id, "game")}>Download</button>
               <button className="expand-btn" onClick={() => toggleExpand(`game-${game.gameId}`)}>V</button>
             </div>
