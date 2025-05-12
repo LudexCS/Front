@@ -7,12 +7,17 @@ import UserInfo from "../components/user/UserInfo";
 import HistoryTabs from "../components/user/HistoryTabs";
 import PurchaseHistory from "../components/user/PurchaseHistory";
 import SalesHistory from "../components/user/SalesHistory";
+import NftModal from "../components/modals/NftModal";
+import PayoutModal from "../components/modals/PayoutModal";
 import { useRecord } from "../context/RecordContext";
 import { downloadGame, downloadResource } from "../api/downloadApi";
 import "../styles/pages/MyPage.css";
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState("purchase");
+  const [nftModalOpen, setNftModalOpen] = useState(false);
+  const [nftInfo, setNftInfo] = useState(null);
+  const [payoutModalOpen, setPayoutModalOpen] = useState(false);
   const navigate = useNavigate();
   const { user, setIsLoggedIn } = useUser();
   const { recordData } = useRecord();
@@ -51,32 +56,37 @@ const MyPage = () => {
     }
   };
 
-  if (!recordData) {
-    return (
-      <div className="mypage-container">
-        <NavbarSearch />
-        <div className="mypage-content">
-          <p className="logout-btn" onClick={handleLogout}>logout</p>
-          <UserInfo userInfo={user} onEdit={() => navigate("/edit-profile")} />
-          <p>거래 정보를 불러오는 중입니다...</p>
-        </div>
-      </div>
-    );
-  }
+  const handleNft = (purchaseId) => {
+    setNftInfo(purchaseId);
+    setNftModalOpen(true);
+  };
+
+  const handlePayout = () => {
+    setPayoutModalOpen(true);
+  };
 
   return (
     <div className="mypage-container">
       <NavbarSearch />
       <div className="mypage-content">
         <p className="logout-btn" onClick={handleLogout}>logout</p>
-        <UserInfo userInfo={user} onEdit={() => navigate("/edit-profile")} />
+        <UserInfo userInfo={user} onEdit={() => navigate("/edit-profile")} requestPayout={handlePayout} />
         <HistoryTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === "purchase" ? (
-          <PurchaseHistory purchases={recordData.purchased} onDownload={handleDownload} />
+          <PurchaseHistory purchases={recordData.purchased} onDownload={handleDownload} showNft={handleNft} />
         ) : (
           <SalesHistory sales={recordData.sold} />
         )}
       </div>
+      <NftModal
+        isOpen={nftModalOpen}
+        onClose={() => setNftModalOpen(false)}
+        purchaseInfo={nftInfo}
+      />
+      <PayoutModal
+        isOpen={payoutModalOpen}
+        onClose={() => setPayoutModalOpen(false)}
+      />
     </div>
   );
 };

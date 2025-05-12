@@ -19,7 +19,7 @@ import "../styles/pages/GameUploadPage.css";
 
 const GameUploadPage = () => {
   const navigate = useNavigate();
-  const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds } = useUpload();
+  const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds, setSharerIds } = useUpload();
   const { setIsFetch } = useRecord();
   const { user, isLoggedIn } = useUser();
   const [isUploading, setIsUploading] = useState(false);
@@ -141,6 +141,7 @@ const GameUploadPage = () => {
 
     if(category === "origin"){
       setGameForm({ ...gameForm, originGameIds:[]})
+      setSharerIds([]);
     };
 
     const payload = {
