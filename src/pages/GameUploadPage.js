@@ -11,16 +11,19 @@ import TermsAgreementModal from "../components/modals/TermsAgreementModal";
 import { useUpload } from "../context/UploadContext";
 import { useRecord } from "../context/RecordContext";
 import { useUser } from "../context/UserContext";
+import { useConfig } from "../context/ConfigContext";
 import { registerGame } from "../api/walletAuth";
 import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
 import { ensureSellerRegistration } from "../api/SellerRegistration";
 import "../styles/pages/GameUploadPage.css";
+import * as ludex from "ludex";
 
 const GameUploadPage = () => {
   const navigate = useNavigate();
   const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds } = useUpload();
   const { setIsFetch } = useRecord();
   const { user } = useUser();
+  const { chainConfig } = useConfig();
   setIsFetch(false);
   const [category, setCategory] = useState("origin");
   const [showHelp, setShowHelp] = useState(false);
@@ -58,7 +61,7 @@ const GameUploadPage = () => {
       thumbnail: null,
       mediaFiles: [],
     });
-  
+
     setResourceForm({
       gameId: 0,
       allowDerivation: true,
@@ -69,7 +72,7 @@ const GameUploadPage = () => {
       imageFiles: [],
       resourceFile: null,
     });
-  
+
     setSelectedTags([]);
     setSelectedIPs([]);
     setAgreed(false);
@@ -90,7 +93,7 @@ const GameUploadPage = () => {
       storage: "",
       network: "",
     });
-  };  
+  };
 
   useEffect(() => {
     resetUploadForm();

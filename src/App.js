@@ -14,30 +14,33 @@ import UserProvider from './context/UserContext';
 import { UploadProvider } from "./context/UploadContext";
 import { RecordProvider } from "./context/RecordContext";
 import { GameProvider } from "./context/gameContext";
+import ConfigProvider from "./context/configContext";
 
 function App() {
   console.log(Router);
 
   return (
     <UserProvider>
-    <UploadProvider>
-    <RecordProvider>
-    <GameProvider>
-      <Routes>
-        <Route path="/" element={<HomePage/>} />
-        <Route path="/login" element={<LoginPage/>} />
-        <Route path='/signup' element={<SignupPage />} />
-        <Route path="/my" element={<MyPage/>} />
-        <Route path="/search/:query" element={<SearchPage/>} />
-        <Route path="/edit-profile" element={<EditProfilePage />}/>
-        <Route path="/submit-game" element={<GameUploadPage />}/>
-        <Route path="/delete-account" element={<DeleteAccount />} />
-        <Route path="/manage-users" element={<ManageUsersPage />} />
-        <Route path="/game/:gameId" element={<GameDetailPage />} />
-      </Routes>
-    </GameProvider>
-    </RecordProvider>
-    </UploadProvider>
+      <ConfigProvider>
+        <UploadProvider>
+          <RecordProvider>
+            <GameProvider>
+              <Routes>
+                <Route path="/" element={<HomePage/>} />
+                <Route path="/login" element={<LoginPage/>} />
+                <Route path='/signup' element={<SignupPage />} />
+                <Route path="/my" element={<MyPage/>} />
+                <Route path="/search/:query" element={<SearchPage/>} />
+                <Route path="/edit-profile" element={<EditProfilePage />}/>
+                <Route path="/submit-game" element={<GameUploadPage />}/>
+                <Route path="/delete-account" element={<DeleteAccount />} />
+                <Route path="/manage-users" element={<ManageUsersPage />} />
+                <Route path="/game/:gameId" element={<GameDetailPage />} />
+              </Routes>
+            </GameProvider>
+          </RecordProvider>
+        </UploadProvider>
+      </ConfigProvider>
     </UserProvider>
   );
 }

@@ -1,4 +1,36 @@
 import web3Instance from "./web3GatewayInstance";
+import * as ludex from "ludex";
+
+export const requestRelay = async (relayRequest) => {
+  try {
+    const res = await web3Instance.post("/relay", ludex.relay.serializeRelayRequest(relayRequest));
+    return res.data;
+  } catch (err) {
+    const msg = err.response?.data?.message || err.message;
+    alert(`실패: ${msg}`);
+  }
+}
+
+export const getConfig = async () => {
+  try {
+    const res = await web3Instance.get("/config/get");
+    const { chainConfig, ludexConfig } = res.data;
+    return { chainConfig, ludexConfig };
+  } catch (err) {
+    const msg = err.response?.data?.message || err.message;
+    alert(`실패: ${msg}`);
+  }
+};
+
+export const getTokenAddress = async () => {
+  try {
+    const res = await web3Instance.get("/token/get/address");
+    return res.data.tokenAddress;
+  } catch (err) {
+    const msg = err.response?.data?.message || err.message;
+    alert(`실패: ${msg}`);
+  }
+};
 
 export const registerGame = async (item) => {
   try {
