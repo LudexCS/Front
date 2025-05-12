@@ -25,7 +25,6 @@ const GameUploadPage = () => {
   const { user, isLoggedIn } = useUser();
   const [isUploading, setIsUploading] = useState(false);
   const { chainConfig } = useConfig();
-  setIsFetch(false);
   const [category, setCategory] = useState("origin");
   const [showHelp, setShowHelp] = useState(false);
   const [showIPModal, setShowIPModal] = useState(false);
@@ -97,9 +96,10 @@ const GameUploadPage = () => {
   };
 
   useEffect(() => {
+    setIsFetch(false);
     resetUploadForm();
   }, []);
-
+  
   useEffect(() => {
       if (!isLoggedIn) {
         navigate("/login");

@@ -14,7 +14,7 @@ import UserProvider from './context/UserContext';
 import { UploadProvider } from "./context/UploadContext";
 import { RecordProvider } from "./context/RecordContext";
 import { GameProvider } from "./context/gameContext";
-import ConfigProvider from "./context/configContext";
+import ConfigProvider from "./context/ConfigContext";
 
 function App() {
   console.log(Router);
