@@ -12,7 +12,7 @@ import { useUpload } from "../context/UploadContext";
 import { useRecord } from "../context/RecordContext";
 import { useUser } from "../context/UserContext";
 import { useConfig } from "../context/ConfigContext";
-import { useGame } from "../context/gameContext";
+import { useGameContext } from "../context/gameContext";
 import { registerGame } from "../api/walletAuth";
 import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
 import LoadingModal from "../components/modals/LoadingModal";
@@ -23,7 +23,7 @@ const GameUploadPage = () => {
   const navigate = useNavigate();
   const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds, setSharerIds } = useUpload();
   const { setIsFetch } = useRecord();
-  const { setIsUpload } = useGame();
+  const { setIsUpload } = useGameContext();
   const { user, isLoggedIn } = useUser();
   const [isUploading, setIsUploading] = useState(false);
   const { chainConfig } = useConfig();
