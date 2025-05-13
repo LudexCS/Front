@@ -202,7 +202,7 @@ const PaymentModal = ({ game, onClose }) => {
 
           {activeTab === "card" && (
             <div className="payment-tab-content">
-              <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()}$ 에 구매하시겠습니까?</p>
+              <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()} $에 구매하시겠습니까?</p>
               <form className="payment-form">
                 <label>카드 번호<input type="text" placeholder="1234 5678 9012 3456" /></label>
                 <label>유효기간<input type="text" placeholder="MM/YY" /></label>
