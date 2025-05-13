@@ -16,7 +16,7 @@
   
   .home-top-section .banner {
     flex: 2;
-    height: 300px;
+    /* height: 300px; */
     width: 300px;
     background-color: #eee;
     display: flex;
