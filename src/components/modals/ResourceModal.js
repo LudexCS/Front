@@ -24,7 +24,7 @@ const ResourceModal = ({ resource, onClose }) => {
     }
   };
 
-  if (!resource) {
+  if (!resource.id) {
     return (
       <div className="modal-overlay">
         <div className="modal-content">

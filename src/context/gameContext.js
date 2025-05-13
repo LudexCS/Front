@@ -1,6 +1,7 @@
 // src/context/gameContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { fetchGameList } from "../api/gameGetApi";
+import { useRecord } from "../context/RecordContext";
 
 const GameContext = createContext();
 
@@ -8,6 +9,7 @@ export const GameProvider = ({ children }) => {
   const [page, setPage] = useState(1);
   const limit = 30;
   const [games, setGames] = useState([]);
+  const { isFetch } = useRecord();
 
   useEffect(() => {
     const loadGames = async () => {
@@ -20,7 +22,7 @@ export const GameProvider = ({ children }) => {
     };
 
     loadGames();
-  }, [page]);
+  }, [page, isFetch]);
 
   return (
     <GameContext.Provider value={{ page, setPage, games }}>
