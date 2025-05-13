@@ -5,9 +5,9 @@ import { useUpload } from "../../context/UploadContext";
 import "../../styles/upload/LicensingTabs.css";
 
 const TABS = [
-  { key: "mode", label: "모드", defaultSplit: { seller: 30, buyer: 60 } },
-  { key: "expansion", label: "확장판", defaultSplit: { seller: 20, buyer: 70 } },
-  { key: "sequel", label: "후속작", defaultSplit: { seller: 10, buyer: 80 } },
+  { key: "mode", label: "모드", defaultSplit: { seller: 30, buyer: 70 } },
+  { key: "expansion", label: "확장판", defaultSplit: { seller: 20, buyer: 80 } },
+  { key: "sequel", label: "후속작", defaultSplit: { seller: 10, buyer: 90 } },
 ];
 
 const LicensingTab = () => {
@@ -73,7 +73,7 @@ const LicensingTab = () => {
 
           <h4>수익 배분 비율 설정</h4>
           <div className="revenue-split">
-            <p>플랫폼: 10%</p>
+            {/* <p>플랫폼: 10%</p> */}
             <label>판매자 (%):</label>
             <input
               type="number"
@@ -82,7 +82,7 @@ const LicensingTab = () => {
                 setResourceForm({
                   ...resourceForm,
                   sellerRatio: parseInt(e.target.value) || 0,
-                  creatorRatio: 90 - (parseInt(e.target.value) || 0),
+                  creatorRatio: 100 - (parseInt(e.target.value) || 0),
                 })
               }
             />

@@ -16,7 +16,7 @@ export const UploadProvider = ({ children }) => {
     gameId: 0,
     allowDerivation: true,
     sellerRatio: 30,
-    creatorRatio: 60,
+    creatorRatio: 70,
     additionalCondition: "",
     description: "",
     imageFiles: [],
