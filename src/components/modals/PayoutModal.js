@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import "../../styles/modals/PayoutModal.css";
 import { useUser } from "../../context/UserContext";
-import {useConfig} from "../../context/configContext";
+import {useConfig} from "../../context/ConfigContext";
 import * as ludex from "ludex";
 import {getTokenAddress, requestRelay} from "../../api/walletAuth";
 

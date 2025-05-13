@@ -11,7 +11,7 @@ import TermsAgreementModal from "../components/modals/TermsAgreementModal";
 import { useUpload } from "../context/UploadContext";
 import { useRecord } from "../context/RecordContext";
 import { useUser } from "../context/UserContext";
-import { useConfig } from "../context/configContext";
+import { useConfig } from "../context/ConfigContext";
 import { registerGame } from "../api/walletAuth";
 import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
 import LoadingModal from "../components/modals/LoadingModal";
@@ -183,7 +183,7 @@ const GameUploadPage = () => {
     if(category === "origin"){
       setGameForm({ ...gameForm, originGameIds:[]})
       setSharerIds([]);
-    };
+    }
 
     const payload = {
       ...gameForm,

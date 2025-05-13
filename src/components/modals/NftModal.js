@@ -1,7 +1,7 @@
 // src/components/modals/NftModal.js
 import React, {useEffect, useState} from "react";
 import "../../styles/modals/NftModal.css";
-import {useConfig} from "../../context/configContext";
+import {useConfig} from "../../context/ConfigContext";
 import * as ludex from "ludex";
 
 const NftModal = ({ isOpen, onClose, purchaseInfo }) => {

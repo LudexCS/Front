@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "../../styles/modals/PaymentModal.css";
 import { useUser } from "../../context/UserContext";
-import { useConfig } from "../../context/configContext";
+import { useConfig } from "../../context/ConfigContext";
 import * as ludex from "ludex";
 import {getTokenAddress, requestRelay} from "../../api/walletAuth";
 import {registerPurchase} from "../../api/purchaseApi";
