@@ -24,9 +24,10 @@ const SalesHistory = ({ sales, onEditGame, onSetDiscount }) => {
             <div className="sales-detail">
               <div className="history-content-row">
                 <div className="text-section">
-                  <p>설명: {game.description}</p>
+                  {/* <p>설명:</p> */}
+                  <p>{game.description}</p>
                   <div>
-                    <p>구동사양:</p>
+                    {/* <p>구동사양: </p> */}
                     {game.requirement?.map((req, i) => (
                       <div key={i}>
                         {[

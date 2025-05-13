@@ -30,9 +30,10 @@ const PurchaseHistory = ({ purchases, showNft, onDownload }) => {
               <div className="history-content-row">
                 <div className="text-section">
                   {/* <p>판매자 ID: {game.user_id}</p> */}
-                  <p>설명: {game.description}</p>
+                  {/* <p>설명:</p> */}
+                  <p>{game.description}</p>
                   <div>
-                    <p>구동사양:</p>
+                    {/* <p>권장 구동사양:</p> */}
                     {game.requirement?.map((req, i) => (
                       <div key={i}>
                         {[
@@ -75,9 +76,10 @@ const PurchaseHistory = ({ purchases, showNft, onDownload }) => {
               <div className="history-content-row">
                 <div className="text-section">
                   {/* <p>판매자 ID: {resource.userId}</p> */}
-                  <p>설명: {resource.description}</p>
-                  <p>플랫폼 : 10%, 판매자 : {resource.sellerRatio}%, 제작자 : {resource.createrRatio}%</p>
-                  <p>관련 게임 ID: {resource.gameId}</p>
+                  {/* <p>설명:</p> */}
+                  <p>{resource.description}</p>
+                  <p>판매자 : {resource.sellerRatio}%, 제작자 : {resource.createrRatio}%</p>
+                  <p>관련 게임 : {resource.title}</p>
                   {/* <p>추가 조건: {resource.}</p> */}
                   <button onClick={() => navigate(`/game/${resource.gameId}`)}>해당 게임 판매페이지 이동</button>
                 </div>

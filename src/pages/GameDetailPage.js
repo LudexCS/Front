@@ -97,7 +97,10 @@ const GameDetailPage = () => {
             <p className="resource-link" onClick={() => setShowResourceModal(true)}>리소스</p>
           </div>
           <div className="action-buttons">
-            <button onClick={() => navigate(-1)}>Back</button>
+            <button onClick={() => {
+              navigate(-1);
+              navigate("/");
+              }}>Back</button>
             <button onClick={() => setShowPaymentModal(true)}>Buy</button>
           </div>
         </div>
