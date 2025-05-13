@@ -71,7 +71,7 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
                 .readonlyAccessLedger();
       } catch (error) {
         console.log("Error: " + error);
-        alert("Error: " + error);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
         return;
       }
 
@@ -83,7 +83,7 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
                 tokenIDNumber);
       } catch (error) {
         console.log("Error: " + error);
-        alert("Error: " + error);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
         return;
       }
 
@@ -94,7 +94,7 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
           purchaseLog = await ledger.getPurchaseInfo(tokenIDNumber);
         } catch (error) {
           console.log("Error: " + error);
-          alert("Error: " + error);
+          alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
           return;
         }
 

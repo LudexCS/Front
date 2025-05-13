@@ -83,7 +83,7 @@ const PayoutModal = ({ isOpen, onClose }) => {
               .metaTXAccessPaymentProcessor();
     } catch (error) {
       console.log("Payment Error: " + error);
-      alert("Payment Error: " + error);
+      alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
       return;
     }
 
@@ -127,7 +127,7 @@ const PayoutModal = ({ isOpen, onClose }) => {
     if (error)
     {
       console.error(`message: ${error.message}`);
-      alert("Server 에러입니다. 관리자에게 문의해주세요.");
+      alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
       onClose();
       return;
     }

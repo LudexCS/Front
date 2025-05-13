@@ -13,7 +13,7 @@ export const requestRelay = async (relayRequest) => {
     return res.data;
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
-    alert(`실패: ${msg}`);
+    alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
     return { error: msg };
   }
 }
@@ -25,7 +25,7 @@ export const getConfig = async () => {
     return { chainConfig, ludexConfig };
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
-    alert(`실패: ${msg}`);
+    alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
   }
 };
 
@@ -35,7 +35,7 @@ export const getTokenAddress = async () => {
     return res.data.tokenAddress;
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
-    alert(`실패: ${msg}`);
+    alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
   }
 };
 
@@ -45,7 +45,7 @@ export const registerGame = async (item) => {
   return res.message;
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
-    alert(`실패: ${msg}`);
+    alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
   }
 };
 
@@ -60,7 +60,7 @@ export const requestWalletNonce = async ({address, url}) => {
   return res.data.message;
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
-    alert(`실패: ${msg}`);
+    alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
   }
 };
 
@@ -74,6 +74,6 @@ export const verifyWalletOwnership = async ({ address, signature }) => {
     return res.data.message;
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
-    alert(`실패: ${msg}`);
+    alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
   }
 };
