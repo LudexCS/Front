@@ -11,16 +11,20 @@ import TermsAgreementModal from "../components/modals/TermsAgreementModal";
 import { useUpload } from "../context/UploadContext";
 import { useRecord } from "../context/RecordContext";
 import { useUser } from "../context/UserContext";
+import { useConfig } from "../context/configContext";
 import { registerGame } from "../api/walletAuth";
 import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
-import { ensureSellerRegistration } from "../api/SellerRegistration";
+import LoadingModal from "../components/modals/LoadingModal";
 import "../styles/pages/GameUploadPage.css";
+import * as ludex from "ludex";
 
 const GameUploadPage = () => {
   const navigate = useNavigate();
-  const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds } = useUpload();
+  const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds, setSharerIds } = useUpload();
   const { setIsFetch } = useRecord();
-  const { user } = useUser();
+  const { user, isLoggedIn } = useUser();
+  const [isUploading, setIsUploading] = useState(false);
+  const { chainConfig } = useConfig();
   setIsFetch(false);
   const [category, setCategory] = useState("origin");
   const [showHelp, setShowHelp] = useState(false);
@@ -58,7 +62,7 @@ const GameUploadPage = () => {
       thumbnail: null,
       mediaFiles: [],
     });
-  
+
     setResourceForm({
       gameId: 0,
       allowDerivation: true,
@@ -69,7 +73,7 @@ const GameUploadPage = () => {
       imageFiles: [],
       resourceFile: null,
     });
-  
+
     setSelectedTags([]);
     setSelectedIPs([]);
     setAgreed(false);
@@ -90,11 +94,17 @@ const GameUploadPage = () => {
       storage: "",
       network: "",
     });
-  };  
+  };
 
   useEffect(() => {
     resetUploadForm();
   }, []);
+
+  useEffect(() => {
+      if (!isLoggedIn) {
+        navigate("/login");
+      }
+    }, [isLoggedIn, navigate]);
 
   const toggleSpecField = (key) => {
     setSpecFields({ ...specFields, [key]: !specFields[key] });
@@ -110,20 +120,55 @@ const GameUploadPage = () => {
       return;
     }
 
-    //const sellerAddress = user.cryptoWallet[0];
+    alert(" 등록을 시도합니다. 완료 될 때까지 잠시 기다려주세요. ");
+    setIsUploading(true);
+
+    const chainIdHex = chainConfig.chainId.toLowerCase();
+
+    try {
+      const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+
+      if (currentChainId !== chainIdHex) {
+        try {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: chainIdHex }]
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
+            // 체인 추가 시도
+            try {
+              await window.ethereum.request({
+                method: "wallet_addEthereumChain",
+                params: [chainConfig]
+              });
+            } catch (addError) {
+              console.warn("Add chain failed:", addError);
+              const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
+              if (nowChainId.toLowerCase() !== chainIdHex) {
+                alert("이더리움 네트워크 전환에 실패했습니다.");
+                setIsUploading(false);
+                return;
+              }
+            }
+          } else {
+            throw switchError;
+          }
+        }
+      }
+    } catch (err) {
+      console.error("MetaMask 네트워크 연결 실패:", err);
+    }
+
     const wallet = await ludex.BrowserWalletConnection.create(chainConfig);
     const sellerAddress = (await wallet.getCurrentAddress()).stringValue;
 
     // sellerAddress가 user.cryptoWallet 배열에 없다면 알림.
-    if (!user.cryptoWallet.includes(sellerAddress)) {
+    if (!user.cryptoWallet.some(wallet => wallet.address?.toLowerCase() === sellerAddress.toLowerCase())) {
       alert(`해당 메타마스크 지갑 주소(${sellerAddress})는 등록된 판매자 지갑이 아닙니다. 주소를 등록해주세요.`);
+      setIsUploading(false);
+      return;
     }
-    // const registered = await ensureSellerRegistration(sellerAddress);
-
-    // if (!registered) {
-    //   alert("판매자 등록에 실패했습니다. 전자지갑 주소를 확인해주세요.");
-    //   return;
-    // }
 
     const requirements = [
       {
@@ -137,7 +182,8 @@ const GameUploadPage = () => {
 
     if(category === "origin"){
       setGameForm({ ...gameForm, originGameIds:[]})
-    }
+      setSharerIds([]);
+    };
 
     const payload = {
       ...gameForm,
@@ -157,34 +203,45 @@ const GameUploadPage = () => {
         
     try {
       const responseGame = await uploadGameData(payload);
-      const responseResource = await uploadResourceData({
-        ...resourceForm,
-        gameId: responseGame.gameId
-      });
+      console.log("const responseGame = await uploadGameData(payload);");
+
       await uploadGameFile(responseGame.gameId, gameForm.gameFile);
-      await uploadResourceFile(responseResource.resourceId, resourceForm.resourceFile);
+      console.log("await uploadGameFile(responseGame.gameId, gameForm.gameFile);");
+
+      if (resourceForm.resourceFile !== null) {
+        const responseResource = await uploadResourceData({
+          ...resourceForm,
+          gameId: responseGame.gameId
+        });
+        console.log("const responseResource = await uploadResourceData({");
+        
+        await uploadResourceFile(responseResource.resourceId, resourceForm.resourceFile);
+      }
       const item = {
         gameId: responseGame.gameId,
         itemName: gameForm.title,
         seller: sellerAddress,
-        sharers: sharerIds, // 구매한 resource의 sharerId[]를 가져오게 수정해야 합니다.
+        sharers: sharerIds,
         itemPrice: gameForm.price,
         shareTerms: [resourceForm.sellerRatio*100]
       };
-
       await registerGame(item);
+
       setIsFetch(true);
       alert("게임이 등록되었습니다.");
       navigate("/");
     } catch (err) {
       console.error(err);
       alert("게임 등록에 실패했습니다.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
   return (
     <div>
       <NavbarSearch />
+      {isUploading && <LoadingModal />}
       <div className="upload-page">
         <h2>게임 파일 업로드(압축파일 형태 업로드 권장)</h2>
         <FileUploader

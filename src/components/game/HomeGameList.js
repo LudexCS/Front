@@ -34,12 +34,12 @@ const HomeGameList = () => {
           <div className="home-game-grid-row">
             {row.map((game) => (
               <div
-                key={game.game_id}
+                key={game.gameId}
                 className="home-game-card"
-                onClick={() => handleGameClick(game.game_id)}
+                onClick={() => handleGameClick(game.gameId)}
               >
                 <img
-                  src={game.thumbnail_url}
+                  src={game.thumbnailUrl}
                   alt={game.title}
                   className="home-game-thumbnail"
                 />

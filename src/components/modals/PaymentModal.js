@@ -1,24 +1,163 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "../../styles/modals/PaymentModal.css";
 import { useUser } from "../../context/UserContext";
+import { useConfig } from "../../context/configContext";
+import * as ludex from "ludex";
+import {getTokenAddress, requestRelay} from "../../api/walletAuth";
+import {registerPurchase} from "../../api/purchaseApi";
 
 const PaymentModal = ({ game, onClose }) => {
   const [activeTab, setActiveTab] = useState("wallet"); // 'card' or 'wallet'
   const { user } = useUser();
   const [selectedWallet, setSelectedWallet] = useState(null);
+  const { chainConfig, ludexConfig } = useConfig();
+  const [tokenAmount, setTokenAmount] = useState("");
 
-  const handleConfirm = () => {
+  useEffect(() => {
+    (async () => {
+      if (!chainConfig || !ludexConfig || !game?.itemId) return;
+
+      const itemId = game.itemId;
+      //const connection = await ludex.BrowserWalletConnection.create(chainConfig);
+      const facade = ludex.facade.createWeb2UserFacade(chainConfig, ludexConfig);
+      const priceTable = facade.readonlyAccessPriceTable();
+
+      const priceInfoListRaw = await priceTable.getPriceInfoList(itemId);
+      const priceInfoList = priceInfoListRaw.map(entry => ({
+        token: entry.token.stringValue,
+        tokenAmount: entry.tokenAmount.toString()
+      }));
+
+      const priceInfo = priceInfoList[0];
+      if (priceInfo?.tokenAmount) {
+        const raw = priceInfo.tokenAmount;
+        const padded = raw.padStart(7, "0");
+        const integerPart = padded.slice(0, -6);
+        const decimalPart = padded.slice(-6).replace(/0+$/, ""); // remove trailing zeros
+        setTokenAmount(decimalPart ? `${integerPart}.${decimalPart}` : integerPart);
+      } else {
+        setTokenAmount("");
+      }
+    })();
+  }, [chainConfig, ludexConfig, game]);
+
+  const handleConfirm = async () => {
     if (activeTab === "card") {
       alert("카드/계좌 결제가 처리되었습니다.");
-    } else if (activeTab === "wallet") {
+      onClose();
+      return;
+    }
+    if (activeTab === "wallet") {
       if (!selectedWallet) {
         alert("지갑 주소를 선택해주세요.");
         return;
       }
       console.log("선택된 지갑 주소:", selectedWallet);
+
+      const chainIdHex = chainConfig.chainId.toLowerCase();
+
+      try {
+        const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+
+        if (currentChainId !== chainIdHex) {
+          try {
+            await window.ethereum.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: chainIdHex }]
+            });
+          } catch (switchError) {
+            if (switchError.code === 4902) {
+              // 체인 추가 시도
+              try {
+                await window.ethereum.request({
+                  method: "wallet_addEthereumChain",
+                  params: [chainConfig]
+                });
+              } catch (addError) {
+                console.warn("Add chain failed:", addError);
+                const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
+                if (nowChainId.toLowerCase() !== chainIdHex) {
+                  alert("이더리움 네트워크 전환에 실패했습니다.");
+                  return;
+                }
+              }
+            } else {
+              throw switchError;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("MetaMask 네트워크 연결 실패:", err);
+      }
+
+      const connection = await ludex.BrowserWalletConnection.create(chainConfig);
+      const address = (await connection.getCurrentAddress()).stringValue;
+
+      if (address.toLowerCase() !== selectedWallet.toLowerCase()) {
+        alert("MetaMask와 지갑 주소가 일치하지 않습니다. 주소를 확인해주세요.");
+        return;
+      }
+
+      const signer = await connection.getSigner();
+
+      const facade =
+          ludex.facade.createWeb3UserFacade(
+              chainConfig,
+              ludexConfig,
+              signer);
+
+      const store = facade.metaTXAccessStore();
+
+      const token = await (async function () {
+        const tokenString =
+            await getTokenAddress();
+        if (!tokenString) {
+          return undefined;
+        }
+
+        return ludex.Address.create(tokenString);
+      })();
+      if (!token)
+      {
+        console.log("No token.");
+        return;
+      }
+
+      let relayRequest;
+      try {
+        relayRequest =
+            await store.purchaseItemRequest(
+                BigInt(game.itemId),
+                token,
+                30000000n);
+      } catch (err) {
+        console.log("relayReques Error: " + err);
+        return;
+      }
+
+      const { args, error } = await requestRelay(relayRequest);
+
+      if (error)
+      {
+        console.error(`message: ${error.message}`);
+        alert("Server 에러입니다. 관리자에게 문의해주세요.");
+        return;
+      }
+
+      const purchaseId = relayRequest.onResponse(args);
+
+      const purchasedGame = {
+        gameId: game.itemId,
+        pricePaid: game.price.toString(),
+        isNftIssued: true,
+        purchaseId: purchaseId
+      }
+
+      const message = await registerPurchase(purchasedGame);
+      console.log(message);
+
       alert("지갑 결제가 처리되었습니다.");
     }
-    onClose();
   };
 
   return (
@@ -42,35 +181,20 @@ const PaymentModal = ({ game, onClose }) => {
 
         {activeTab === "card" && (
           <div className="payment-tab-content">
-            <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()}$에 구매하시겠습니까?</p>
+            <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()}$ 토큰에 구매하시겠습니까?</p>
             <form className="payment-form">
-              <label>
-                카드 번호
-                <input type="text" placeholder="1234 5678 9012 3456" />
-              </label>
-              <label>
-                유효기간
-                <input type="text" placeholder="MM/YY" />
-              </label>
-              <label>
-                CVC
-                <input type="text" placeholder="123" />
-              </label>
-              <label>
-                결제자 이름
-                <input type="text" placeholder="홍길동" />
-              </label>
-              <label>
-                결제자 이메일
-                <input type="email" placeholder="email@example.com" />
-              </label>
+              <label>카드 번호<input type="text" placeholder="1234 5678 9012 3456" /></label>
+              <label>유효기간<input type="text" placeholder="MM/YY" /></label>
+              <label>CVC<input type="text" placeholder="123" /></label>
+              <label>결제자 이름<input type="text" placeholder="홍길동" /></label>
+              <label>결제자 이메일<input type="email" placeholder="email@example.com" /></label>
             </form>
           </div>
         )}
 
         {activeTab === "wallet" && (
           <div className="payment-tab-content">
-            <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()}₩에 구매하시겠습니까?</p>
+            <p><strong>{game.title}</strong>을(를) {tokenAmount} 토큰에 구매하시겠습니까?</p>
             <p>지갑 주소를 선택해주세요:</p>
             <ul className="payment-wallet-list">
               {user?.cryptoWallet?.map((wallet, idx) => (

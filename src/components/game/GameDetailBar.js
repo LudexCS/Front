@@ -11,10 +11,10 @@ const GameDetailBar = ({ game }) => {
 
   return (
     <div className="bar-game-detail">
-      <img src={game.thumbnail} alt={game.title} className="bar-game-detail-thumbnail" />
+      <img src={game.thumbnailUrl} alt={game.title} className="bar-game-detail-thumbnail" />
       <h2>{game.title}</h2>
       <p>{game.price}</p>
-      <p>게임의 설명</p>
+      <p>{game.description}</p>
 
       <div className="bar-tag">
         {game.tags.map((tag, index) => (
@@ -24,7 +24,7 @@ const GameDetailBar = ({ game }) => {
         ))}
       </div>
 
-      <button className="bar-detail-button" onClick={() => navigate(`/game/${game.id}`)}>
+      <button className="bar-detail-button" onClick={() => navigate(`/game/${game.gameId}`)}>
         상세 페이지로 이동
       </button>
     </div>

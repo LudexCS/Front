@@ -1,7 +1,7 @@
 import React from "react";
 import "../../styles/user/UserInfo.css";
 
-const UserInfo = ({ userInfo, onEdit }) => {
+const UserInfo = ({ userInfo, onEdit, requestPayout }) => {
   return (
     <div className="user-info-section">
       <div className="left-info">
@@ -18,6 +18,7 @@ const UserInfo = ({ userInfo, onEdit }) => {
             </li>
           ))}
         </ul>
+        <button className="edit-btn" onClick={() => requestPayout()}>Payout</button>
       </div>
     </div>
   );

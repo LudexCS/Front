@@ -5,7 +5,7 @@ const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
   const handleAddFile = (e) => {
     const selected = Array.from(e.target.files)
       .filter((file) => file instanceof File)
-      .map((file) => ({ file, description: "" }));
+      .map((file) => ({ file }));
 
     if (files.length + selected.length <= maxFiles) {
       setFiles([...files, ...selected]);
@@ -39,12 +39,6 @@ const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
               {entry.file.name} ({(entry.file.size / 1024).toFixed(1)} KB)
               <button onClick={() => handleRemove(idx)}>삭제</button>
             </div>
-            <input
-              type="text"
-              placeholder="설명 입력"
-              value={entry.description}
-              onChange={(e) => handleDescriptionChange(idx, e.target.value)}
-            />
           </li>
         ))}
       </ul>

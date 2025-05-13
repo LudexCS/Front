@@ -20,7 +20,7 @@ export const fetchOriginGameList = async ({ gameId }) => {
     const response = await axios.get("http://3.37.46.45:30353/api/get/origin", {
       params: { gameId },
     });
-    console.log("원본 게임 목록 조회: ", response.data);
+    // console.log("원본 게임 목록 조회: ", response.data);
     return response.data;
   } catch (error) {
     console.error("원본 게임 목록을 가져오는데 실패:", error);
@@ -34,7 +34,7 @@ export const fetchVariantGameList = async ({ gameId }) => {
     const response = await axios.get("http://3.37.46.45:30353/api/get/variant", {
       params: { gameId },
     });
-    console.log("파생 게임 목록 조회: ", response.data);
+    // console.log("파생 게임 목록 조회: ", response.data);
     return response.data;
   } catch (error) {
     console.error("파생 게임 목록을 가져오는데 실패:", error);
@@ -66,6 +66,20 @@ export const fetchGameDetail = async ({ gameId }) => {
     return response.data;
   } catch (error) {
     console.error("게임 상세 정보를 가져오는데 실패:", error);
+    throw error;
+  }
+};
+
+//게임 리소스 정보 조회
+export const fetchGameResource = async ({ gameId }) => {
+  try {
+    const response = await axios.get("http://3.37.46.45:30353/api/get/resourceDetail", {
+      params: { gameId },
+    });
+    console.log("게임 리소스 정보 조회: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("게임 리소스 정보를 가져오는데 실패:", error);
     throw error;
   }
 };

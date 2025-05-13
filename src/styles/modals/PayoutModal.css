@@ -1,0 +1,94 @@
+/* src/styles/modals/PayoutModal.css */
+.payout-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.payout-modal {
+  background-color: white;
+  padding: 24px 32px;
+  width: 440px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease;
+  font-family: sans-serif;
+}
+
+.payout-modal h2 {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.payout-wallet-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payout-wallet-list li {
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 15px;
+  transition: background-color 0.2s ease;
+}
+
+.payout-wallet-list li:hover {
+  background-color: #f5f5f5;
+}
+
+.payout-wallet-list li.selected {
+  background-color: #d0e7ff;
+  border-color: #007bff;
+  font-weight: bold;
+}
+
+.payout-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.payout-actions button {
+  padding: 10px 16px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.payout-confirm-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.payout-confirm-btn:hover {
+  background-color: #0069d9;
+}
+
+.payout-actions button:not(.payout-confirm-btn) {
+  background-color: #ccc;
+}
+
+.payout-actions button:not(.payout-confirm-btn):hover {
+  background-color: #bbb;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
