@@ -14,7 +14,7 @@ const IPSelectorModal = ({ onClose, setSelectedIPs }) => {
   const [checked, setChecked] = useState({});
   const { setSharerIds, gameForm, setGameForm } = useUpload();
   const { recordData } = useRecord(); //.purchased.resources
-  const availableIPs = recordData.purchased.resources;
+  const availableIPs = recordData.purchased.resources; //allowDerivation
 
   const handleCheck = (resourceId) => {
     setChecked((prev) => ({
@@ -26,7 +26,7 @@ const IPSelectorModal = ({ onClose, setSelectedIPs }) => {
   const handleConfirm = () => {
     const selected = availableIPs
       .filter((ip) => checked[ip.resourceId])
-      .map((ip) => `${ip.description}${ip.allowsDerivative ? " (2차 제작 허용)" : " (2차 제작 금지)"}`);
+      .map((ip) => `${ip.title}${ip.allowDerivation ? " (2차 제작 허용)" : " (2차 제작 금지)"}`);
 
     setGameForm({ ...gameForm, originGameIds: availableIPs
       .filter((ip) => checked[ip.resourceId])

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import "../../styles/modals/PaymentModal.css";
 import { useUser } from "../../context/UserContext";
 import { useConfig } from "../../context/ConfigContext";
+import { useRecord } from "../../context/RecordContext";
 import * as ludex from "ludex";
 import {getTokenAddress, requestRelay} from "../../api/walletAuth";
 import {registerPurchase} from "../../api/purchaseApi";
@@ -12,6 +13,11 @@ const PaymentModal = ({ game, onClose }) => {
   const [selectedWallet, setSelectedWallet] = useState(null);
   const { chainConfig, ludexConfig } = useConfig();
   const [tokenAmount, setTokenAmount] = useState("");
+  const { setIsFetch } = useRecord();
+
+  useEffect(() => {
+    setIsFetch(false);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -44,6 +50,7 @@ const PaymentModal = ({ game, onClose }) => {
   const handleConfirm = async () => {
     if (activeTab === "card") {
       alert("카드/계좌 결제가 처리되었습니다.");
+      setIsFetch(true);
       onClose();
       return;
     }
@@ -173,6 +180,7 @@ const PaymentModal = ({ game, onClose }) => {
         return;
       }
 
+      setIsFetch(true);
       alert("지갑 결제가 처리되었습니다.");
       onClose();
     }

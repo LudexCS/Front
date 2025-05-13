@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/modals/ResourceModal.css";
 import PreviewModal from "./PreviewModal";
 import { useNavigate } from "react-router-dom";
 import { purchaseResource } from "../../api/purchaseApi";
 import { useUser } from "../../context/UserContext";
+import { useRecord } from "../../context/RecordContext";
 
 const ResourceModal = ({ resource, onClose }) => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const { isLoggedIn } = useUser();
+  const { setIsFetch } = useRecord();
   const navigate = useNavigate();
 
   const handleCheckout = async () => {
@@ -18,11 +20,16 @@ const ResourceModal = ({ resource, onClose }) => {
     try {
       await purchaseResource({ resourceId: resource.id });
       alert("리소스 구매가 완료되었습니다.");
+      setIsFetch(true);
       onClose();
     } catch (err) {
       alert("리소스 구매에 실패했습니다.");
     }
   };
+
+  useEffect(() => {
+    setIsFetch(false);
+  }, []);
 
   if (!resource.id) {
     return (
