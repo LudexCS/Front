@@ -123,11 +123,17 @@ const PaymentModal = ({ game, onClose }) => {
         return;
       }
 
-      const relayRequest =
-          await store.purchaseItemRequest(
-              BigInt(game.itemId),
-              token,
-              30000000n);
+      let relayRequest;
+      try {
+        relayRequest =
+            await store.purchaseItemRequest(
+                BigInt(game.itemId),
+                token,
+                30000000n);
+      } catch (err) {
+        console.log("relayReques Error: " + err);
+        return;
+      }
 
       const { args, error } = await requestRelay(relayRequest);
 
