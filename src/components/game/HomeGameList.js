@@ -2,10 +2,10 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/game/HomeGameList.css";
-import { useGameContext } from "../../context/gameContext";
+import { useGame } from "../../context/gameContext";
 
 const HomeGameList = () => {
-  const { games, page, setPage } = useGameContext();
+  const { games, page, setPage } = useGame();
   const navigate = useNavigate();
 
   // 한 행당 최대 5개로 분할

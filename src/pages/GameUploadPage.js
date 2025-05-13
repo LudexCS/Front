@@ -12,6 +12,7 @@ import { useUpload } from "../context/UploadContext";
 import { useRecord } from "../context/RecordContext";
 import { useUser } from "../context/UserContext";
 import { useConfig } from "../context/ConfigContext";
+import { useGame } from "../context/gameContext";
 import { registerGame } from "../api/walletAuth";
 import { uploadGameData, uploadResourceData, uploadGameFile, uploadResourceFile } from "../api/uploadApi";
 import LoadingModal from "../components/modals/LoadingModal";
@@ -22,6 +23,7 @@ const GameUploadPage = () => {
   const navigate = useNavigate();
   const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds, setSharerIds } = useUpload();
   const { setIsFetch } = useRecord();
+  const { setIsUpload } = useGame();
   const { user, isLoggedIn } = useUser();
   const [isUploading, setIsUploading] = useState(false);
   const { chainConfig } = useConfig();
@@ -101,6 +103,7 @@ const GameUploadPage = () => {
 
   useEffect(() => {
     setIsFetch(false);
+    setIsUpload(false);
     resetUploadForm();
   }, []);
   
@@ -240,6 +243,7 @@ const GameUploadPage = () => {
       await registerGame(item);
 
       setIsFetch(true);
+      setIsUpload(true);
       alert("게임이 등록되었습니다.");
       navigate("/");
     } catch (err) {

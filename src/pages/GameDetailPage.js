@@ -4,7 +4,6 @@ import ResourceModal from "../components/modals/ResourceModal";
 import PaymentModal from "../components/modals/PaymentModal";
 import ReportModal from "../components/modals/ReportModal";
 import NavbarSearch from "../components/layout/NavbarSearch";
-import defaultGameImage from "../assets/game-image.png";
 import RelatedGameList from "../components/game/RelatedGameList";
 import { fetchGameDetail, fetchGameResource } from "../api/gameGetApi";
 import "../styles/pages/GameDetailPage.css";
@@ -47,8 +46,8 @@ const GameDetailPage = () => {
     );
   }
   
-  const mediaList = game.imageUrls?.length ? game.imageUrls : [defaultGameImage];
-  const mainMedia = mediaList[selectedMediaIndex] || defaultGameImage;
+  const mediaList = game.imageUrls;
+  const mainMedia = mediaList[selectedMediaIndex];
 
   return (
     <div>

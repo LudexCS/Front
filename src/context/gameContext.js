@@ -9,7 +9,7 @@ export const GameProvider = ({ children }) => {
   const [page, setPage] = useState(1);
   const limit = 30;
   const [games, setGames] = useState([]);
-  const { isFetch } = useRecord();
+  const [isUpload, setIsUpload] = useState(false);
 
   useEffect(() => {
     const loadGames = async () => {
@@ -22,10 +22,10 @@ export const GameProvider = ({ children }) => {
     };
 
     loadGames();
-  }, [page, isFetch]);
+  }, [page, isUpload]);
 
   return (
-    <GameContext.Provider value={{ page, setPage, games }}>
+    <GameContext.Provider value={{ page, setPage, games, setIsUpload }}>
       {children}
     </GameContext.Provider>
   );

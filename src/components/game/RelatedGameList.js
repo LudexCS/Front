@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/game/RelatedGameList.css";
-import defaultGameImage from "../../assets/game-image.png";
 import { fetchOriginGameList, fetchVariantGameList } from "../../api/gameGetApi";
 
 const RelatedGameList = ({ gameId }) => {
@@ -39,7 +38,7 @@ const RelatedGameList = ({ gameId }) => {
           }}
         >
           <img
-            src={game.thumbnailUrl || defaultGameImage}
+            src={game.thumbnailUrl}
             alt={game.title}
             className="related-game-thumbnail"
           />
