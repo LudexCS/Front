@@ -63,7 +63,7 @@ const PurchaseHistory = ({ purchases, showNft, onDownload }) => {
         <div key={`resource-${resource.resourceId}`} className="purchase-item">
           <div className="purchase-summary">
             <span>
-              리소스 | 리소스 ID {resource.resourceId}
+              리소스 | 관련 게임: {resource.title}
             </span>
             <div>
               <button className="download-btn" onClick={() => onDownload(resource.resourceId, "resource")}>Download</button>
