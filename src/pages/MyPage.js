@@ -31,6 +31,7 @@ const MyPage = () => {
     try {
       let result;
       if (type === "game") {
+        console.log("game Id: " + id);
         result = await downloadGame({ gameId: id });
       } else if (type === "resource") {
         result = await downloadResource({ resourceId: id });

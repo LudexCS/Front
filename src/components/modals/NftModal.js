@@ -60,21 +60,43 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
       if(purchaseInfo === null) {
         return;
       }
+      console.log("purchaseInfo: " + purchaseInfo);
+      const tokenIDNumber = BigInt(purchaseInfo);
+      console.log("tokenIDNumber: " + tokenIDNumber);
 
-      const tokenIDNumber = BigInt("0x" + purchaseInfo);
+      let ledger;
+      try {
+        ledger =
+            ludex.facade.createWeb2UserFacade(chainConfig, ludexConfig)
+                .readonlyAccessLedger();
+      } catch (error) {
+        console.log("Error: " + error);
+        alert("Error: " + error);
+        return;
+      }
 
-      const ledger =
-          ludex.facade.createWeb2UserFacade(chainConfig, ludexConfig)
-              .readonlyAccessLedger();
-
-      const isOwner = await
-          ledger.proveOwnership(
-              ludex.Address.create(address),
-              tokenIDNumber);
+      let isOwner;
+      try {
+        isOwner = await
+            ledger.proveOwnership(
+                ludex.Address.create(address),
+                tokenIDNumber);
+      } catch (error) {
+        console.log("Error: " + error);
+        alert("Error: " + error);
+        return;
+      }
 
       if (isOwner)
       {
-        const purchaseLog = await ledger.getPurchaseInfo(tokenIDNumber);
+        let purchaseLog;
+        try {
+          purchaseLog = await ledger.getPurchaseInfo(tokenIDNumber);
+        } catch (error) {
+          console.log("Error: " + error);
+          alert("Error: " + error);
+          return;
+        }
 
         setNftData({
           tokenId: purchaseLog.tokenID.toString(16),

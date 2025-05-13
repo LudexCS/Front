@@ -63,6 +63,7 @@ const PayoutModal = ({ isOpen, onClose }) => {
     }
 
     const tokenAddress = await getTokenAddress();
+    console.log("tokenAddress: " + tokenAddress);
     if (!tokenAddress) {
       alert("토큰 주소를 가져오지 못했습니다.");
       return;
@@ -70,19 +71,56 @@ const PayoutModal = ({ isOpen, onClose }) => {
 
     const signer = await connection.getSigner();
 
-    const payment =
-        ludex
-            .facade
-            .createWeb3UserFacade(
-                chainConfig,
-                ludexConfig,
-                signer)
-            .metaTXAccessPaymentProcessor();
+    let payment;
+    try {
+      payment =
+          ludex
+              .facade
+              .createWeb3UserFacade(
+                  chainConfig,
+                  ludexConfig,
+                  signer)
+              .metaTXAccessPaymentProcessor();
+    } catch (error) {
+      console.log("Payment Error: " + error);
+      alert("Payment Error: " + error);
+      return;
+    }
 
-    const relayRequest =
-        await payment.claimRequest(
-            ludex.Address.create(tokenAddress),
-            3000000n);
+    let balance;
+    try {
+      balance = await payment.getEscrowBalance(ludex.Address.create(tokenAddress));
+      const padded = balance.toString().padStart(7, "0");
+      const integerPart = padded.slice(0, -6);
+      const decimalPart = padded.slice(-6).replace(/0+$/, "");
+      balance = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+      console.log("Balance: " + balance.toString() + " USDC");
+      if (balance.toString() === "0") {
+        alert("정산할 판매액이 없습니다.");
+        onClose();
+        return;
+      }
+    } catch (error) {
+      console.log("Balance Error: " + error);
+      alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+      onClose();
+      return;
+    }
+
+
+    let relayRequest;
+    try {
+      console.log("ludex.Address.token: " + ludex.Address.create(tokenAddress));
+      relayRequest =
+          await payment.claimRequest(
+              ludex.Address.create(tokenAddress.toString()),
+              3000000n);
+    } catch (error) {
+      console.log("Relay Request Error: " + error);
+      alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+      onClose();
+      return;
+    }
 
     const { args, error } = await requestRelay(relayRequest);
 
@@ -90,10 +128,11 @@ const PayoutModal = ({ isOpen, onClose }) => {
     {
       console.error(`message: ${error.message}`);
       alert("Server 에러입니다. 관리자에게 문의해주세요.");
+      onClose();
       return;
     }
 
-    alert(args + " 금액의 정산 요청이 처리되었습니다.");
+    alert(balance + " USDC 금액의 정산 요청이 처리되었습니다.");
     onClose();
   };
 

@@ -33,7 +33,7 @@ const PaymentModal = ({ game, onClose }) => {
         const raw = priceInfo.tokenAmount;
         const padded = raw.padStart(7, "0");
         const integerPart = padded.slice(0, -6);
-        const decimalPart = padded.slice(-6).replace(/0+$/, ""); // remove trailing zeros
+        const decimalPart = padded.slice(-6).replace(/0+$/, "");
         setTokenAmount(decimalPart ? `${integerPart}.${decimalPart}` : integerPart);
       } else {
         setTokenAmount("");
@@ -78,11 +78,13 @@ const PaymentModal = ({ game, onClose }) => {
                 const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
                 if (nowChainId.toLowerCase() !== chainIdHex) {
                   alert("이더리움 네트워크 전환에 실패했습니다.");
+                  onClose();
                   return;
                 }
               }
             } else {
-              throw switchError;
+              onClose();
+              return;
             }
           }
         }
@@ -95,6 +97,7 @@ const PaymentModal = ({ game, onClose }) => {
 
       if (address.toLowerCase() !== selectedWallet.toLowerCase()) {
         alert("MetaMask와 지갑 주소가 일치하지 않습니다. 주소를 확인해주세요.");
+        onClose();
         return;
       }
 
@@ -120,10 +123,12 @@ const PaymentModal = ({ game, onClose }) => {
       if (!token)
       {
         console.log("No token.");
+        onClose();
         return;
       }
 
       let relayRequest;
+      console.log("game.itemId: " + game.itemId);
       try {
         relayRequest =
             await store.purchaseItemRequest(
@@ -131,7 +136,9 @@ const PaymentModal = ({ game, onClose }) => {
                 token,
                 30000000n);
       } catch (err) {
-        console.log("relayReques Error: " + err);
+        console.log("relayRequest Error: " + err);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        onClose();
         return;
       }
 
@@ -140,23 +147,34 @@ const PaymentModal = ({ game, onClose }) => {
       if (error)
       {
         console.error(`message: ${error.message}`);
-        alert("Server 에러입니다. 관리자에게 문의해주세요.");
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        onClose();
         return;
       }
 
-      const purchaseId = relayRequest.onResponse(args);
+      try {
+        const resultArray = Array.isArray(args) ? args : [args];
 
-      const purchasedGame = {
-        gameId: game.itemId,
-        pricePaid: game.price.toString(),
-        isNftIssued: true,
-        purchaseId: purchaseId
+        const purchaseId = relayRequest.onResponse(resultArray);
+        console.log("purchaseId: " + purchaseId.toString());
+        const purchasedGame = {
+          gameId: game.id,
+          pricePaid: game.price.toString(),
+          isNftIssued: true,
+          purchaseId: purchaseId.toString()
+        }
+
+        const message = await registerPurchase(purchasedGame);
+        console.log(message);
+      } catch (error) {
+        console.log("Register Purchase Error: " + error);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        onClose();
+        return;
       }
 
-      const message = await registerPurchase(purchasedGame);
-      console.log(message);
-
       alert("지갑 결제가 처리되었습니다.");
+      onClose();
     }
   };
 
