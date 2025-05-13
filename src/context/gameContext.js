@@ -7,7 +7,7 @@ const GameContext = createContext();
 
 export const GameProvider = ({ children }) => {
   const [page, setPage] = useState(1);
-  const limit = 30;
+  const limit = 15;
   const [games, setGames] = useState([]);
   const [isUpload, setIsUpload] = useState(false);
 
