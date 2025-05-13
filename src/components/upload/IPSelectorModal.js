@@ -30,7 +30,8 @@ const IPSelectorModal = ({ onClose, setSelectedIPs }) => {
 
     setGameForm({ ...gameForm, originGameIds: availableIPs
       .filter((ip) => checked[ip.resourceId])
-      .map((ip) => ip.resourceId)});
+      .map((ip) => ip.gameId)});
+    console.log("gameForm.originGameIds", gameForm.originGameIds);
 
     setSharerIds(availableIPs
       .filter((ip) => checked[ip.resourceId])
@@ -53,7 +54,7 @@ const IPSelectorModal = ({ onClose, setSelectedIPs }) => {
                   checked={!!checked[ip.resourceId]}
                   onChange={() => handleCheck(ip.resourceId)}
                 />
-                {ip.description} {ip.allowsDerivative}
+                {ip.title} {ip.allowsDerivative}
               </label>
             </li>
           ))}

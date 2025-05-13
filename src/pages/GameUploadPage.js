@@ -25,7 +25,6 @@ const GameUploadPage = () => {
   const { user, isLoggedIn } = useUser();
   const [isUploading, setIsUploading] = useState(false);
   const { chainConfig } = useConfig();
-  setIsFetch(false);
   const [category, setCategory] = useState("origin");
   const [showHelp, setShowHelp] = useState(false);
   const [showIPModal, setShowIPModal] = useState(false);
@@ -96,13 +95,21 @@ const GameUploadPage = () => {
     });
   };
 
+  const isMetaMaskInstalled = () => {
+    return typeof window.ethereum !== "undefined" && window.ethereum.isMetaMask;
+  };
+
   useEffect(() => {
+    setIsFetch(false);
     resetUploadForm();
   }, []);
-
+  
   useEffect(() => {
       if (!isLoggedIn) {
         navigate("/login");
+    } else if (!isMetaMaskInstalled()) {
+      alert("MetaMask가 설치되어 있지 않습니다. MetaMask를 설치해주세요.");
+      navigate("/");
       }
     }, [isLoggedIn, navigate]);
 
@@ -117,6 +124,10 @@ const GameUploadPage = () => {
     }
     if (selectedTags.length === 0) {
       alert("태그를 하나 이상 선택해주세요.");
+      return;
+    }
+    if (category === "variant" && sharerIds.length === 0) {
+      alert("게임 IP를 하나 이상 선택해주세요.");
       return;
     }
 
@@ -167,11 +178,18 @@ const GameUploadPage = () => {
     if (!user.cryptoWallet.some(wallet => wallet.address?.toLowerCase() === sellerAddress.toLowerCase())) {
       alert(`해당 메타마스크 지갑 주소(${sellerAddress})는 등록된 판매자 지갑이 아닙니다. 주소를 등록해주세요.`);
       setIsUploading(false);
+      navigate("/my");
       return;
     }
 
+    if(category === "origin"){
+      setGameForm({ ...gameForm, originGameIds:[]})
+      setSharerIds([]);
+    };
+
     const requirements = [
       {
+        isMinimum: false, 
         ...Object.fromEntries(
           Object.entries(specFields)
             .filter(([key, enabled]) => enabled)
@@ -184,22 +202,16 @@ const GameUploadPage = () => {
       setGameForm({ ...gameForm, originGameIds:[]})
       setSharerIds([]);
     }
-
     const payload = {
       ...gameForm,
       price: parseFloat(gameForm.price),
       isOrigin: category === "origin",
-
-      originGameIds: selectedIPs.map(ip => {
-        const match = ip.match(/\d+/);
-        return match ? parseInt(match[0], 10) : null;
-      }).filter(id => id !== null),
-
       tags: selectedTags.map((tagId) => ({tagId, priority: 10})),
-      requirements,
+      requirements: requirements,
       thumbnail: gameForm.thumbnail,
       mediaFiles: gameForm.mediaFiles,
     };
+    console.log("payload: ", payload);
         
     try {
       const responseGame = await uploadGameData(payload);

@@ -1,12 +1,13 @@
 import React from "react";
 import "../../styles/game/GameDetailBar.css";
 import { useNavigate } from "react-router-dom";
+import Banner from "../layout/Banner";
 
 const GameDetailBar = ({ game }) => {
   const navigate = useNavigate();
 
   if (!game) {
-    return <div className="bar-game-banner">게임을 선택하세요.</div>;
+    return <div className="bar-game-banner"><Banner /></div>;
   }
 
   return (

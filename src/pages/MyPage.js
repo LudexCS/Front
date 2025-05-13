@@ -31,10 +31,9 @@ const MyPage = () => {
     try {
       let result;
       if (type === "game") {
-        console.log("game Id: " + id);
-        result = await downloadGame({ gameId: id });
+        result = await downloadGame({ gameId: String(id) });
       } else if (type === "resource") {
-        result = await downloadResource({ resourceId: id });
+        result = await downloadResource({ resourceId: String(id) });
       } else {
         throw new Error("알 수 없는 다운로드 타입");
       }

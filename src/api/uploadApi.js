@@ -82,14 +82,14 @@ export const uploadResourceData = async (resourceForm) => {
     }
   });
 
-  // // 디버깅 로그
-  // for (const [key, value] of formData.entries()) {
-  //   if (value instanceof File) {
-  //     console.log(`[FormData] ${key}: ${value.name}, ${value.size} bytes`);
-  //   } else {
-  //     console.log(`[FormData] ${key}:`, value);
-  //   }
-  // }
+  // 디버깅 로그
+  for (const [key, value] of formData.entries()) {
+    if (value instanceof File) {
+      console.log(`[FormData] ${key}: ${value.name}, ${value.size} bytes`);
+    } else {
+      console.log(`[FormData] ${key}:`, value);
+    }
+  }
 
   try {
     const response = await gameManageInstance.post(
