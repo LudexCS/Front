@@ -29,7 +29,15 @@ const PaymentModal = ({ game, onClose }) => {
       }));
 
       const priceInfo = priceInfoList[0];
-      setTokenAmount(priceInfo?.tokenAmount ?? "");
+      if (priceInfo?.tokenAmount) {
+        const raw = priceInfo.tokenAmount;
+        const padded = raw.padStart(7, "0");
+        const integerPart = padded.slice(0, -6);
+        const decimalPart = padded.slice(-6).replace(/0+$/, "");
+        setTokenAmount(decimalPart ? `${integerPart}.${decimalPart}` : integerPart);
+      } else {
+        setTokenAmount("");
+      }
     })();
   }, [chainConfig, ludexConfig, game]);
 
@@ -46,14 +54,54 @@ const PaymentModal = ({ game, onClose }) => {
       }
       console.log("선택된 지갑 주소:", selectedWallet);
 
-      const connection = await ludex.BrowserWalletConnection.create(chainConfig);
-      const signer = await connection.getSigner();
+      const chainIdHex = chainConfig.chainId.toLowerCase();
 
-      const address = await signer.getAddress();
-      if (address !== selectedWallet) {
+      try {
+        const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+
+        if (currentChainId !== chainIdHex) {
+          try {
+            await window.ethereum.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: chainIdHex }]
+            });
+          } catch (switchError) {
+            if (switchError.code === 4902) {
+              // 체인 추가 시도
+              try {
+                await window.ethereum.request({
+                  method: "wallet_addEthereumChain",
+                  params: [chainConfig]
+                });
+              } catch (addError) {
+                console.warn("Add chain failed:", addError);
+                const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
+                if (nowChainId.toLowerCase() !== chainIdHex) {
+                  alert("이더리움 네트워크 전환에 실패했습니다.");
+                  onClose();
+                  return;
+                }
+              }
+            } else {
+              onClose();
+              return;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("MetaMask 네트워크 연결 실패:", err);
+      }
+
+      const connection = await ludex.BrowserWalletConnection.create(chainConfig);
+      const address = (await connection.getCurrentAddress()).stringValue;
+
+      if (address.toLowerCase() !== selectedWallet.toLowerCase()) {
         alert("MetaMask와 지갑 주소가 일치하지 않습니다. 주소를 확인해주세요.");
+        onClose();
         return;
       }
+
+      const signer = await connection.getSigner();
 
       const facade =
           ludex.facade.createWeb3UserFacade(
@@ -75,37 +123,58 @@ const PaymentModal = ({ game, onClose }) => {
       if (!token)
       {
         console.log("No token.");
+        onClose();
         return;
       }
 
-      const relayRequest =
-          await store.purchaseItemRequest(
-              BigInt(game.itemId),
-              token,
-              30000000n);
+      let relayRequest;
+      console.log("game.itemId: " + game.itemId);
+      try {
+        relayRequest =
+            await store.purchaseItemRequest(
+                BigInt(game.itemId),
+                token,
+                30000000n);
+      } catch (err) {
+        console.log("relayRequest Error: " + err);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        onClose();
+        return;
+      }
 
       const { args, error } = await requestRelay(relayRequest);
 
       if (error)
       {
         console.error(`message: ${error.message}`);
-        alert("Server 에러입니다. 관리자에게 문의해주세요.");
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        onClose();
         return;
       }
 
-      const purchaseId = relayRequest.onResponse(args);
+      try {
+        const resultArray = Array.isArray(args) ? args : [args];
 
-      const purchasedGame = {
-        gameId: game.itemId,
-        pricePaid: game.price.toString(),
-        isNftIssued: true,
-        pruchaseId: purchaseId
+        const purchaseId = relayRequest.onResponse(resultArray);
+        console.log("purchaseId: " + purchaseId.toString());
+        const purchasedGame = {
+          gameId: game.id,
+          pricePaid: game.price.toString(),
+          isNftIssued: true,
+          purchaseId: purchaseId.toString()
+        }
+
+        const message = await registerPurchase(purchasedGame);
+        console.log(message);
+      } catch (error) {
+        console.log("Register Purchase Error: " + error);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        onClose();
+        return;
       }
 
-      const message = await registerPurchase(purchasedGame);
-      console.log(message);
-
       alert("지갑 결제가 처리되었습니다.");
+      onClose();
     }
   };
 

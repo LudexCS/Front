@@ -3,11 +3,18 @@ import * as ludex from "ludex";
 
 export const requestRelay = async (relayRequest) => {
   try {
-    const res = await web3Instance.post("/relay", ludex.relay.serializeRelayRequest(relayRequest));
+    const body = ludex.relay.serializeRelayRequest(relayRequest);
+    console.log("requestRelay body: ", body);
+    const res = await web3Instance.post("/relay", body, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
     return res.data;
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
     alert(`실패: ${msg}`);
+    return { error: msg };
   }
 }
 
