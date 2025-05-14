@@ -72,6 +72,7 @@ const LicensingTab = () => {
           </div>
 
           <h4>수익 배분 비율 설정</h4>
+          <label>(ludex 10% 별도)</label>
           <div className="revenue-split">
             {/* <p>플랫폼: 10%</p> */}
             <label>판매자 (%):</label>

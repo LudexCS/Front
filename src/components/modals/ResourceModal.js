@@ -63,7 +63,7 @@ const ResourceModal = ({ resource, onClose }) => {
             아래 명시된 계약 조건을 확인 후 Checkout을 진행해 주세요.<br />
             위반 시 서비스 이용이 제한되며, 법적 책임이 발생할 수 있습니다.
             </p>
-            <pre>수익 분배: ludex 10%, 판매자 {resource.sellerRatio}%, 구매자 {resource.creatorRatio}%</pre>
+            <pre>수익 분배: 판매자 {resource.sellerRatio}%, 구매자 {resource.creatorRatio}% (ludex 10% 별도)</pre>
             <pre>2차 파생 허용: {resource.allowDerivation? "Yes" : "No"}</pre>
             <pre>추가 조건: {resource.additionalCondition}</pre>
           </div>
