@@ -47,7 +47,7 @@ const SignupPage = () => {
       return false;
     }
   };
-  
+
   const handleEmailCheckAndSendCode = async () => {
     try {
       const isEmailValid = await checkEmailDuplicate();
@@ -115,6 +115,9 @@ const SignupPage = () => {
               setNickname(e.target.value);
               setIsNicknameChecked(false);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleNicknameCheck();
+            }}
           />
           <button onClick={handleNicknameCheck}>Check</button>
         </div>
@@ -128,6 +131,9 @@ const SignupPage = () => {
               setEmail(e.target.value);
               setEmailVerified(false);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleEmailCheckAndSendCode();
+            }}
           />
           <button onClick={handleEmailCheckAndSendCode}>Send</button>
         </div>
@@ -139,6 +145,9 @@ const SignupPage = () => {
               placeholder="code"
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleVerifyCode();
+              }}
             />
             <button onClick={handleVerifyCode}>Check</button>
           </div>
@@ -149,12 +158,18 @@ const SignupPage = () => {
           placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSignup();
+          }}
         />
         <input
           type="password"
           placeholder="repeat password"
           value={repeatPassword}
           onChange={(e) => setRepeatPassword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSignup();
+          }}
         />
 
         <div className="signup-action-buttons">
