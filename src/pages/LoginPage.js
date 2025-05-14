@@ -14,16 +14,18 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       const { accessToken } = await loginUser(email, password);
-      
       localStorage.setItem("accessToken", accessToken);
-
-      // 전역 로그인 상태 업데이트
       setIsLoggedIn(true);
-
       navigate("/");
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
       alert(`실패: ${msg}`);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
     }
   };
 
@@ -38,12 +40,14 @@ const LoginPage = () => {
             placeholder="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <input
             type="password"
             placeholder="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button onClick={handleLogin}>Login</button>
           <p>

@@ -9,7 +9,7 @@ import { logout } from "../api/userApi";
 import { checkNickname } from "../api/signupApi";
 
 const EditProfilePage = () => {
-  const { user, setUser, setIsLoggedIn, setIsFetch } = useUser();
+  const { user, setIsLoggedIn, setIsFetch } = useUser();
   const [nickname, setNickname] = useState(user ? user.nickname : "");
   const [email] = useState(user ? user.email : "");
   const [wallets, setWallets] = useState(user ? user.cryptoWallet : []);
@@ -93,7 +93,6 @@ const EditProfilePage = () => {
   const confirmDelete = async () => {
     try {
       const res = await axiosInstance.delete("/protected/account/delete");
-      setUser(null);
       await logout(setIsLoggedIn);
       navigate("/", { state: { message: res.data.message } });
     } catch (err) {

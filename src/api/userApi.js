@@ -21,15 +21,16 @@ export const logout = async (setIsLoggedIn) => {
   console.log("로그아웃");
   localStorage.removeItem("accessToken");
   setIsLoggedIn(false);
-  try {
-    const response = await axios.delete("http://3.37.46.45:30300/api/auth/logout"
-      ,{ withCredentials: true }
-    );
-    return response;
-  } catch (err) {
-    const msg = err.response?.data?.message || err.message;
-    console.log("logout 로그아웃 실패: ", msg);
-  }
+  // 캐시 관련
+  // try {
+  //   const response = await axios.delete("http://3.37.46.45:30300/api/auth/logout"
+  //     ,{ withCredentials: true }
+  //   );
+  //   return response;
+  // } catch (err) {
+  //   const msg = err.response?.data?.message || err.message;
+  //   console.log("logout 로그아웃 실패: ", msg);
+  // }
 };
 
 // 회원 정보를 가져오는 API

@@ -3,9 +3,13 @@ import { logout, getUserData } from "../api/userApi";
 
 const UserContext = createContext();
 
+const checkInitialLoginStatus = () => {
+  return !!localStorage.getItem("accessToken");
+};
+
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(checkInitialLoginStatus());
   const [isFetch, setIsFetch] = useState(false);
 
   useEffect(() => {
