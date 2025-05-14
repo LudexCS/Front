@@ -28,6 +28,7 @@ const MyPage = () => {
   };
 
   const handleDownload = async (id, type) => {
+    console.log("id: ",id);
     try {
       let result;
       if (type === "game") {

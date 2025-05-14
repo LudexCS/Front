@@ -13,8 +13,8 @@ export const downloadGame = async ({ gameId }) => {
 };
 
 // 리소스 다운로드
-export const downloadResource = async (resourceId) => {
-  console.log("resourceId: ", resourceId);
+export const downloadResource = async ({ resourceId }) => {
+  // console.log("resourceId: ", resourceId.resourceId);
   try {
     const response = await uploadInstance.get(`/protected/resource/download/${resourceId}`);
     console.log("리소스 다운로드 링크 조회: ", response.data);
