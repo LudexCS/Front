@@ -8,7 +8,11 @@ const checkInitialLoginStatus = () => {
 };
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    email: "",
+    nickname: "",
+    cryptoWallet: [],
+  });
   const [isLoggedIn, setIsLoggedIn] = useState(checkInitialLoginStatus());
   const [isFetch, setIsFetch] = useState(false);
 

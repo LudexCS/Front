@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { logout } from "../api/userApi";
@@ -14,18 +14,24 @@ import { downloadGame, downloadResource } from "../api/downloadApi";
 import "../styles/pages/MyPage.css";
 
 const MyPage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("purchase");
   const [nftModalOpen, setNftModalOpen] = useState(false);
   const [nftInfo, setNftInfo] = useState(null);
   const [payoutModalOpen, setPayoutModalOpen] = useState(false);
-  const navigate = useNavigate();
-  const { user, setIsLoggedIn } = useUser();
+  const { user, isLoggedIn, setIsLoggedIn } = useUser();
   const { recordData } = useRecord();
 
   const handleLogout = async () => {
     await logout(setIsLoggedIn);
     navigate("/");
   };
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleDownload = async (id, type) => {
     try {

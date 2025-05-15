@@ -16,7 +16,7 @@ const LoadingModal = () => {
   return (
     <div className="loading-modal-overlay">
       <div className="loading-modal-content">
-        <p>등록 중{dots}</p>
+        <p>처리 중{dots}</p>
       </div>
     </div>
   );
