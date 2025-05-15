@@ -15,7 +15,7 @@ const PaymentModal = ({ game, onClose }) => {
   const { setIsFetch } = useRecord();
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [tokenAmount, setTokenAmount] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false); // 추가됨
 
   useEffect(() => {
     setIsFetch(false);
@@ -62,13 +62,10 @@ const PaymentModal = ({ game, onClose }) => {
         return;
       }
 
-      setIsUploading(true);
-
       const chainIdHex = chainConfig.chainId.toLowerCase();
 
       try {
         const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
-
         if (currentChainId !== chainIdHex) {
           try {
             await window.ethereum.request({
@@ -83,7 +80,6 @@ const PaymentModal = ({ game, onClose }) => {
                   params: [chainConfig]
                 });
               } catch (addError) {
-                setIsUploading(false);
                 const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
                 if (nowChainId.toLowerCase() !== chainIdHex) {
                   alert("이더리움 네트워크 전환에 실패했습니다.");
@@ -92,14 +88,12 @@ const PaymentModal = ({ game, onClose }) => {
                 }
               }
             } else {
-              setIsUploading(false);
               onClose();
               return;
             }
           }
         }
       } catch (err) {
-        setIsUploading(false);
         console.error("MetaMask 네트워크 연결 실패:", err);
         return;
       }
@@ -109,7 +103,6 @@ const PaymentModal = ({ game, onClose }) => {
 
       if (address.toLowerCase() !== selectedWallet.toLowerCase()) {
         alert("MetaMask와 지갑 주소가 일치하지 않습니다.");
-        setIsUploading(false);
         onClose();
         return;
       }
@@ -125,18 +118,19 @@ const PaymentModal = ({ game, onClose }) => {
 
       if (!token) {
         console.log("No token.");
-        setIsUploading(false);
         onClose();
         return;
       }
+
+      setIsUploading(true); // 로딩 시작
 
       let relayRequest;
       try {
         relayRequest = await store.purchaseItemRequest(BigInt(game.itemId), token, 30000000n);
       } catch (err) {
         console.log("relayRequest Error:", err);
-        setIsUploading(false);
         alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        setIsUploading(false);
         onClose();
         return;
       }
@@ -145,8 +139,8 @@ const PaymentModal = ({ game, onClose }) => {
 
       if (error) {
         console.error("relay error:", error.message);
-        setIsUploading(false);
         alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        setIsUploading(false);
         onClose();
         return;
       }
@@ -154,7 +148,6 @@ const PaymentModal = ({ game, onClose }) => {
       try {
         const resultArray = Array.isArray(args) ? args : [args];
         const purchaseId = relayRequest.onResponse(resultArray);
-
         const purchasedGame = {
           gameId: game.id,
           pricePaid: game.price.toString(),
@@ -166,14 +159,14 @@ const PaymentModal = ({ game, onClose }) => {
         console.log(message);
       } catch (error) {
         console.log("Register Purchase Error:", error);
-        setIsUploading(false);
         alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        setIsUploading(false);
         onClose();
         return;
       }
 
+      setIsUploading(false); // 로딩 끝
       setIsFetch(true);
-      setIsUploading(false);
       alert("지갑 결제가 처리되었습니다.");
       onClose();
     }
@@ -181,7 +174,7 @@ const PaymentModal = ({ game, onClose }) => {
 
   return (
     <>
-      {isUploading && <LoadingModal />}
+      {isUploading && <LoadingModal />} {/* 로딩 모달 조건부 렌더링 */}
       <div className="payment-modal-overlay">
         <div className="payment-modal-content payment-modal">
           <h3>결제 방법 선택</h3>

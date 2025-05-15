@@ -1,4 +1,6 @@
+// LoadingModal.js
 import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import "../../styles/modals/LoadingModal.css";
 
 const LoadingModal = () => {
@@ -13,12 +15,12 @@ const LoadingModal = () => {
 
   const dots = ".".repeat(dotCount);
 
-  return (
+  return ReactDOM.createPortal(
     <div className="loading-modal-overlay">
-      <div className="loading-modal-content">
-        <p>처리 중{dots}</p>
-      </div>
-    </div>
+      <div className="loading-modal-spinner" />
+      <div className="loading-modal-text">처리 중{dots}</div>
+    </div>,
+    document.body
   );
 };
 
