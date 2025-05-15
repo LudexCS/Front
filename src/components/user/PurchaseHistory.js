@@ -21,7 +21,7 @@ const PurchaseHistory = ({ purchases, showNft, onDownload }) => {
             </span>
             <div>
               <button className="download-btn" onClick={() => showNft(game.purchaseId)}>Nft</button>
-              <button className="download-btn" onClick={() => onDownload(game.id, "game")}>Download</button>
+              <button className="download-btn" onClick={() => onDownload(game.gameId, "game")}>Download</button>
               <button className="expand-btn" onClick={() => toggleExpand(`game-${game.gameId}`)}>V</button>
             </div>
           </div>

@@ -9,6 +9,7 @@ import PurchaseHistory from "../components/user/PurchaseHistory";
 import SalesHistory from "../components/user/SalesHistory";
 import NftModal from "../components/modals/NftModal";
 import PayoutModal from "../components/modals/PayoutModal";
+import DiscountModal from "../components/modals/DiscountModal";
 import { useRecord } from "../context/RecordContext";
 import { downloadGame, downloadResource } from "../api/downloadApi";
 import "../styles/pages/MyPage.css";
@@ -18,6 +19,8 @@ const MyPage = () => {
   const [activeTab, setActiveTab] = useState("purchase");
   const [nftModalOpen, setNftModalOpen] = useState(false);
   const [nftInfo, setNftInfo] = useState(null);
+  const [discountModalOpen, setDiscountModalOpen] = useState(false);
+  const [selectedGame, setSelectedGame] = useState(null);
   const [payoutModalOpen, setPayoutModalOpen] = useState(false);
   const { user, isLoggedIn, setIsLoggedIn } = useUser();
   const { recordData } = useRecord();
@@ -71,6 +74,15 @@ const MyPage = () => {
     setPayoutModalOpen(true);
   };
 
+  const handleDiscount = (game) => {
+    setSelectedGame(game);
+    setDiscountModalOpen(true);
+  };
+
+  const handleEdit = (game) => {
+    navigate(`/edit-game/${game.gameId}`)
+  }
+
   return (
     <div className="mypage-container">
       <NavbarSearch />
@@ -81,18 +93,12 @@ const MyPage = () => {
         {activeTab === "purchase" ? (
           <PurchaseHistory purchases={recordData.purchased} onDownload={handleDownload} showNft={handleNft} />
         ) : (
-          <SalesHistory sales={recordData.sold} />
+          <SalesHistory sales={recordData.sold} onSetDiscount={handleDiscount}  onEditGame={handleEdit}/>
         )}
       </div>
-      <NftModal
-        isOpen={nftModalOpen}
-        onClose={() => setNftModalOpen(false)}
-        purchaseInfo={nftInfo}
-      />
-      <PayoutModal
-        isOpen={payoutModalOpen}
-        onClose={() => setPayoutModalOpen(false)}
-      />
+      <NftModal isOpen={nftModalOpen} onClose={() => setNftModalOpen(false)} purchaseInfo={nftInfo} />
+      <PayoutModal isOpen={payoutModalOpen} onClose={() => setPayoutModalOpen(false)} />
+      <DiscountModal isOpen={discountModalOpen} onClose={() => setDiscountModalOpen(false)} game={selectedGame} />
     </div>
   );
 };

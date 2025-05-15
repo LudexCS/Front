@@ -142,8 +142,8 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
           </div>
         ) : (
           <div className="nft-pending">
-            <p>NFT가 아직 발급되지 않았습니다.</p>
-            <p>전자지갑을 확인해주세요.</p>
+            <p>발급정보를 가져오고 있거나, NFT가 아직 발급되지 않았습니다.</p>
+            <p>잠시 기다린 후 전자지갑을 확인해주세요.</p>
           </div>
         )}
         <button className="close-btn" onClick={onClose}>닫기</button>
