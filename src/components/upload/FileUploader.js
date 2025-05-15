@@ -36,7 +36,7 @@ const FileUploader = ({ maxFiles = 5, files = [], setFiles }) => {
         {files.map((entry, idx) => (
           <li key={idx}>
             <div>
-              {entry.file.name} ({(entry.file.size / 1024).toFixed(1)} KB)
+              {entry.file? entry.file.name : "파일"} ({((entry.file? entry.file.size : 1024) / 1024).toFixed(1)} KB)
               <button onClick={() => handleRemove(idx)}>삭제</button>
             </div>
           </li>

@@ -15,6 +15,7 @@ import { UploadProvider } from "./context/UploadContext";
 import { RecordProvider } from "./context/RecordContext";
 import { GameProvider } from "./context/gameContext";
 import ConfigProvider from "./context/ConfigContext";
+import GameEditPage from "./pages/GameEditPage";
 
 function App() {
   console.log(Router);
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/delete-account" element={<DeleteAccount />} />
                 <Route path="/manage-users" element={<ManageUsersPage />} />
                 <Route path="/game/:gameId" element={<GameDetailPage />} />
+                <Route path="/edit-game/:gameId" element={<GameEditPage />} />
               </Routes>
             </GameProvider>
           </RecordProvider>
