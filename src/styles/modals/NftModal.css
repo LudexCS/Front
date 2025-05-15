@@ -16,11 +16,13 @@
   background-color: #ffffff;
   padding: 24px 32px;
   border-radius: 12px;
-  width: 400px;
-  max-width: 90%;
+  width: auto;
+  max-width: 90vw;
+  min-width: 400px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   position: relative;
   animation: fadeIn 0.3s ease-in-out;
+  word-break: break-word;
 }
 
 .nft-modal h2 {
@@ -29,11 +31,18 @@
   text-align: center;
 }
 
-.nft-info p,
 .nft-pending p {
   margin: 8px 0;
   font-size: 15px;
   line-height: 1.4;
+}
+
+.nft-info p {
+  margin: 8px 0;
+  font-size: 15px;
+  line-height: 1.4;
+  word-break: break-all;
+  white-space: normal;
 }
 
 .nft-pending {
