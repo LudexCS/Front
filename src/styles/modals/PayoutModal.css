@@ -53,7 +53,7 @@
 .payout-wallet-list li.selected {
   background-color: #d0e7ff;
   border-color: #007bff;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 .payout-actions {
