@@ -26,16 +26,22 @@ const PaymentModal = ({ game, onClose }) => {
       if (!chainConfig || !ludexConfig || !game?.itemId) return;
 
       const itemId = game.itemId;
-      const facade = ludex.facade.createWeb2UserFacade(chainConfig, ludexConfig);
-      const priceTable = facade.readonlyAccessPriceTable();
+      let priceInfo;
+      try {
+        const facade = ludex.facade.createWeb2UserFacade(chainConfig, ludexConfig);
+        const priceTable = facade.readonlyAccessPriceTable();
+        const priceInfoListRaw = await priceTable.getPriceInfoList(itemId);
+        const priceInfoList = priceInfoListRaw.map(entry => ({
+          token: entry.token.stringValue,
+          tokenAmount: entry.tokenAmount.toString()
+        }));
 
-      const priceInfoListRaw = await priceTable.getPriceInfoList(itemId);
-      const priceInfoList = priceInfoListRaw.map(entry => ({
-        token: entry.token.stringValue,
-        tokenAmount: entry.tokenAmount.toString()
-      }));
+        priceInfo = priceInfoList[0];
+      } catch (error) {
+        console.error("Price Table Error:", error);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+      }
 
-      const priceInfo = priceInfoList[0];
       if (priceInfo?.tokenAmount) {
         const raw = priceInfo.tokenAmount;
         const padded = raw.padStart(7, "0");
