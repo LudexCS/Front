@@ -170,7 +170,8 @@ export const uploadGameData = async ({
     console.log("response.data: ", response.data);
     return response.data;
   } catch (error) {
-    console.error("게임 업로드 실패:", error);
+    const msg = error.response?.data?.message || error.message;
+    console.error("게임 업로드 실패:", msg);
     throw error;
   }
 };
