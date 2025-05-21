@@ -30,12 +30,11 @@ const PaymentModal = ({ game, onClose }) => {
       try {
         const facade = ludex.facade.createWeb2UserFacade(chainConfig, ludexConfig);
         const priceTable = facade.readonlyAccessPriceTable();
-        const priceInfoListRaw = await priceTable.getPriceInfoList(itemId);
+        const priceInfoListRaw = await priceTable.getPriceInfoList(BigInt(itemId));
         const priceInfoList = priceInfoListRaw.map(entry => ({
           token: entry.token.stringValue,
           tokenAmount: entry.tokenAmount.toString()
         }));
-
         priceInfo = priceInfoList[0];
       } catch (error) {
         console.error("Price Table Error:", error);
