@@ -11,6 +11,7 @@ import IPSelectorModal from "../components/upload/IPSelectorModal";
 
 const mockGame = {
   title: "Space Blaster",
+  titleKo: "스페이스 블라스터",
   price: 50,
   description: "An arcade-style space shooter game.",
   requirements: [
@@ -71,6 +72,7 @@ const GameEditPage = () => {
 
     setGameForm({
       title: mockGame.title,
+      titleKo: mockGame.titleKo,
       price: mockGame.price,
       description: mockGame.description,
       requirements: mockGame.requirements,
@@ -162,12 +164,19 @@ const GameEditPage = () => {
         />
 
         <div className="form-section">
-          <label>게임명:</label>
+          <label>게임명(영문):</label>
           <input
             type="text"
             value={gameForm.title}
             onChange={(e) => setGameForm({ ...gameForm, title: e.target.value })}
           />
+          
+          {/* <label>게임명(한글):</label>
+          <input
+            type="text"
+            value={gameForm.titleKo}
+            onChange={(e) => setGameForm({ ...gameForm, titleKo: e.target.value })}
+          /> */}
 
           <label>가격(USD):</label>
           <input

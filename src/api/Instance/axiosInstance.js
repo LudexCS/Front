@@ -1,9 +1,8 @@
-// src/api/axiosInstance.js
 import axios from "axios";
-import { getNewAccessToken } from "./userApi";
+// import { getNewAccessToken } from "../../api/userApi";
 
 const instance = axios.create({
-  baseURL:  "http://3.37.46.45:30300/api",
+  baseURL:  "http://16.184.9.194:30300/api",
   withCredentials: true,
 });
 

@@ -5,6 +5,7 @@ const UploadContext = createContext();
 export const UploadProvider = ({ children }) => {
   const [gameForm, setGameForm] = useState({
     title: "",
+    titleKo: "",
     price: "",
     description: "",
     tags: [],

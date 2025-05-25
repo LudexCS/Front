@@ -1,4 +1,4 @@
-import web3Instance from "./web3GatewayInstance";
+import web3Instance from "./Instance/web3GatewayInstance";
 import * as ludex from "ludex";
 
 export const requestRelay = async (relayRequest) => {
@@ -26,6 +26,7 @@ export const getConfig = async () => {
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
     alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+    return { error: msg };
   }
 };
 
@@ -36,6 +37,7 @@ export const getTokenAddress = async () => {
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
     alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+    return { error: msg };
   }
 };
 
@@ -46,6 +48,7 @@ export const registerGame = async (item) => {
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
     alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+    return { error: msg };
   }
 };
 
@@ -61,6 +64,7 @@ export const requestWalletNonce = async ({address, url}) => {
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
     alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+    return { error: msg };
   }
 };
 
@@ -75,5 +79,6 @@ export const verifyWalletOwnership = async ({ address, signature }) => {
   } catch (err) {
     const msg = err.response?.data?.message || err.message;
     alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+    return { error: msg };
   }
 };

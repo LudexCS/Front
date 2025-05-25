@@ -281,11 +281,18 @@ const GameUploadPage = () => {
         />
 
         <div className="form-section">
-          <label>게임명:</label>
+          <label>게임명(영문):</label>
           <input
             type="text"
             value={gameForm.title}
             onChange={(e) => setGameForm({ ...gameForm, title: e.target.value })}
+          />
+          
+          <label>게임명(한글):</label>
+          <input
+            type="text"
+            value={gameForm.titleKo}
+            onChange={(e) => setGameForm({ ...gameForm, titleKo: e.target.value })}
           />
 
           <label>가격(USD):</label>
