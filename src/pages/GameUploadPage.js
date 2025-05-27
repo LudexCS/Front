@@ -129,12 +129,17 @@ const GameUploadPage = () => {
       alert("태그를 하나 이상 선택해주세요.");
       return;
     }
+    if (!Array.isArray(gameForm.mediaFiles) || gameForm.mediaFiles.length === 0 || !gameForm.thumbnail ||
+    (resourceForm.resourceFile !== null && (!Array.isArray(resourceForm.imageFiles) || resourceForm.imageFiles.length === 0))) {
+      alert("이미지 파일을 하나 이상 업로드해주세요.");
+      return;
+    }
     if (category === "variant" && sharerIds.length === 0) {
       alert("게임 IP를 하나 이상 선택해주세요.");
       return;
     }
 
-    alert(" 등록을 시도합니다. 완료 될 때까지 잠시 기다려주세요. ");
+    alert("등록을 시도합니다. 완료 될 때까지 잠시 기다려주세요.");
     setIsUploading(true);
 
     const chainIdHex = chainConfig.chainId.toLowerCase();
@@ -201,10 +206,6 @@ const GameUploadPage = () => {
       },
     ];
 
-    if(category === "origin"){
-      setGameForm({ ...gameForm, originGameIds:[]})
-      setSharerIds([]);
-    }
     const payload = {
       ...gameForm,
       price: parseFloat(gameForm.price),

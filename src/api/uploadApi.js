@@ -11,6 +11,146 @@ function extractFile(input) {
   throw new Error("File 형식으로 변환할 수 없습니다.");
 }
 
+export const updateResourceData = async (resourceForm) => {
+  const {
+    id,
+    gameId,
+    allowDerivation,
+    sellerRatio,
+    creatorRatio,
+    additionalCondition,
+    description,
+    imageFiles,
+  } = resourceForm;
+
+  const formData = new FormData();
+  const resourceId = {resourceId : id};
+  const jsonData = {
+    gameId,
+    allowDerivation,
+    sellerRatio,
+    creatorRatio,
+    additionalCondition,
+    description,
+  };
+
+  console.log("resourceId: ", resourceId);
+  console.log("jsonData: ", jsonData);
+
+  formData.append("resourceId", JSON.stringify(resourceId));
+  formData.append("json", JSON.stringify(jsonData));
+
+  // 이미지들 첨부
+  imageFiles.forEach(({ file }) => {
+    if (file instanceof File) {
+      const safeFile = new File(
+        [file],
+        sanitizeFilename(file.name),
+        { type: file.type }
+      );
+      formData.append("images", safeFile);
+    }
+  });
+
+  // 디버깅 로그
+  // for (const [key, value] of formData.entries()) {
+  //   if (value instanceof File) {
+  //     console.log(`[FormData] ${key}: ${value.name}, ${value.size} bytes`);
+  //   } else {
+  //     console.log(`[FormData] ${key}:`, value);
+  //   }
+  // }
+
+  // try {
+  //   const response = await gameManageInstance.post(
+  //     "/protected/patch/resource",
+  //     formData
+  //   );
+  //   return response.data;
+  // } catch (error) {
+  //   console.error("리소스 업로드 실패:", error);
+  //   throw error;
+  // }
+};
+
+export const updateGameData = async ({
+  id,
+  title,
+  titleKo,
+  price,
+  description,
+  requirements,
+  tags,
+  isOrigin,
+  originGameIds = [],
+  thumbnail,
+  mediaFiles = [],
+}) => {
+  const formData = new FormData();
+  const gameId = {gameId: id};
+  const jsonData = {
+    title,
+    titleKo,
+    price,
+    description,
+    requirements,
+    tags,
+    isOrigin,
+  };
+
+  if (!isOrigin) {
+    jsonData.originGameIds = originGameIds;
+  }
+
+  console.log("gameId: ", gameId);
+  console.log("jsonData: ", jsonData);
+  formData.append("gameId", JSON.stringify(gameId));
+  formData.append("json", JSON.stringify(jsonData));
+
+  // 썸네일 파일 첨부
+  if (thumbnail?.file instanceof File) {
+    const safeThumb = new File(
+      [thumbnail.file],
+      sanitizeFilename(thumbnail.file.name),
+      { type: thumbnail.file.type }
+    );
+    formData.append("thumbnail", safeThumb);
+  }
+
+  // 이미지들 첨부
+  mediaFiles.forEach(({ file }) => {
+    if (file instanceof File) {
+      const safeFile = new File(
+        [file],
+        sanitizeFilename(file.name),
+        { type: file.type }
+      );
+      formData.append("images", safeFile);
+    }
+  });
+
+  // // 디버깅 로그
+  // for (const [key, value] of formData.entries()) {
+  //   if (value instanceof File) {
+  //     console.log(`[FormData] ${key}: ${value.name}, ${value.size} bytes`);
+  //   } else {
+  //     console.log(`[FormData] ${key}:`, value);
+  //   }
+  // }
+
+  // try {
+  //   const response = await gameManageInstance.post(
+  //     "/protected/patch/game",
+  //     formData
+  //   );
+  //   console.log("response.data: ", response.data);
+  //   return response.data;
+  // } catch (error) {
+  //   console.error("게임 업로드 실패:", error);
+  //   throw error;
+  // }
+};
+
 export const uploadGameFile = async (gameId, gameFileInput) => {
   const gameFile = extractFile(gameFileInput);
 
@@ -44,7 +184,6 @@ export const uploadResourceFile = async (resourceId, resourceFileInput) => {
 };
 
 export const uploadResourceData = async (resourceForm) => {
-  // console.log("resourceForm: ", resourceForm);
   const {
     gameId,
     allowDerivation,

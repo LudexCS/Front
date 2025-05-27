@@ -3,13 +3,6 @@ import { useUpload } from "../../context/UploadContext";
 import { useRecord } from "../../context/RecordContext";
 import "../../styles/upload/IPSelectorModal.css";
 
-// const availableIPs = [
-//   { resourceId: 111, description: "구매한 게임 A", allowsDerivative: true, sharerId: 1 },
-//   { resourceId: 222, description: "구매한 게임 B", allowsDerivative: false, sharerId: 2 },
-//   { resourceId: 333, description: "구매한 게임 C", allowsDerivative: true, sharerId: 3 },
-//   // 실제 API로 불러올 수 있음
-// ];
-
 const IPSelectorModal = ({ onClose, setSelectedIPs }) => {
   const [checked, setChecked] = useState({});
   const { setSharerIds, gameForm, setGameForm } = useUpload();
@@ -31,7 +24,7 @@ const IPSelectorModal = ({ onClose, setSelectedIPs }) => {
     setGameForm({ ...gameForm, originGameIds: availableIPs
       .filter((ip) => checked[ip.resourceId])
       .map((ip) => ip.gameId)});
-    console.log("gameForm.originGameIds", gameForm.originGameIds);
+    console.log("gameForm.originGameIds: ", gameForm.originGameIds);
 
     setSharerIds(availableIPs
       .filter((ip) => checked[ip.resourceId])
