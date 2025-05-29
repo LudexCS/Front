@@ -1,9 +1,9 @@
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "./Instance/axiosInstance";
 import axios from "axios";
 
 export const loginUser = async (email, password) => {
   const response = await axios.post(
-    "http://3.37.46.45:30300/api/auth/login",
+    "http://16.184.9.194:30300/api/auth/login",
     { email, password },
     { withCredentials: true }    // refreshToken 쿠키 수신용
   );

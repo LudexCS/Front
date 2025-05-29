@@ -1,4 +1,3 @@
-// src/pages/GameEditPage.js
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import NavbarSearch from "../components/layout/NavbarSearch";
@@ -7,144 +6,183 @@ import TagSelector from "../components/upload/TagSelector";
 import LicensingTab from "../components/upload/LicensingTab";
 import FileUploader from "../components/upload/FileUploader";
 import IPSelectorModal from "../components/upload/IPSelectorModal";
-// import "../styles/pages/GameEditPage.css";
-
-const mockGame = {
-  title: "Space Blaster",
-  price: 50,
-  description: "An arcade-style space shooter game.",
-  requirements: [
-    {
-      os: "Windows 11",
-      cpu: "Intel i7",
-      gpu: "NVIDIA RTX 2060",
-      ram: "16GB",
-      storage: "5GB",
-      network: "Broadband Internet",
-    },
-  ],
-  tags: [
-    { tagId: 1, priority: 10 },
-    { tagId: 23, priority: 5 },
-  ],
-  isOrigin: true,
-  thumbnailUrl: "https://example.com/thumbnails/space-blaster.jpg",
-  imageUrls: [
-    "https://example.com/images/screenshot1.jpg",
-    "https://example.com/images/screenshot2.jpg",
-  ],
-  originGameIds: []
-};
-
-const mockResource = {
-  gameId: 1,
-  allowDerivation: true,
-  sellerRatio: 30,
-  creatorRatio: 70,
-  additionalCondition: "You must credit the original creator.",
-  description: "High-resolution character sprites for use in RPGs.",
-  imageUrls: [
-    "https://example.com/images/screenshot1.jpg",
-    "https://example.com/images/screenshot2.jpg",
-  ],
-};
+import LoadingModal from "../components/modals/LoadingModal";
+import { fetchGameDetail, fetchGameResource } from "../api/gameGetApi";
+import { getAllTags } from "../api/tagsApi";
+import { updateGameData, updateResourceData } from "../api/uploadApi";
 
 const GameEditPage = () => {
   const { gameId } = useParams();
   const navigate = useNavigate();
-  const { gameForm, setGameForm, resourceForm, setResourceForm } = useUpload();
+  const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds } = useUpload();
   const [selectedTags, setSelectedTags] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [showIPModal, setShowIPModal] = useState(false);
-  const [selectedIPs, setSelectedIPs] = useState(mockGame.originGameIds);
+  const [selectedIPs, setSelectedIPs] = useState([]);
   const [specFields, setSpecFields] = useState({
     os: false, cpu: false, gpu: false, ram: false, storage: false, network: false,
-    });
-    const [specValues, setSpecValues] = useState({
+  });
+  const [specValues, setSpecValues] = useState({
     os: "", cpu: "", gpu: "", ram: "", storage: "", network: "",
+  });
+  const resetUploadForm = () => {
+    setGameForm({
+      title: "",
+      price: "",
+      description: "",
+      tags: [],
+      requirements: [],
+      originGameIds: [],
+      gameFile: null,
+      thumbnail: null,
+      mediaFiles: [],
     });
+    setSelectedTags([]);
+    setResourceForm({
+      gameId: 0,
+      allowDerivation: true,
+      sellerRatio: 30,
+      creatorRatio: 70,
+      additionalCondition: "",
+      description: "",
+      imageFiles: [],
+      resourceFile: null,
+    });
+    setSpecFields({
+      os: true,
+      cpu: false,
+      gpu: false,
+      ram: false,
+      storage: false,
+      network: false,
+    });
+    setSpecValues({
+      os: "",
+      cpu: "",
+      gpu: "",
+      ram: "",
+      storage: "",
+      network: "",
+    });
+  };
 
   useEffect(() => {
-    // 실제 API 호출 예시 (현재는 주석 처리)
-    // const gameData = await fetchGameById(gameId);
-    // setGameForm(gameData);
-    // setResourceForm(resourceData);
+    resetUploadForm();
+  }, []);
 
-    setGameForm({
-      title: mockGame.title,
-      price: mockGame.price,
-      description: mockGame.description,
-      requirements: mockGame.requirements,
-      gameFile: mockGame.thumbnailUrl,
-      thumbnail: mockGame.thumbnailUrl,
-      mediaFiles: mockGame.imageUrls,
-      tags: mockGame.tags,
-      originGameIds: [],
-    });
+  useEffect(() => {
+    (async () => {
+      setIsUploading(true);
+      try {
+        const [gameData, allTags] = await Promise.all([
+          fetchGameDetail({ gameId }),
+          getAllTags(),
+        ]);
 
-    setResourceForm({
-      ...mockResource,
-      resourceFile: mockGame.thumbnailUrl,
-      imageFiles: mockResource.imageUrls,
-    });
+        const tagNameToId = Object.fromEntries(allTags.map((tag) => [tag.name, tag.id]));
+        const tagIds = gameData.tags.map((name) => tagNameToId[name]).filter(Boolean);
 
-    setSelectedTags(mockGame.tags.map((t) => t.tagId));
+        setSelectedTags(tagIds);
+        
+        setGameForm({
+          ...gameData,
+          isOrigin: true,
+          titleKo: "한글 제목",
+        });
 
-    const fields = { ...specFields };
-    const values = { ...specValues };
-    Object.entries(mockGame.requirements[0]).forEach(([key, value]) => {
-        if (fields.hasOwnProperty(key)) {
-        fields[key] = true;
-        values[key] = value;
-        }
-    });
-    setSpecFields(fields);
-    setSpecValues(values);
+        const fields = { ...specFields };
+        const values = { ...specValues };
+        Object.entries(gameData.requirements?.[0] || {}).forEach(([key, value]) => {
+          if (fields.hasOwnProperty(key)) {
+            fields[key] = true;
+            values[key] = value;
+          }
+        });
+        setSpecFields(fields);
+        setSpecValues(values);
+
+      } catch (err) {
+        console.error("게임 상세 정보를 불러오는 데 실패했습니다", err);
+        navigate("/");
+      }
+
+      try {
+        const resourceData = await fetchGameResource({ gameId });
+        setResourceForm(resourceData);
+      } catch (err) {
+        console.error("게임 리소스 정보를 불러오는 데 실패했습니다", err);
+        navigate("/");
+      }
+      setIsUploading(false);
+    })();
   }, [gameId]);
 
-    const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedTags.length === 0) {
       alert("태그를 하나 이상 선택해주세요.");
       return;
     }
-    if (!mockGame.isOrigin && selectedIPs.length === 0) {
+    if (!Array.isArray(gameForm.mediaFiles) || gameForm.mediaFiles.length === 0 || !gameForm.thumbnail ||
+    (resourceForm.resourceFile !== null && (!Array.isArray(resourceForm.imageFiles) || resourceForm.imageFiles.length === 0))) {
+      alert("이미지 파일을 하나 이상 업로드해주세요.");
+      return;
+    }
+    if (!gameForm.isOrigin && sharerIds.length === 0) {
       alert("게임 IP를 하나 이상 선택해주세요.");
       return;
     }
+
+    alert("수정사항을 반영합니다. 완료 될 때까지 잠시 기다려주세요.");
+    setIsUploading(true);
+
     const filteredRequirements = {
-        isMinimum: false,
-        ...Object.fromEntries(
+      ...Object.fromEntries(
         Object.entries(specFields)
-            .filter(([_, enabled]) => enabled)
-            .map(([key]) => [key, specValues[key]])
-        )
+          .filter(([_, enabled]) => enabled)
+          .map(([key]) => [key, specValues[key]])
+      ),
     };
 
     const updatedGameForm = {
-        ...gameForm,
-        requirements: [filteredRequirements],
-        tags: selectedTags.map((tagId) => ({ tagId, priority: 10 }))
+      ...gameForm,
+      requirements: [filteredRequirements],
+      tags: selectedTags.map((tagId) => ({ tagId, priority: 10 })),
     };
 
     console.log("수정된 게임 데이터:", updatedGameForm);
     console.log("수정된 리소스 데이터:", resourceForm);
-    alert("콘솔에서 수정 내용을 확인하세요.");
-    };
+    
+    try{
+      await updateGameData(updatedGameForm);
+      if (resourceForm.resourceFile !== null) {
+        await updateResourceData(resourceForm);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("게임 수정에 실패했습니다.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
-    const toggleSpecField = (key) => {
+  const toggleSpecField = (key) => {
     setSpecFields((prev) => ({ ...prev, [key]: !prev[key] }));
-    };
+  };
 
   return (
     <>
       <NavbarSearch />
+      {isUploading && <LoadingModal />}
       <div className="upload-page">
         <h1 className="edit-page-title">게임 수정</h1>
 
-        <h2>게임 파일 업로드(압축파일 형태 업로드 권장)</h2>
+        <h2>게임 파일 업로드</h2>
         <FileUploader
           maxFiles={1}
           files={gameForm.gameFile ? [{ file: gameForm.gameFile }] : []}
-          setFiles={(files) => setGameForm({ ...gameForm, gameFile: files[0]?.file || null })}
+          setFiles={(files) =>
+            setGameForm({ ...gameForm, gameFile: files[0]?.file || null })
+          }
         />
 
         <h2>썸네일 업로드</h2>
@@ -162,12 +200,19 @@ const GameEditPage = () => {
         />
 
         <div className="form-section">
-          <label>게임명:</label>
+          <label>게임명(영문):</label>
           <input
             type="text"
             value={gameForm.title}
             onChange={(e) => setGameForm({ ...gameForm, title: e.target.value })}
           />
+          
+          {/* <label>게임명(한글):</label>
+          <input
+            type="text"
+            value={gameForm.titleKo}
+            onChange={(e) => setGameForm({ ...gameForm, titleKo: e.target.value })}
+          /> */}
 
           <label>가격(USD):</label>
           <input
@@ -183,41 +228,41 @@ const GameEditPage = () => {
           />
 
           <label>권장 구동사양 (하나 이상 선택):</label>
-            <div className="spec-checkboxes">
-                {Object.keys(specFields).map((key) => (
-                <label key={key}>
-                    <input
-                    type="checkbox"
-                    checked={specFields[key]}
-                    onChange={() => toggleSpecField(key)}
-                    />
-                    {key.toUpperCase()}
-                </label>
-                ))}
-            </div>
+          <div className="spec-checkboxes">
+            {Object.keys(specFields).map((key) => (
+              <label key={key}>
+                <input
+                  type="checkbox"
+                  checked={specFields[key]}
+                  onChange={() => toggleSpecField(key)}
+                />
+                {key.toUpperCase()}
+              </label>
+            ))}
+          </div>
 
-            {Object.entries(specFields).map(
-                ([key, enabled]) =>
-                enabled && (
-                    <div key={key}>
-                    <label>{key.toUpperCase()}:</label>
-                    <input
-                        type="text"
-                        value={specValues[key]}
-                        onChange={(e) =>
-                        setSpecValues((prev) => ({ ...prev, [key]: e.target.value }))
-                        }
-                    />
-                    </div>
-                )
-            )}
+          {Object.entries(specFields).map(
+            ([key, enabled]) =>
+              enabled && (
+                <div key={key}>
+                  <label>{key.toUpperCase()}:</label>
+                  <input
+                    type="text"
+                    value={specValues[key]}
+                    onChange={(e) =>
+                      setSpecValues((prev) => ({ ...prev, [key]: e.target.value }))
+                    }
+                  />
+                </div>
+              )
+          )}
         </div>
 
         <TagSelector selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
 
-        <label>분류: {mockGame.isOrigin ? "Origin" : "Variant"}</label>
+        <label>분류: {gameForm.isOrigin ? "Origin" : "Variant"}</label>
 
-        {!mockGame.isOrigin && (
+        {!gameForm.isOrigin && (
           <div className="ip-input-section">
             <label>사용 게임 IP:</label>
             <button className="ip-check-button" onClick={() => setShowIPModal(true)}>
@@ -233,8 +278,8 @@ const GameEditPage = () => {
           </div>
         )}
 
-        {(mockGame.isOrigin || (selectedIPs.every(ip => ip.includes("2차 제작 허용")) && selectedIPs.length > 0)) && (
-          <LicensingTab/>
+        {(gameForm.isOrigin || (selectedIPs.every(ip => ip.includes("2차 제작 허용")) && selectedIPs.length > 0)) && (
+          <LicensingTab />
         )}
 
         <div className="action-buttons">

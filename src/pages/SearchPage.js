@@ -5,7 +5,7 @@ import SearchBar from "../components/layout/SearchBar";
 import SearchGameList from "../components/game/SearchGameList";
 import GameDetailBar from "../components/game/GameDetailBar";
 import TagBar from "../components/layout/TagBar";
-import { fetchGamesByTags } from "../api/gameGetApi";
+import { fetchGamesByKeyword } from "../api/gameGetApi";
 import "../styles/pages/SearchPage.css";
 
 const SearchPage = () => {
@@ -30,9 +30,8 @@ const SearchPage = () => {
         }
   
         try {
-          const tags = query.split(",").map(tag => tag.trim()).filter(Boolean);
-          const response = await fetchGamesByTags({ tags });
-          console.log("게임 목록 불러오기", response);
+          console.log("query: ", query);
+          const response = await fetchGamesByKeyword(query);
           setGames(response);
         } catch (error) {
           console.error("게임 목록 불러오기 실패:", error);

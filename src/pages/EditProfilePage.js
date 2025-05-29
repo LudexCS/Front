@@ -3,7 +3,7 @@ import "../styles/pages/EditProfilePage.css";
 import NavbarSearch from "../components/layout/NavbarSearch";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
-import axiosInstance from "../api/axiosInstance";
+import axiosInstance from "../api/Instance/axiosInstance";
 import { requestWalletNonce, verifyWalletOwnership } from "../api/walletAuth";
 import { logout } from "../api/userApi";
 import { checkNickname } from "../api/signupApi";

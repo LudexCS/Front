@@ -1,9 +1,8 @@
-// src/api/gameManageInstance.js
 import axios from "axios";
-import { getNewAccessToken } from "../userApi";
+// import { getNewAccessToken } from "../userApi";
 
 const gameManageInstance = axios.create({
-  baseURL: "http://3.37.46.45:30353/api",
+  baseURL: "http://16.184.9.194:30353/api",
   withCredentials: true,
 });
 

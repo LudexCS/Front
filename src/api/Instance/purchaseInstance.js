@@ -1,8 +1,8 @@
 import axios from "axios";
-import { getNewAccessToken } from "../userApi";
+// import { getNewAccessToken } from "../userApi";
 
 const purchaseInstance = axios.create({
-    baseURL: "http://3.37.46.45:30356/api",
+    baseURL: "http://16.184.9.194:30356/api",
     withCredentials: true,
 });
 
