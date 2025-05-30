@@ -15,6 +15,7 @@ const PaymentModal = ({ game, onClose }) => {
   const { setIsFetch } = useRecord();
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [tokenAmount, setTokenAmount] = useState("");
+  const [krwAmount, setKrwAmount] = useState("");
   const [isUploading, setIsUploading] = useState(false); // 추가됨
 
   useEffect(() => {
@@ -52,6 +53,13 @@ const PaymentModal = ({ game, onClose }) => {
       }
     })();
   }, [chainConfig, ludexConfig, game]);
+
+  useEffect(() => {
+    (async () => {
+      const price = 1371 * game.price;
+      setKrwAmount(price.toLocaleString());
+    })();
+  }, [game.price]);
 
   const handleConfirm = async () => {
     if (activeTab === "card") {
