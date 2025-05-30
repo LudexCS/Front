@@ -16,6 +16,8 @@ import { RecordProvider } from "./context/RecordContext";
 import { GameProvider } from "./context/gameContext";
 import ConfigProvider from "./context/ConfigContext";
 import GameEditPage from "./pages/GameEditPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import PaymentFailPage from "./pages/PaymentFailPage";
 
 function App() {
   console.log(Router);
@@ -38,6 +40,8 @@ function App() {
                 <Route path="/manage-users" element={<ManageUsersPage />} />
                 <Route path="/game/:gameId" element={<GameDetailPage />} />
                 <Route path="/edit-game/:gameId" element={<GameEditPage />} />
+                <Route path="/payment/success" element={<PaymentSuccessPage />} />
+                <Route path="/payment/fail" element={<PaymentFailPage />} />
               </Routes>
             </GameProvider>
           </RecordProvider>
