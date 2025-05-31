@@ -1,0 +1,73 @@
+/* 박스 스타일 */
+.box_section {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgb(0 0 0 / 1%), 0 6px 6px rgb(0 0 0 / 6%);
+    padding: 50px;
+    margin-top: 30px;
+    margin-right: auto;
+    margin-left: auto;
+    color: #333d4b;
+    align-items: center;
+    text-align: center;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* 그리드 레이아웃 */
+.p-grid {
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -24px;
+}
+
+.p-grid-col {
+    flex-grow: 1;
+    padding-right: 24px;
+}
+
+.p-grid-col5 {
+    flex: 0 0 41.66667%;
+    max-width: 41.66667%;
+}
+
+/* 타이포그래피 - 본문 */
+.typography--p {
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+/* 텍스트 정렬 */
+.text--left {
+    text-align: left;
+}
+
+.text--right {
+    text-align: right;
+}
+
+/* 버튼 스타일 */
+.button {
+    color: #f9fafb;
+    background-color: #3182f6;
+    margin: 30px 15px 0px 15px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 18px;
+    white-space: nowrap;
+    text-align: center;
+    cursor: pointer;
+    border: 0 solid transparent;
+    user-select: none;
+    transition: background 0.2s ease, color 0.1s ease;
+    text-decoration: none;
+    border-radius: 7px;
+    padding: 11px 16px;
+    width: 250px;
+}
+
+.button:hover {
+    color: #fff;
+    background-color: #1b64da;
+}
