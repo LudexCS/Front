@@ -14,7 +14,7 @@
     display: flex;
     justify-content: space-between;
     padding: 10px;
-    background: #0066b3;
+    background: #e0edf8;
     color: white;
   }
   
@@ -31,3 +31,22 @@
     font-size: 16px;
     cursor: pointer;
   }  
+
+  .tab-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .tab-buttons button {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background-color: #f3f3f3;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .tab-buttons button.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }

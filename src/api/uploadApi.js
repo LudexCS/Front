@@ -24,7 +24,7 @@ export const updateResourceData = async (resourceForm) => {
   } = resourceForm;
 
   const formData = new FormData();
-  const resourceId = {resourceId : id};
+  const resourceId = id;
   const jsonData = {
     gameId,
     allowDerivation,
@@ -61,16 +61,16 @@ export const updateResourceData = async (resourceForm) => {
   //   }
   // }
 
-  // try {
-  //   const response = await gameManageInstance.post(
-  //     "/protected/patch/resource",
-  //     formData
-  //   );
-  //   return response.data;
-  // } catch (error) {
-  //   console.error("리소스 업로드 실패:", error);
-  //   throw error;
-  // }
+  try {
+    const response = await gameManageInstance.patch(
+      "/protected/patch/resource",
+      formData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("리소스 업로드 실패:", error);
+    throw error;
+  }
 };
 
 export const updateGameData = async ({
@@ -87,7 +87,7 @@ export const updateGameData = async ({
   mediaFiles = [],
 }) => {
   const formData = new FormData();
-  const gameId = {gameId: id};
+  const gameId = id;
   const jsonData = {
     title,
     titleKo,
@@ -138,17 +138,17 @@ export const updateGameData = async ({
   //   }
   // }
 
-  // try {
-  //   const response = await gameManageInstance.post(
-  //     "/protected/patch/game",
-  //     formData
-  //   );
-  //   console.log("response.data: ", response.data);
-  //   return response.data;
-  // } catch (error) {
-  //   console.error("게임 업로드 실패:", error);
-  //   throw error;
-  // }
+  try {
+    const response = await gameManageInstance.patch(
+      "/protected/patch/game",
+      formData
+    );
+    console.log("response.data: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("게임 업로드 실패:", error);
+    throw error;
+  }
 };
 
 export const uploadGameFile = async (gameId, gameFileInput) => {

@@ -4,7 +4,7 @@ import UserHistoryModal from "../modals/UserHistoryModal";
 
 const UserItem = ({ user }) => {
   const [blocked, setBlocked] = useState(user.isBlocked);
-  const [showModal, setShowModal] = useState(null);
+  // const [showModal, setShowModal] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [message, setMessage] = useState(""); // 텍스트 내용
 
@@ -25,8 +25,8 @@ const UserItem = ({ user }) => {
           {user.nickname} / {user.email}
         </div>
         <div className="actions">
-          <button onClick={() => setShowModal("purchase")}>purchase history</button>
-          <button onClick={() => setShowModal("sales")}>sales history</button>
+          {/* <button onClick={() => setShowModal("purchase")}>purchase history</button>
+          <button onClick={() => setShowModal("sales")}>sales history</button> */}
           <button onClick={handleBlockToggle}>
             {blocked ? "Unblock" : "Block"}
           </button>
@@ -46,12 +46,13 @@ const UserItem = ({ user }) => {
         </div>
       )}
 
-      {showModal && (
+      {/* {showModal && (
         <UserHistoryModal
           type={showModal}
+          user={user}
           onClose={() => setShowModal(null)}
         />
-      )}
+      )} */}
     </div>
   );
 };

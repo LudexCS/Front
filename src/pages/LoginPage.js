@@ -16,7 +16,11 @@ const LoginPage = () => {
       const { accessToken } = await loginUser(email, password);
       localStorage.setItem("accessToken", accessToken);
       setIsLoggedIn(true);
-      navigate("/");
+      if (email === "admin@admin.com") {
+        navigate("/manage-users");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       const msg = err.response?.data?.message || err.message;
       alert(`실패: ${msg}`);

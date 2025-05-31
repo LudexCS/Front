@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import "../styles/pages/EditProfilePage.css";
+import React, { useState, useEffect } from "react";
 import NavbarSearch from "../components/layout/NavbarSearch";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import axiosInstance from "../api/Instance/axiosInstance";
 import { requestWalletNonce, verifyWalletOwnership } from "../api/walletAuth";
-import { logout } from "../api/userApi";
+import { logout, editUserData } from "../api/userApi";
 import { checkNickname } from "../api/signupApi";
+import "../styles/pages/EditProfilePage.css";
 
 const EditProfilePage = () => {
   const { user, setIsLoggedIn, setIsFetch } = useUser();
@@ -17,7 +17,10 @@ const EditProfilePage = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const navigate = useNavigate();
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  setIsFetch(false);
+
+  useEffect(() => {
+    setIsFetch(false);
+  }, []);
 
   const handleNicknameCheck = async () => {
       if (nickname.length < 2 || nickname.length > 20) {
@@ -77,12 +80,20 @@ const EditProfilePage = () => {
     setWallets(wallets.filter((_, i) => i !== index));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if(!isNicknameChecked){
       alert("닉네임 중복체크를 확인주세요.");
     } else {
-      alert("저장되었습니다.");
-      navigate("/my");
+      try {
+        await editUserData(nickname);
+        setIsFetch(true);
+        alert("저장되었습니다.");
+      } catch (err) {
+        console.error(err);
+        alert("닉네임 변경에 실패했습니다.");
+      } finally {
+        navigate("/my");
+      }
     }
   };
 
