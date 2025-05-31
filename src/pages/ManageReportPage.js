@@ -5,56 +5,70 @@ import Sidebar from "../components/layout/Sidebar";
 import ReportItem from "../components/admin/ReportItem";
 import NavbarManage from "../components/layout/NavbarManage";
 import { useUser } from "../context/UserContext";
-
-const dummyReports = Array.from({ length: 10 }).map((_, i) => ({
-  id: i,
-  title: `test${i}`,
-  nickname: `user${i}`,
-  reporter: `user${i*10}`,
-  isHandled: i % 2 === 0,
-  detail: "report message",
-}));
+import { adminGetReportList } from "../api/adminApi";
 
 const ManageReportPage = () => {
   const navigate = useNavigate();
-  const [isHandled, setIsHandled] = useState(false);
   const { isLoggedIn } = useUser();
+  const [isHandled, setIsHandled] = useState(false);
+  const [reports, setReports] = useState([]);
 
-  const filteredUsers = dummyReports.filter(
-    user => user.isHandled === isHandled
-  );
+  const fetchReports = async () => {
+    try {
+      const response = await adminGetReportList(isHandled);
+      setReports(response);
+    } catch (error) {
+      console.error("신고 목록 불러오기 실패:", error);
+    }
+  };
 
+  // 로그인 상태 확인
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login");
     }
   }, [isLoggedIn, navigate]);
 
+  // 신고 목록 가져오기
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchReports();
+    }
+  }, [isHandled, isLoggedIn]);
+
   return (
     <div>
-        <NavbarManage />
-        <div className="manage-users-container">
+      <NavbarManage />
+      <div className="manage-users-container">
         <Sidebar />
         <div className="user-panel">
-            <div className="top-bar">
-            <div className="top-bar">
+          <div className="top-bar">
             <div className="tab-buttons">
-                <button
+              <button
                 className={!isHandled ? "active" : ""}
-                onClick={() => setIsHandled(false)}>Pending</button>
-                <button
+                onClick={() => {
+                  setReports([]);
+                  setIsHandled(false);}}
+              >
+                Pending
+              </button>
+              <button
                 className={isHandled ? "active" : ""}
-                onClick={() => setIsHandled(true)}>Resolved</button>
+                onClick={() => {
+                  setReports([]);
+                  setIsHandled(true);}}
+              >
+                Resolved
+              </button>
             </div>
-            </div>
-            </div>
-            <div className="user-list">
-            {filteredUsers.map(report => (
-                <ReportItem key={report.id} report={report} />
+          </div>
+          <div className="user-list">
+            {reports.map((report) => (
+              <ReportItem key={report.id} report={report} fetchReports={fetchReports}/>
             ))}
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
   );
 };

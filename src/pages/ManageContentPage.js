@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/pages/ManageUsersPage.css";
 import Sidebar from "../components/layout/Sidebar";
 import ContentItem from "../components/admin/ContentItem";
 import NavbarManage from "../components/layout/NavbarManage";
 import { useUser } from "../context/UserContext";
-import { fetchGamesByKeyword } from "../api/gameGetApi";
+import { adminGamesByKeyword } from "../api/adminApi";
 import { useGameContext } from "../context/gameContext";
 
 const ManageContentPage = () => {
@@ -27,7 +27,7 @@ const ManageContentPage = () => {
       }
       try {
         console.log("searchTerm: ", searchTerm);
-        const response = await fetchGamesByKeyword(searchTerm);
+        const response = await adminGamesByKeyword(searchTerm);
         setContents(response);
       } catch (error) {
         console.error("게임 목록 불러오기 실패:", error);
