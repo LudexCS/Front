@@ -20,6 +20,7 @@ import ConfigProvider from "./context/ConfigContext";
 import GameEditPage from "./pages/GameEditPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import PaymentFailPage from "./pages/PaymentFailPage";
+import ManageBannerPage from "./pages/ManageBannerPage";
 
 function App() {
   console.log(Router);
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/manage-users" element={<ManageUsersPage />} />
                 <Route path="/manage-content" element={<ManageContentPage />} />
                 <Route path="/review-reports" element={<ManageReportPage />} />
+                <Route path="/edit-banners" element={<ManageBannerPage />} />
                 <Route path="/game/:gameId" element={<GameDetailPage />} />
                 <Route path="/edit-game/:gameId" element={<GameEditPage />} />
                 <Route path="/payment/success" element={<PaymentSuccessPage />} />

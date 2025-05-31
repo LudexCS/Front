@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import "../../styles/admin/UserItem.css"
-import ResourceModal from "../modals/ResourceModal";
-import { fetchGameDetail, fetchGameResource } from "../../api/gameGetApi";
 import GameDetailBar from "../game/GameDetailBar";
 
 const ContentItem = ({ content }) => {
