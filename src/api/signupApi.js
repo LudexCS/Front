@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://api.uosludex.com/useraccount/api";
+const BASE_URL = "https://api.uosludex.com/useraccount/api";
 
 // 닉네임 중복 체크
 export const checkNickname = async (nickname) => {

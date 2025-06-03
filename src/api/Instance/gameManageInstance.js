@@ -2,7 +2,7 @@ import axios from "axios";
 // import { getNewAccessToken } from "../userApi";
 
 const gameManageInstance = axios.create({
-  baseURL: "http://api.uosludex.com/management/api",
+  baseURL: "https://api.uosludex.com/management/api",
   withCredentials: true,
 });
 

@@ -2,7 +2,7 @@ import axios from "axios";
 // import { getNewAccessToken } from "../userApi";
 
 const uploadInstance = axios.create({
-  baseURL: "http://api.uosludex.com/upload/api",
+  baseURL: "https://api.uosludex.com/upload/api",
   withCredentials: true,
 });
 

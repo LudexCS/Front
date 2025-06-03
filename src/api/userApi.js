@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const loginUser = async (email, password) => {
   const response = await axios.post(
-    "http://api.uosludex.com/useraccount/api/auth/login",
+    "https://api.uosludex.com/useraccount/api/auth/login",
     { email, password },
     { withCredentials: true }    // refreshToken 쿠키 수신용
   );

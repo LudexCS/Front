@@ -2,7 +2,7 @@ import axios from "axios";
 // import { getNewAccessToken } from "../userApi";
 
 const purchaseInstance = axios.create({
-    baseURL: "http://api.uosludex.com/purchase/api",
+    baseURL: "https://api.uosludex.com/purchase/api",
     withCredentials: true,
 });
 
