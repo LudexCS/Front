@@ -2,7 +2,7 @@ import axios from "axios";
 // import { getNewAccessToken } from "../../api/userApi";
 
 const instance = axios.create({
-  baseURL:  "http://api.uosludex.com/uesraccount/api",
+  baseURL:  "http://api.uosludex.com/useraccount/api",
   withCredentials: true,
 });
 
