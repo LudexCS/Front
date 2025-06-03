@@ -1,0 +1,39 @@
+name: Build and Dispatch to DevOps
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Clone or update LudexWeb3Integration
+        run: |
+          mkdir -p packages
+          if [ -d "packages/LudexWeb3Integration/.git" ]; then
+            cd packages/LudexWeb3Integration && git pull
+          else
+            git clone https://github.com/LudexCS/LudexWeb3Integration.git packages/LudexWeb3Integration
+          fi
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t gomdadi/frontend:latest .
+
+      - name: Push Docker image
+        run: docker push gomdadi/frontend:latest
+
+      - name: Dispatch to BE_DevOps
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          repository: LudexCS/BE_DevOps
+          event-type: deploy-frontend
