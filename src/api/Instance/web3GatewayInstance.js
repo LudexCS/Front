@@ -2,7 +2,7 @@ import axios from 'axios';
 // import { getNewAccessToken } from "../../api/userApi";
 
 const web3Instance = axios.create({
-  baseURL: "http://16.184.9.194:31219/web3gateway/api",
+  baseURL: "http://api.uosludex.com/web3gateway/api",
   withCredentials: true,
 });
 
