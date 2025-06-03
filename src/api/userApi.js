@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const loginUser = async (email, password) => {
   const response = await axios.post(
-    "http://16.184.9.194:30300/api/auth/login",
+    "http://16.184.9.194:31219/useraccount/api/auth/login",
     { email, password },
     { withCredentials: true }    // refreshToken 쿠키 수신용
   );
