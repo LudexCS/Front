@@ -1,0 +1,24 @@
+# IDE 설정
+.idea
+.vscode
+
+# 종속성
+node_modules
+
+# 빌드 결과물 (GitHub Actions가 직접 빌드할 거니까 제외)
+build
+dist
+
+# 로그/캐시
+npm-debug.log
+yarn-error.log
+*.log
+
+# 환경 변수 및 민감 정보
+.env
+.env.*  
+
+# Docker 자체
+Dockerfile
+.dockerignore
+docker-compose.yml
