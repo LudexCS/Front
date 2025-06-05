@@ -171,7 +171,7 @@ export const adminHandleReport = async (reportId) => {
 export const adminUnhandleReport = async (reportId) => {
   try {
     const response = await platformAdminInstance.post("/admin/report/unHandleReport", {reportId});
-    console.log("관리자) 신고 미처리: ", response.data);
+    console.log("관리자) 신고 미처리 변경: ", response.data);
     return response.data;
   } catch (error) {
     console.error("관리자) 신고 미처리 변경에 실패:", error);
