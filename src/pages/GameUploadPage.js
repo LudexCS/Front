@@ -54,6 +54,7 @@ const GameUploadPage = () => {
   const resetUploadForm = () => {
     setGameForm({
       title: "",
+      titleKo: "",
       price: "",
       description: "",
       tags: [],

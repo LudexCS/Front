@@ -244,6 +244,7 @@ export const uploadResourceData = async (resourceForm) => {
 
 export const uploadGameData = async ({
   title,
+  titleKo,
   price,
   description,
   requirements,
@@ -257,6 +258,7 @@ export const uploadGameData = async ({
 
   const jsonData = {
     title,
+    titleKo,
     price,
     description,
     requirements,
