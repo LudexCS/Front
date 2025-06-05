@@ -7,12 +7,22 @@ const ReportItem = ({ report, fetchReports }) => {
   const [expanded, setExpanded] = useState(false);
 
   const handleBlockToggle = async () => {
-    try {
-      await adminHandleReport(report.id);
-      fetchReports();
-    } catch (error) {
-      console.error("신고 처리 실패:", error);
-    }
+    // if(handled){
+      try {
+        await adminHandleReport(report.id);
+        fetchReports();
+      } catch (error) {
+        console.error("신고 처리 실패:", error);
+      }
+    // }
+    // if(!handled){
+    //   try {
+    //     await adminUnhandleReport(report.id);
+    //     fetchReports();
+    //   } catch (error) {
+    //     console.error("신고 미처리 변경 실패:", error);
+    //   }
+    // }
   };
 
   return (
@@ -27,7 +37,7 @@ const ReportItem = ({ report, fetchReports }) => {
             onClick={handleBlockToggle}
             disabled={report.isHandled} // handled가 true면 버튼 비활성화
           >
-            {handled ? "Resolved" : "Pending"}
+            {handled ? "resolved" : "set resolved"}
           </button>
           <button onClick={() => setExpanded(!expanded)}>V</button>
         </div>

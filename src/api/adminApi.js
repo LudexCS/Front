@@ -22,14 +22,14 @@ export const addBanner = async (banner, image) => {
     formData.append("imageUrl", safeThumb);
   }
 
-  // 디버깅 로그
-  for (const [key, value] of formData.entries()) {
-    if (value instanceof File) {
-      console.log(`[FormData] ${key}: ${value.name}, ${value.size} bytes`);
-    } else {
-      console.log(`[FormData] ${key}:`, value);
-    }
-  }
+  // // 디버깅 로그
+  // for (const [key, value] of formData.entries()) {
+  //   if (value instanceof File) {
+  //     console.log(`[FormData] ${key}: ${value.name}, ${value.size} bytes`);
+  //   } else {
+  //     console.log(`[FormData] ${key}:`, value);
+  //   }
+  // }
 
   try {
     const response = await platformAdminInstance.post("/admin/banner/create", formData);
@@ -50,42 +50,42 @@ export const postReport = async (report) => {
   }
 };
 
-export const postUserBlocked = async (gameTitle) => {
+export const postGameBlocked = async (gameId) => {
   try {
     const response = await platformAdminInstance.post("/admin/sanction/game", {
       adminEmail: "admin@admin.com",
-      gameTitle: gameTitle,
+      gameId: gameId,
       sanctionDetail: ""
     });
     return response.data;
   } catch (error) {
-    console.error("차단 처리 실패:", error);
+    console.error("게임 차단 처리 실패:", error);
     throw error;
   }
 };
 
-export const postGameUnblocked = async (gameTitle) => {
+export const postGameUnblocked = async (gameId) => {
   try {
     const response = await platformAdminInstance.post("/admin/sanction/free/game", {
-      gameTitle: gameTitle
+      gameId: gameId
     });
     return response.data;
   } catch (error) {
-    console.error("차단 해제 실패:", error);
+    console.error("게임 차단 해제 실패:", error);
     throw error;
   }
 };
 
-export const postGameBlocked = async (gameTitle) => {
+export const postUserBlocked = async (userEmail) => {
   try {
     const response = await platformAdminInstance.post("/admin/sanction/user", {
       adminEmail: "admin@admin.com",
-      gameTitle: gameTitle,
+      userEmail: userEmail,
       sanctionDetail: ""
     });
     return response.data;
   } catch (error) {
-    console.error("차단 처리 실패:", error);
+    console.error("유저 차단 처리 실패:", error);
     throw error;
   }
 };
@@ -97,7 +97,7 @@ export const postUserUnblocked = async (userEmail) => {
     });
     return response.data;
   } catch (error) {
-    console.error("차단 해제 실패:", error);
+    console.error("유저 차단 해제 실패:", error);
     throw error;
   }
 };
@@ -164,6 +164,17 @@ export const adminHandleReport = async (reportId) => {
     return response.data;
   } catch (error) {
     console.error("관리자) 신고 처리에 실패:", error);
+    throw error;
+  }
+};
+
+export const adminUnhandleReport = async (reportId) => {
+  try {
+    const response = await platformAdminInstance.post("/admin/report/unHandleReport", {reportId});
+    console.log("관리자) 신고 미처리: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("관리자) 신고 미처리 변경에 실패:", error);
     throw error;
   }
 };

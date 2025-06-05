@@ -48,7 +48,7 @@ const UserItem = ({ user }) => {
           {/* <button onClick={() => setShowModal("purchase")}>purchase history</button>
           <button onClick={() => setShowModal("sales")}>sales history</button> */}
           <button onClick={handleBlockToggle}>
-            {blocked ? "Unblock" : "Block"}
+            {blocked ? "set unblock" : "set block"}
           </button>
           <button onClick={() => setExpanded(!expanded)}>V</button>
         </div>
