@@ -87,7 +87,6 @@ const GameEditPage = () => {
         setGameForm({
           ...gameData,
           isOrigin: true,
-          titleKo: "한글 제목",
         });
 
         const fields = { ...specFields };
@@ -123,7 +122,7 @@ const GameEditPage = () => {
       return;
     }
     if (!Array.isArray(gameForm.mediaFiles) || gameForm.mediaFiles.length === 0 || !gameForm.thumbnail ||
-    (resourceForm.resourceFile !== null && (!Array.isArray(resourceForm.imageFiles) || resourceForm.imageFiles.length === 0))) {
+    (resourceForm.resourceFile != null && (!Array.isArray(resourceForm.imageFiles) || resourceForm.imageFiles.length === 0))) {
       alert("이미지 파일을 하나 이상 업로드해주세요.");
       return;
     }
@@ -154,9 +153,10 @@ const GameEditPage = () => {
     
     try{
       await updateGameData(updatedGameForm);
-      if (resourceForm.resourceFile !== null) {
+      if (resourceForm.resourceFile != null) {
         await updateResourceData(resourceForm);
       }
+      alert("게임 수정에 성공했습니다.");
     } catch (err) {
       console.error(err);
       alert("게임 수정에 실패했습니다.");
@@ -207,12 +207,12 @@ const GameEditPage = () => {
             onChange={(e) => setGameForm({ ...gameForm, title: e.target.value })}
           />
           
-          {/* <label>게임명(한글):</label>
+          <label>게임명(한글):</label>
           <input
             type="text"
             value={gameForm.titleKo}
             onChange={(e) => setGameForm({ ...gameForm, titleKo: e.target.value })}
-          /> */}
+          />
 
           <label>가격(USD):</label>
           <input

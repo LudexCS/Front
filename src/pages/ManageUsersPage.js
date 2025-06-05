@@ -5,24 +5,32 @@ import Sidebar from "../components/layout/Sidebar";
 import UserItem from "../components/admin/UserItem";
 import NavbarManage from "../components/layout/NavbarManage";
 import { useUser } from "../context/UserContext";
-
-const dummyUsers = Array.from({ length: 10 }).map((_, i) => ({
-  id: i,
-  nickname: `user${i}`,
-  email: `user${i}@example.com`,
-  isBlocked: i % 2 === 0,
-}));
+import { getUsersList } from "../api/adminApi";
 
 const ManageUsersPage = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [users, setUsers] = useState([]);
   const { isLoggedIn } = useUser();
 
-  const filteredUsers = dummyUsers.filter(
+  const filteredUsers = users.filter(
     user =>
       user.nickname.includes(searchTerm) ||
       user.email.includes(searchTerm)
   );
+
+  const fetchUsers = async () => {
+      try {
+        const response = await getUsersList();
+        setUsers(response);
+      } catch (error) {
+        console.error("유저 목록 불러오기 실패:", error);
+      }
+    };
+
+  useEffect( () => {
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn) {

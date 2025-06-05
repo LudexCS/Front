@@ -1,7 +1,5 @@
-// src/context/gameContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { fetchGameList } from "../api/gameGetApi";
-import { useRecord } from "../context/RecordContext";
 
 const GameContext = createContext();
 
@@ -10,6 +8,9 @@ export const GameProvider = ({ children }) => {
   const limit = 15;
   const [games, setGames] = useState([]);
   const [isUpload, setIsUpload] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [contents, setContents] = useState([]);
 
   useEffect(() => {
     const loadGames = async () => {
@@ -25,7 +26,7 @@ export const GameProvider = ({ children }) => {
   }, [page, isUpload]);
 
   return (
-    <GameContext.Provider value={{ page, setPage, games, setIsUpload }}>
+    <GameContext.Provider value={{ page, setPage, games, setIsUpload, searchTerm, setSearchTerm, contents, setContents }}>
       {children}
     </GameContext.Provider>
   );

@@ -1,0 +1,83 @@
+.admin-add-banner-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.admin-add-banner-content {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  width: 400px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-add-banner-content h2 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.admin-add-banner-group {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 6px;
+}
+
+.admin-add-banner-group label {
+  font-weight: bold;
+}
+
+.admin-add-banner-group input[type="text"],
+.admin-add-banner-group input[type="number"],
+.admin-add-banner-group input[type="datetime-local"] {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.admin-add-banner-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-add-banner-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.admin-add-banner-actions button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.admin-add-banner-actions button:hover {
+  background-color: #0056b3;
+}
+
+.admin-add-banner-actions button:first-child {
+  background-color: #6c757d;
+}
+
+.admin-add-banner-actions button:first-child:hover {
+  background-color: #495057;
+}

@@ -46,6 +46,19 @@ export const getUserData = async () => {
   }
 };
 
+// 회원 정보를 수정하는 API
+export const editUserData = async (nickname) => {
+  try {
+    const response = await axiosInstance.put("protected/account/edit", {nickname});
+    console.log("editUserData response: ", response.data);
+    return response.data;
+  } catch (err) {
+    const msg = err.response?.data?.message || err.message;
+    console.log("editUserData 회원 정보 수정 실패: ", msg);
+    throw err;
+  }
+};
+
 export const getNewAccessToken = async () => {
   const response = await axiosInstance.get("/auth/reissue",
     { withCredentials: true } 

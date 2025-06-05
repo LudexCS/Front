@@ -45,7 +45,7 @@ const PaymentModal = ({ game, onClose }) => {
         priceInfo = priceInfoList[0];
       } catch (error) {
         console.error("Price Table Error:", error);
-        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        // alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
       }
 
       if (priceInfo?.tokenAmount) {
@@ -91,6 +91,27 @@ const PaymentModal = ({ game, onClose }) => {
     fetchPayment();
   }, [clientKey, customerKey]);
 
+// const registerGamePurchase = async () => {
+//   try {
+//     const resultArray = Array.isArray(args) ? args : [args];
+//     const purchaseId = relayRequest.onResponse(resultArray);
+//     const purchasedGame = {
+//       gameId: game.id,
+//       pricePaid: game.price.toString(),
+//       isNftIssued: true,
+//       purchaseId: purchaseId.toString()
+//     };
+//     const message = await registerPurchase(purchasedGame);
+//     console.log(message);
+//   } catch (error) {
+//     console.log("Register Purchase Error:", error);
+//     alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+//     setIsUploading(false);
+//     onClose();
+//     return;
+//   }
+// }
+
 const handleConfirm = async () => {
     const orderId = generateOrderId();
     const amount = krwAmount;
@@ -130,6 +151,7 @@ const handleConfirm = async () => {
               useAppCardOnly: false,
             },
           });
+          setIsFetch(true);
         } catch (error) {
           console.error("Toss Payments 결제 취소:", error);
           setIsUploading(false);
@@ -173,6 +195,7 @@ const handleConfirm = async () => {
               useEscrow: false,
             },
           });
+          setIsFetch(true);
         } catch (error) {
           console.error("Toss Payments 결제 취소:", error);
           setIsUploading(false);
@@ -217,6 +240,7 @@ const handleConfirm = async () => {
               validHours: 24,
             },
           });
+          setIsFetch(true);
         } catch (error) {
           console.error("Toss Payments 결제 취소:", error);
           setIsUploading(false);
@@ -253,6 +277,7 @@ const handleConfirm = async () => {
             customerEmail: user.email,
             customerName: user.nickname,
           });
+          setIsFetch(true);
         } catch (error) {
           console.error("Toss Payments 결제 취소:", error);
           setIsUploading(false);
@@ -289,6 +314,7 @@ const handleConfirm = async () => {
             customerEmail: user.email,
             customerName: user.nickname,
           });
+          setIsFetch(true);
         } catch (error) {
           console.error("Toss Payments 결제 취소:", error);
           setIsUploading(false);
@@ -331,6 +357,7 @@ const handleConfirm = async () => {
               country: "KR",
             },
           });
+          setIsFetch(true);
         } catch (error) {
           console.error("Toss Payments 결제 취소:", error);
           setIsUploading(false);
@@ -436,7 +463,6 @@ const handleConfirm = async () => {
               isNftIssued: true,
               purchaseId: purchaseId.toString()
             };
-
             const message = await registerPurchase(purchasedGame);
             console.log(message);
           } catch (error) {
@@ -446,7 +472,6 @@ const handleConfirm = async () => {
             onClose();
             return;
           }
-
           setIsUploading(false);
           setIsFetch(true);
           alert("지갑 결제가 처리되었습니다.");

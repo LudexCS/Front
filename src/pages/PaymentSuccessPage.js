@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
-import {Link, useNavigate, useSearchParams} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import "../styles/pages/PaymentSuccessPage.css";
 import {confirmPayment} from "../api/purchaseApi";
+import NavbarSearch from "../components/layout/NavbarSearch";
 
 const PaymentSuccessPage = () => {
     const navigate = useNavigate();
@@ -29,7 +30,9 @@ const PaymentSuccessPage = () => {
     }, [searchParams]);
 
     return (
-        <>
+    <>
+        <NavbarSearch />
+        <div className="payment-result-container">
             <div className="box_section" style={{ width: "600px" }}>
                 <img width="100px" src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" />
                 <h2>결제를 완료했어요</h2>
@@ -59,23 +62,12 @@ const PaymentSuccessPage = () => {
                     </div>
                 </div>
                 <div className="p-grid-col">
-                    <Link to="https://docs.tosspayments.com/guides/v2/payment-widget/integration">
-                        <button className="button p-grid-col5">연동 문서</button>
-                    </Link>
-                    <Link to="https://discord.gg/A4fRFXQhRu">
-                        <button className="button p-grid-col5" style={{ backgroundColor: "#e8f3ff", color: "#1b64da" }}>
-                            실시간 문의
-                        </button>
-                    </Link>
+                    <button className="button p-grid-col5" onClick={()=>{navigate(-1)}}>상세 페이지로 돌아가기</button>
+                    <button className="button p-grid-col5" onClick={()=>{navigate("/my")}}>결제 내역 확인하기</button>
                 </div>
             </div>
-            <div className="box_section" style={{ width: "600px", textAlign: "left" }}>
-                <b>Response Data :</b>
-                <div id="response" style={{ whiteSpace: "initial" }}>
-                    {responseData && <pre>{JSON.stringify(responseData, null, 4)}</pre>}
-                </div>
-            </div>
-        </>
+        </div>
+    </>
     );
 }
 

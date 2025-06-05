@@ -9,6 +9,8 @@ import EditProfilePage from "./pages/EditProfilePage";
 import GameUploadPage from "./pages/GameUploadPage";
 import DeleteAccount from "./components/modals/DeleteAccount";
 import ManageUsersPage from "./pages/ManageUsersPage";
+import ManageContentPage from "./pages/ManageContentPage";
+import ManageReportPage from "./pages/ManageReportPage";
 import GameDetailPage from "./pages/GameDetailPage";
 import UserProvider from './context/UserContext';
 import { UploadProvider } from "./context/UploadContext";
@@ -18,6 +20,7 @@ import ConfigProvider from "./context/ConfigContext";
 import GameEditPage from "./pages/GameEditPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import PaymentFailPage from "./pages/PaymentFailPage";
+import ManageBannerPage from "./pages/ManageBannerPage";
 
 function App() {
   console.log(Router);
@@ -38,6 +41,9 @@ function App() {
                 <Route path="/submit-game" element={<GameUploadPage />}/>
                 <Route path="/delete-account" element={<DeleteAccount />} />
                 <Route path="/manage-users" element={<ManageUsersPage />} />
+                <Route path="/manage-content" element={<ManageContentPage />} />
+                <Route path="/review-reports" element={<ManageReportPage />} />
+                <Route path="/edit-banners" element={<ManageBannerPage />} />
                 <Route path="/game/:gameId" element={<GameDetailPage />} />
                 <Route path="/edit-game/:gameId" element={<GameEditPage />} />
                 <Route path="/payment/success" element={<PaymentSuccessPage />} />
