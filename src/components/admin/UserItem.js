@@ -1,21 +1,41 @@
 import React, { useState } from "react";
 import "../../styles/admin/UserItem.css"
-// import UserHistoryModal from "../modals/UserHistoryModal";
+import { postUserBlocked, postUserUnblocked, postUserEmail } from "../../api/adminApi";
+
+const defaultMessage = "게임 <strong>\"게임 제목\"</strong>에 대한 신고가 접수되어 검토 중입니다.<br/>신속한 조치가 필요하니 <a href='게임 상세페이지 url'>내 게임 관리 페이지</a>를 확인해주세요.";
 
 const UserItem = ({ user }) => {
   const [blocked, setBlocked] = useState(user.isBlocked);
   // const [showModal, setShowModal] = useState(null);
   const [expanded, setExpanded] = useState(false);
-  const [message, setMessage] = useState(""); // 텍스트 내용
+  const [message, setMessage] = useState(defaultMessage);
 
-  const handleBlockToggle = () => {
-    // 실제 API 연결 필요
-    setBlocked(!blocked);
-  };
+  const handleBlockToggle = async () => {{
+    if(!blocked){
+      try {
+        await postUserBlocked(user.email);
+        setBlocked(!blocked);
+      } catch (error) {
+        console.error("유저 차단 실패:", error);
+    }}
+    else if(blocked){
+      try {
+        await postUserUnblocked(user.email);
+        setBlocked(!blocked);
+      } catch (error) {
+        console.error("유저 차단 해제 실패:", error);
+    }}
+  }};
 
-  const handleNotify = () => {
-    console.log(`Notify to ${user.nickname}:`, message);
-    setMessage("");
+  const handleNotify = async () => {
+    try {
+      alert("이메일 전송을 시작합니다.")
+      await postUserEmail(user.email, message);
+      alert("이메일을 전송했습니다.");
+      setMessage(defaultMessage);
+    } catch (error) {
+      console.error("이메일 전송 실패:", error);
+    }
   };
 
   return (

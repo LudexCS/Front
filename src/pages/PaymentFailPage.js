@@ -1,10 +1,15 @@
-import { Link, useSearchParams } from "react-router-dom";
-import "../styles/pages/PaymentFailPage.css";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import "../styles/pages/PaymentSuccessPage.css";
+import NavbarSearch from "../components/layout/NavbarSearch";
 
 const FailPage = () => {
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     return (
+    <>
+        <NavbarSearch />
+        <div className="payment-result-container">
         <div id="info" className="box_section" style={{ width: "600px" }}>
             <img width="100px" src="https://static.toss.im/lotties/error-spot-no-loop-space-apng.png" alt="에러 이미지" />
             <h2>결제를 실패했어요</h2>
@@ -23,16 +28,12 @@ const FailPage = () => {
             </div>
 
             <div className="p-grid-col">
-                <Link to="https://docs.tosspayments.com/guides/v2/payment-widget/integration">
-                    <button className="button p-grid-col5">연동 문서</button>
-                </Link>
-                <Link to="https://discord.gg/A4fRFXQhRu">
-                    <button className="button p-grid-col5" style={{ backgroundColor: "#e8f3ff", color: "#1b64da" }}>
-                        실시간 문의
-                    </button>
-                </Link>
+                <button className="button p-grid-col5" onClick={()=>navigate("/")}>메인 페이지로 돌아가기</button>
+                <button className="button p-grid-col5" onClick={()=>navigate("/my")}>결제 내역 확인하기</button>
             </div>
         </div>
+        </div>
+    </>
     );
 }
 

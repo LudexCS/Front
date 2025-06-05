@@ -3,12 +3,124 @@ import gameManageInstance from "./Instance/gameManageInstance";
 
 const page = 1;
 
+function sanitizeFilename(name) {
+  return name.replace(/[^\w.-]+/g, "_"); // 한글, 공백, 특수문자 제거
+}
+
+export const addBanner = async (banner, image) => {
+  const formData = new FormData();
+
+  console.log("json: ", banner);
+  formData.append("json", JSON.stringify(banner));
+
+  if (image?.file instanceof File) {
+    const safeThumb = new File(
+      [image.file],
+      sanitizeFilename(image.file.name),
+      { type: image.file.type }
+    );
+    formData.append("imageUrl", safeThumb);
+  }
+
+  // 디버깅 로그
+  for (const [key, value] of formData.entries()) {
+    if (value instanceof File) {
+      console.log(`[FormData] ${key}: ${value.name}, ${value.size} bytes`);
+    } else {
+      console.log(`[FormData] ${key}:`, value);
+    }
+  }
+
+  try {
+    const response = await platformAdminInstance.post("/admin/banner/create", formData);
+    return response.data;
+  } catch (error) {
+    console.error("배너 등록 실패:", error);
+    throw error;
+  }
+};
+
 export const postReport = async (report) => {
   try {
     const response = await platformAdminInstance.post("/protected/report/post", report);
     return response.data;
   } catch (error) {
     console.error("신고 처리 실패:", error);
+    throw error;
+  }
+};
+
+export const postUserBlocked = async (gameTitle) => {
+  try {
+    const response = await platformAdminInstance.post("/admin/sanction/game", {
+      adminEmail: "admin@admin.com",
+      gameTitle: gameTitle,
+      sanctionDetail: ""
+    });
+    return response.data;
+  } catch (error) {
+    console.error("차단 처리 실패:", error);
+    throw error;
+  }
+};
+
+export const postGameUnblocked = async (gameTitle) => {
+  try {
+    const response = await platformAdminInstance.post("/admin/sanction/free/game", {
+      gameTitle: gameTitle
+    });
+    return response.data;
+  } catch (error) {
+    console.error("차단 해제 실패:", error);
+    throw error;
+  }
+};
+
+export const postGameBlocked = async (gameTitle) => {
+  try {
+    const response = await platformAdminInstance.post("/admin/sanction/user", {
+      adminEmail: "admin@admin.com",
+      gameTitle: gameTitle,
+      sanctionDetail: ""
+    });
+    return response.data;
+  } catch (error) {
+    console.error("차단 처리 실패:", error);
+    throw error;
+  }
+};
+
+export const postUserUnblocked = async (userEmail) => {
+  try {
+    const response = await platformAdminInstance.post("/admin/sanction/free/user", {
+      email: userEmail
+    });
+    return response.data;
+  } catch (error) {
+    console.error("차단 해제 실패:", error);
+    throw error;
+  }
+};
+
+export const postUserEmail = async (userEmail, content) => {
+  try {
+    const response = await platformAdminInstance.post("/admin/send/email", {
+      userEmail: userEmail,
+      content: content
+    });
+    return response.data;
+  } catch (error) {
+    console.error("이메일 전송 실패:", error);
+    throw error;
+  }
+};
+
+export const getUsersList = async () => {
+  try {
+    const response = await platformAdminInstance.get("/admin/user/usersList");
+    return response.data;
+  } catch (error) {
+    console.error("유저 목록 조회 실패:", error);
     throw error;
   }
 };

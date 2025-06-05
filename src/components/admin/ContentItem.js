@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../../styles/admin/UserItem.css"
 import GameDetailBar from "../game/GameDetailBar";
+import { postUserBlocked, postGameUnblocked } from "../../api/adminApi";
 
 const ContentItem = ({ content }) => {
   const [blocked, setBlocked] = useState(content.isBlocked);
@@ -10,9 +11,21 @@ const ContentItem = ({ content }) => {
 //   const [game, setGame] = useState(null);
   const [resource, setResource] = useState(null);
 
-  const handlePauseToggle = () => {
-    // 실제 API 연결 필요
-    setBlocked(!blocked);
+  const handlePauseToggle = async () => {
+    if(!blocked){
+      try {
+        await postUserBlocked(content.title);
+        setBlocked(!blocked);
+      } catch (error) {
+        console.error("게임 차단 실패:", error);
+    }}
+    else if(blocked){
+      try {
+        await postGameUnblocked(content.title);
+        setBlocked(!blocked);
+      } catch (error) {
+        console.error("게임 차단 해제 실패:", error);
+    }}
   };
 
   return (
