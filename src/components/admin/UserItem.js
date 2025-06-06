@@ -13,15 +13,15 @@ const UserItem = ({ user }) => {
   const handleBlockToggle = async () => {{
     if(!blocked){
       try {
-        await postUserBlocked(user.email);
         setBlocked(!blocked);
+        await postUserBlocked(user.email);
       } catch (error) {
         console.error("유저 차단 실패:", error);
     }}
     else if(blocked){
       try {
-        await postUserUnblocked(user.email);
         setBlocked(!blocked);
+        await postUserUnblocked(user.email);
       } catch (error) {
         console.error("유저 차단 해제 실패:", error);
     }}

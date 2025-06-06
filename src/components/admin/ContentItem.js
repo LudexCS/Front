@@ -14,15 +14,17 @@ const ContentItem = ({ content }) => {
   const handlePauseToggle = async () => {
     if(!blocked){
       try {
-        await postGameBlocked(content.gameId);
         setBlocked(!blocked);
+        await postGameBlocked(content.gameId);
+        console.log("게임 차단 성공");
       } catch (error) {
         console.error("게임 차단 실패:", error);
     }}
     else if(blocked){
       try {
-        await postGameUnblocked(content.gameId);
         setBlocked(!blocked);
+        await postGameUnblocked(content.gameId);
+        console.log("게임 차단 해제 성공");
       } catch (error) {
         console.error("게임 차단 해제 실패:", error);
     }}
