@@ -1,6 +1,20 @@
 import web3Instance from "./Instance/web3GatewayInstance";
 import * as ludex from "ludex";
 
+export const claimPurchase = async ({ ownerId, ownerAddress, purchaseId }) => {
+  try {
+    const res = await web3Instance.post("/protected/delegate/claim-purchase", {
+      ownerId,
+      ownerAddress,
+      purchaseId,
+    });
+    return res.data;
+  } catch (err) {
+    const msg = err.response?.data?.message || err.message;
+    return { error: msg };
+  }
+}
+
 export const requestRelay = async (relayRequest) => {
   try {
     const body = ludex.relay.serializeRelayRequest(relayRequest);

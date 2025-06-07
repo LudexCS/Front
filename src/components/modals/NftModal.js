@@ -4,6 +4,7 @@ import "../../styles/modals/NftModal.css";
 import {useConfig} from "../../context/ConfigContext";
 import { useUser } from "../../context/UserContext";
 import * as ludex from "ludex";
+import {claimPurchase} from "../../api/walletAuth";
 
 const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
   const { chainConfig, ludexConfig } = useConfig();
@@ -23,51 +24,13 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
     const run = async () => {
       if (!isOpen) return;
 
-      const chainIdHex = chainConfig.chainId.toLowerCase();
+      let isOwner = null;
 
-      try {
-        const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
-
-        if (currentChainId !== chainIdHex) {
-          try {
-            await window.ethereum.request({
-              method: "wallet_switchEthereumChain",
-              params: [{ chainId: chainIdHex }]
-            });
-          } catch (switchError) {
-            if (switchError.code === 4902) {
-              // 체인 추가 시도
-              try {
-                await window.ethereum.request({
-                  method: "wallet_addEthereumChain",
-                  params: [chainConfig]
-                });
-              } catch (addError) {
-                console.warn("Add chain failed:", addError);
-                const nowChainId = await window.ethereum.request({ method: "eth_chainId" });
-                if (nowChainId.toLowerCase() !== chainIdHex) {
-                  alert("이더리움 네트워크 전환에 실패했습니다.");
-                  return;
-                }
-              }
-            } else {
-              throw switchError;
-            }
-          }
-        }
-      } catch (err) {
-        console.error("MetaMask 네트워크 연결 실패:", err);
-      }
-
-      const wallet = await ludex.BrowserWalletConnection.create(chainConfig);
-      const address = (await wallet.getCurrentAddress()).stringValue;
-
-      if(purchaseInfo === null) {
+      if(!purchaseInfo) {
         return;
       }
-      console.log("purchaseInfo: " + purchaseInfo);
+
       const tokenIDNumber = BigInt(purchaseInfo);
-      console.log("tokenIDNumber: " + tokenIDNumber);
 
       let ledger;
       try {
@@ -80,16 +43,51 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
         return;
       }
 
-      let isOwner;
+      const chainIdHex = chainConfig.chainId.toLowerCase();
+
+
       try {
-        isOwner = await
-            ledger.proveOwnership(
-                ludex.Address.create(address),
-                tokenIDNumber);
-      } catch (error) {
-        console.log("Error: " + error);
-        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
-        return;
+        const currentChainId = await window.ethereum.request({method: "eth_chainId"});
+
+        if (currentChainId !== chainIdHex) {
+          try {
+            await window.ethereum.request({
+              method: "wallet_switchEthereumChain",
+              params: [{chainId: chainIdHex}]
+            });
+          } catch (switchError) {
+            if (switchError.code === 4902) {
+              // 체인 추가 시도
+              try {
+                await window.ethereum.request({
+                  method: "wallet_addEthereumChain",
+                  params: [chainConfig]
+                });
+              } catch (addError) {
+                console.warn("Add chain failed:", addError);
+                const nowChainId = await window.ethereum.request({method: "eth_chainId"});
+                if (nowChainId.toLowerCase() !== chainIdHex) {
+                  alert("이더리움 네트워크 전환에 실패했습니다.");
+                  return;
+                }
+              }
+            } else {
+              throw switchError;
+            }
+          }
+        }
+
+        const wallet = await ludex.BrowserWalletConnection.create(chainConfig);
+
+        const address = (await wallet.getCurrentAddress()).stringValue;
+
+
+        isOwner = await ledger.proveOwnership(
+            ludex.Address.create(address),
+            tokenIDNumber
+        );
+      } catch (err) {
+        console.error("MetaMask 네트워크 연결 실패:", err);
       }
 
       let purchaseLog;
@@ -167,9 +165,27 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
       alert("지갑을 선택해주세요.");
       return;
     }
-    // TODO: 연결 로직을 여기에 추가
-    alert(`선택된 지갑(${selectedWallet})으로 연결 요청`);
+
+    const requestBody = {
+      ownerId: user.ownerId,
+      purchaseId: purchaseInfo,
+      ownerAddress: selectedWallet
     }
+
+    try {
+      const response = await claimPurchase(requestBody);
+      /*
+      const responseOwnerAddress = response.result.ownerAddress;
+      const responsePurchaseId = response.result.purchaseId;
+      console.log("responseOwnerAddress: ", responseOwnerAddress, "responsePurchaseId: ", responsePurchaseId);
+       */
+      alert(`선택된 지갑(${selectedWallet})으로 연결 요청 성공`);
+    } catch (error) {
+      console.error("NFT 연결 요청 실패:", error.message);
+      alert(`선택된 지갑(${selectedWallet})으로 연결 요청 실패`);
+    }
+
+  }
 
   return (
     <div className="nft-modal-overlay" onClick={onClose}>
