@@ -41,8 +41,8 @@ export const savePaymentInfo = async ({ orderId, amount }) => {
 };
 
 // 결제 confirm
-export const confirmPayment = async ({ paymentKey, orderId, amount }) => {
-    const requestData = { paymentKey, orderId, amount };
+export const confirmPayment = async ({ paymentKey, orderId, amount, gameId, itemId, tokenAmount }) => {
+    const requestData = { paymentKey, orderId, amount, gameId, itemId, tokenAmount };
 
     try {
         const response = await purchaseInstance.post(

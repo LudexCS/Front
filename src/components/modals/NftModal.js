@@ -6,6 +6,7 @@ import * as ludex from "ludex";
 
 const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
   const { chainConfig, ludexConfig } = useConfig();
+  const [hasNft, setHasNft] = useState(false);
 
   const [nftData, setNftData] = useState({
     tokenId: null,
@@ -87,32 +88,60 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
         return;
       }
 
-      if (isOwner)
-      {
-        let purchaseLog;
-        try {
-          purchaseLog = await ledger.getPurchaseInfo(tokenIDNumber);
-        } catch (error) {
-          console.log("Error: " + error);
-          alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
-          return;
-        }
+      let purchaseLog;
+      let buyer;
+      try {
+        purchaseLog = await ledger.getPurchaseInfo(tokenIDNumber);
 
+        buyer = (function () {
+          if (typeof(purchaseLog.buyer) === "bigint")
+          {
+            return (purchaseLog.buyer.toString());
+          }
+          else
+          {
+            return (purchaseLog.buyer.stringValue);
+          }
+        })();
+
+      } catch (error) {
+        console.log("Error: " + error);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        return;
+      }
+
+      if (isOwner && purchaseLog && buyer)
+      {
         setNftData({
           tokenId: purchaseLog.tokenID.toString(16),
           itemId: purchaseLog.itemID.toString(),
-          buyer: purchaseLog.buyer.stringValue,
+          buyer: buyer,
           timestamp: purchaseLog.timestamp
         });
+
+        setHasNft(true);
       }
-      else
+      // Web2 결제 사용자 - nft가 컨트랙트 상에 존재하지만, 사용자 지갑에 귀속되지는 않은 상태.
+      else if (purchaseLog && buyer)
       {
+        setNftData({
+          tokenId: purchaseLog.tokenID.toString(16),
+          itemId: purchaseLog.itemID.toString(),
+          buyer: buyer,
+          timestamp: purchaseLog.timestamp
+        });
+
+        setHasNft(false);
+      }
+      else {
         setNftData({
           tokenId: null,
           itemId: null,
           buyer: null,
           timestamp: null
         });
+
+        setHasNft(false);
       }
     };
 
@@ -123,7 +152,7 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
 
   const { tokenId, itemId, buyer, timestamp } = nftData;
 
-  const hasNft = tokenId && itemId && buyer && timestamp;
+  const hasPurchaseLog = tokenId && itemId && buyer && timestamp;
 
   const formattedTime = timestamp
     ? new Date(timestamp).toLocaleString()
@@ -133,13 +162,23 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
     <div className="nft-modal-overlay" onClick={onClose}>
       <div className="nft-modal" onClick={(e) => e.stopPropagation()}>
         <h2>NFT 발급 정보</h2>
-        {hasNft ? (
-          <div className="nft-info">
-            <p><strong>Token ID:</strong> {tokenId}</p>
-            <p><strong>Item ID:</strong> {itemId}</p>
-            <p><strong>구매자:</strong> {buyer}</p>
-            <p><strong>구매 일시:</strong> {formattedTime}</p>
-          </div>
+        {hasPurchaseLog ? (
+          hasNft ? (
+            <div className="nft-info">
+              <p><strong>Token ID:</strong> {tokenId}</p>
+              <p><strong>Item ID:</strong> {itemId}</p>
+              <p><strong>구매자:</strong> {buyer}</p>
+              <p><strong>구매 일시:</strong> {formattedTime}</p>
+            </div>
+          ) : (
+            <div className="nft-info">
+              <p><strong>Token ID:</strong> {tokenId}</p>
+              <p><strong>Item ID:</strong> {itemId}</p>
+              <p><strong>구매자:</strong> {buyer}</p>
+              <p><strong>구매 일시:</strong> {formattedTime}</p>
+              <p className="unassigned-note">※ NFT는 발급되었지만 아직 지갑에 귀속되지 않았습니다.</p>
+            </div>
+          )
         ) : (
           <div className="nft-pending">
             <p>발급정보를 가져오고 있거나, NFT가 아직 발급되지 않았습니다.</p>
