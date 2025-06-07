@@ -2,11 +2,15 @@
 import React, {useEffect, useState} from "react";
 import "../../styles/modals/NftModal.css";
 import {useConfig} from "../../context/ConfigContext";
+import { useUser } from "../../context/UserContext";
 import * as ludex from "ludex";
 
 const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
   const { chainConfig, ludexConfig } = useConfig();
   const [hasNft, setHasNft] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState(null);
+  const { user } = useUser();
+  const [showWallets, setShowWallets] = useState(false);
 
   const [nftData, setNftData] = useState({
     tokenId: null,
@@ -158,6 +162,15 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
     ? new Date(timestamp).toLocaleString()
     : "N/A";
 
+  const ConnectWallet = async () => {
+    if (!selectedWallet) {
+      alert("지갑을 선택해주세요.");
+      return;
+    }
+    // TODO: 연결 로직을 여기에 추가
+    alert(`선택된 지갑(${selectedWallet})으로 연결 요청`);
+    }
+
   return (
     <div className="nft-modal-overlay" onClick={onClose}>
       <div className="nft-modal" onClick={(e) => e.stopPropagation()}>
@@ -177,6 +190,34 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
               <p><strong>구매자:</strong> {buyer}</p>
               <p><strong>구매 일시:</strong> {formattedTime}</p>
               <p className="unassigned-note">※ NFT는 발급되었지만 아직 지갑에 귀속되지 않았습니다.</p>
+              {!hasNft && buyer && (
+                <div>
+                  <button className="assign-wallet-btn" onClick={() => setShowWallets(!showWallets)}>
+                    내 지갑에 연결
+                  </button>
+                  {showWallets && (
+                    <div className="wallet-selection">
+                      <ul className="wallet-list">
+                        {user?.cryptoWallet?.map((wallet, idx) => (
+                          <li
+                            key={idx}
+                            className={`wallet-item ${selectedWallet === wallet.address ? "selected" : ""}`}
+                            onClick={() => setSelectedWallet(wallet.address)}
+                          >
+                            {wallet.address}
+                          </li>
+                        ))}
+                      </ul>
+                      <button className="confirm-wallet-btn" onClick={ConnectWallet}>
+                        연결하기
+                      </button>
+                      <button className="confirm-wallet-btn" onClick={() => setShowWallets(!showWallets)}>
+                        Back
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )
         ) : (
