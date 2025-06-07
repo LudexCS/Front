@@ -25,7 +25,7 @@ const IPSelectorModal = ({ onClose, setSelectedIPs }) => {
       .filter((ip) => checked[ip.resourceId])
       .map((ip) => ip.gameId)});
     console.log("gameForm.originGameIds: ", gameForm.originGameIds);
-
+    
     setSharerIds(availableIPs
       .filter((ip) => checked[ip.resourceId])
       .map((ip) => ip.sharerId));

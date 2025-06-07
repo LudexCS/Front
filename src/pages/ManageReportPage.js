@@ -64,7 +64,7 @@ const ManageReportPage = () => {
           </div>
           <div className="user-list">
             {reports.map((report) => (
-              <ReportItem key={report.id} report={report} fetchReports={fetchReports}/>
+              <ReportItem key={report.report_id} report={report} fetchReports={fetchReports}/>
             ))}
           </div>
         </div>

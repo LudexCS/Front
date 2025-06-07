@@ -3,13 +3,13 @@ import { adminHandleReport } from "../../api/adminApi";
 import "../../styles/admin/UserItem.css"
 
 const ReportItem = ({ report, fetchReports }) => {
-  const [handled, setHandled] = useState(report.isHandled);
+  const [handled, setHandled] = useState(report.report_ishandled);
   const [expanded, setExpanded] = useState(false);
 
   const handleBlockToggle = async () => {
     // if(handled){
       try {
-        await adminHandleReport(report.id);
+        await adminHandleReport(report.report_id);
         fetchReports();
       } catch (error) {
         console.error("신고 처리 실패:", error);
@@ -30,12 +30,12 @@ const ReportItem = ({ report, fetchReports }) => {
       <div className="user-item-row">
         <div className="user-info"> 
           {/* 수정 필요 */}
-          게임: {report.reportedGameId} / 판매자: {report.id} / 신고자: {report.complainantId}
+          게임: {report.reportedGame_title} / 판매자: {report.creator_nickname} / 신고자: {report.complainant_nickname}
         </div>
         <div className="actions">
           <button
             onClick={handleBlockToggle}
-            disabled={report.isHandled} // handled가 true면 버튼 비활성화
+            disabled={report.report_ishandled} // handled가 true면 버튼 비활성화
           >
             {handled ? "resolved" : "set resolved"}
           </button>
@@ -45,7 +45,7 @@ const ReportItem = ({ report, fetchReports }) => {
 
       {expanded && (
         <div className="expanded-section">
-          <pre>{report.reportsDetails}</pre>
+          <pre>{report.report_reports_details}</pre>
         </div>
       )}
     </div>

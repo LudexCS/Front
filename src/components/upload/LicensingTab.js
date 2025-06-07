@@ -26,9 +26,9 @@ const LicensingTab = () => {
   };
 
   return (
-    <div className="licensing-tabs">
-      <div className="tab-body">
-        <div className="licensing-pane">
+    <div className="resource-licensing-tabs">
+      <div className="resource-tab-body">
+        <div className="resource-licensing-pane">
           <h4>리소스 업로드(압축파일 형태 업로드 권장)</h4>
           <FileUploader
             maxFiles={1}
@@ -36,7 +36,7 @@ const LicensingTab = () => {
             setFiles={(files) => setResourceForm({ ...resourceForm, resourceFile: files[0]?.file || null })}
           />
 
-          <label>리소스 설명:</label>
+          <p>리소스 설명:</p>
           <textarea
             value={resourceForm.description}
             onChange={(e) =>
@@ -44,24 +44,24 @@ const LicensingTab = () => {
             }
           />
 
-          <label>리소스 미리보기 이미지 업로드</label>
+          <h4>리소스 미리보기 이미지 업로드</h4>
           <FileUploader
             files={resourceForm.imageFiles}
             setFiles={(files) => setResourceForm({ ...resourceForm, imageFiles: files })}
             maxFiles={5}
           />
 
-          <div className="tab-header">
+          <div className="resource-tab-header">
             <h4>리소스 종류 선택</h4>
-            <button className="help-button" onClick={() => setShowHelp(true)}>?</button>
+            <button className="resource-help-button" onClick={() => setShowHelp(true)}>?</button>
           </div>
 
-          <div className="radio-group">
+          <div className="resource-radio-group">
             {TABS.map((tab) => (
               <label key={tab.key} style={{ marginRight: "1rem" }}>
                 <input
                   type="radio"
-                  name="licensing-type"
+                  name="resource-licensing-type"
                   value={tab.key}
                   checked={activeTab === tab.key}
                   onChange={() => handleCategoryChange(tab.key)}
@@ -72,8 +72,8 @@ const LicensingTab = () => {
           </div>
 
           <h4>수익 배분 비율 설정</h4>
-          <label>(ludex 10% 별도)</label>
-          <div className="revenue-split">
+          <p>(ludex 10% 별도)</p>
+          <div className="resource-revenue-split">
             {/* <p>플랫폼: 10%</p> */}
             <label>판매자 (%):</label>
             <input
@@ -107,7 +107,7 @@ const LicensingTab = () => {
             2차 파생 허용
           </label>
 
-          <label style={{ display: "block" }}>추가 조건:</label>
+          <p style={{ display: "block" }}>추가 조건:</p>
           <textarea
             value={resourceForm.additionalCondition}
             onChange={(e) =>
