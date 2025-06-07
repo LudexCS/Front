@@ -15,6 +15,9 @@ const PaymentSuccessPage = () => {
                 orderId: searchParams.get("orderId"),
                 amount: searchParams.get("amount"),
                 paymentKey: searchParams.get("paymentKey"),
+                itemId: searchParams.get("itemId"),
+                gameId: searchParams.get("gameId"),
+                tokenAmount: searchParams.get("tokenAmount")
             };
 
             return await confirmPayment(requestData);
