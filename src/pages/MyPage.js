@@ -97,7 +97,7 @@ const MyPage = () => {
         )}
       </div>
       <NftModal isOpen={nftModalOpen} onClose={() => setNftModalOpen(false)} purchaseInfo={nftInfo} />
-      <PayoutModal isOpen={payoutModalOpen} onClose={() => setPayoutModalOpen(false)} />
+      <PayoutModal isOpen={payoutModalOpen} onClose={() => setPayoutModalOpen(false)} sales={recordData.sold}/>
       <DiscountModal isOpen={discountModalOpen} onClose={() => setDiscountModalOpen(false)} game={selectedGame} />
     </div>
   );

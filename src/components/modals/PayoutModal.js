@@ -6,19 +6,25 @@ import * as ludex from "ludex";
 import { getTokenAddress, requestRelay } from "../../api/walletAuth";
 import LoadingModal from "./LoadingModal";
 
-const PayoutModal = ({ isOpen, onClose }) => {
+const PayoutModal = ({ isOpen, onClose, sales }) => {
   const { user } = useUser();
   const { chainConfig, ludexConfig } = useConfig();
   const [selectedWallet, setSelectedWallet] = useState(null);
+  const [selectedGameId, setSelectedGameId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePayoutConfirm = async () => {
+    if (!selectedGameId) {
+      alert("정산을 받을 게임을 선택해주세요.");
+      return;
+    }
     if (!selectedWallet) {
       alert("정산을 받을 지갑을 선택해주세요.");
       return;
     }
 
     setIsLoading(true); // 로딩 시작
+    console.log("정산 요청된 게임 아이디:", selectedGameId);
     console.log("정산 요청된 지갑 주소:", selectedWallet);
 
     const chainIdHex = chainConfig.chainId.toLowerCase();
@@ -146,6 +152,23 @@ const PayoutModal = ({ isOpen, onClose }) => {
       <div className="payout-modal-overlay" onClick={onClose}>
         <div className="payout-modal" onClick={(e) => e.stopPropagation()}>
           <h2>정산 요청</h2>
+          <p>정산 할 게임을 선택해주세요:</p>
+          <div className="payout-sales-summary-wrapper">
+            {sales.games.map((game) => (
+              <div key={game.gameId} className="payout-sales-summary">
+                <li 
+                  className={game.gameId === selectedGameId ? "selected" : ""} 
+                  onClick={() => setSelectedGameId(game.gameId)} //game.itemId
+                >
+                  <img src={game.thumbnailUrl} alt="payout-thumbnail-img" className="payout-thumbnail-img" />
+                  <div>
+                    <span>{game.title}</span>
+                    <span>{game.price} USDC</span> {/* 해당 게임의 정산할 금액 */}
+                  </div>
+                </li>
+              </div>
+            ))}
+          </div>
           <p>수익을 받을 지갑을 선택해주세요:</p>
           <ul className="payout-wallet-list">
             {user?.cryptoWallet?.map((wallet, idx) => (
