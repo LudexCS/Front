@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "../../styles/modals/PayoutModal.css";
 import { useUser } from "../../context/UserContext";
 import { useConfig } from "../../context/ConfigContext";
@@ -12,6 +12,50 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [selectedGameId, setSelectedGameId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [gamesBalance, setGamesBalance] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const gamesBalance = await Promise.all(
+          sales.games.map( async (game) => {
+            try {
+              const profitEscrow =
+                  ludex
+                      .facade
+                      .createWeb2UserFacade(
+                          chainConfig,
+                          ludexConfig)
+                      .readonlyAccessProfitEscrow();
+
+              const tokenAddress = await getTokenAddress();
+              console.log("tokenAddress: " + tokenAddress);
+              if (!tokenAddress) {
+                alert("토큰 주소를 가져오지 못했습니다.");
+                return 0;
+              }
+
+              const itemId = BigInt(game.itemId);
+
+              let balance = (await profitEscrow.getBalanceFor(
+                  itemId,
+                  ludex.Address.create(tokenAddress)))
+                  .toString();
+              const padded = balance.toString().padStart(7, "0");
+              const integerPart = padded.slice(0, -6);
+              const decimalPart = padded.slice(-6).replace(/0+$/, "");
+              balance = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+              console.log("Balance: " + balance.toString() + " USDC");
+              return balance;
+            } catch (error) {
+              alert("정산할 금액을 가져오지 못했습니다.");
+              console.log("Balance Error: " + error.message);
+              return 0;
+            }
+          })
+      );
+      setGamesBalance(gamesBalance);
+    })();
+  }, [isOpen, chainConfig, ludexConfig, sales.games]);
 
   const handlePayoutConfirm = async () => {
     if (!selectedGameId) {
@@ -28,6 +72,9 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
     console.log("정산 요청된 지갑 주소:", selectedWallet);
 
     const chainIdHex = chainConfig.chainId.toLowerCase();
+
+    let connection;
+    let address;
 
     try {
       const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
@@ -60,14 +107,15 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
           }
         }
       }
+
+      connection = await ludex.BrowserWalletConnection.create(chainConfig);
+      address = (await connection.getCurrentAddress()).stringValue;
     } catch (err) {
       console.error("MetaMask 네트워크 연결 실패:", err);
+      alert("MetaMask 등록 후 다시 시도해주세요.");
       setIsLoading(false);
       return;
     }
-
-    const connection = await ludex.BrowserWalletConnection.create(chainConfig);
-    const address = (await connection.getCurrentAddress()).stringValue;
 
     if (address.toLowerCase() !== selectedWallet.toLowerCase()) {
       alert("MetaMask와 지갑 주소가 일치하지 않습니다. 주소를 확인해주세요.");
@@ -76,7 +124,6 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
     }
 
     const tokenAddress = await getTokenAddress();
-    console.log("tokenAddress: " + tokenAddress);
     if (!tokenAddress) {
       alert("토큰 주소를 가져오지 못했습니다.");
       setIsLoading(false);
@@ -85,9 +132,16 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
 
     const signer = await connection.getSigner();
 
-    let payment;
+    let profitEscrow;
     try {
-      payment = ludex.facade.createWeb3UserFacade(chainConfig, ludexConfig, signer).metaTXAccessPaymentProcessor();
+      profitEscrow =
+          ludex
+              .facade
+              .createWeb3UserFacade(
+                  chainConfig,
+                  ludexConfig,
+                  signer)
+              .metaTXAcessProfitEscrow();
     } catch (error) {
       console.log("Payment Error: " + error);
       alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
@@ -95,32 +149,16 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
       return;
     }
 
-    let balance;
-    try {
-      balance = await payment.getEscrowBalance(ludex.Address.create(tokenAddress));
-      const padded = balance.toString().padStart(7, "0");
-      const integerPart = padded.slice(0, -6);
-      const decimalPart = padded.slice(-6).replace(/0+$/, "");
-      balance = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
-      console.log("Balance: " + balance.toString() + " USDC");
-      if (balance.toString() === "0") {
-        alert("정산할 판매액이 없습니다.");
-        setIsLoading(false);
-        onClose();
-        return;
-      }
-    } catch (error) {
-      console.log("Balance Error: " + error);
-      alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
-      setIsLoading(false);
-      onClose();
-      return;
-    }
+    const itemId = BigInt(selectedGameId);
 
     let relayRequest;
     try {
-      console.log("ludex.Address.token: " + ludex.Address.create(tokenAddress));
-      relayRequest = await payment.claimRequest(ludex.Address.create(tokenAddress.toString()), 3000000n);
+      relayRequest =
+          await profitEscrow.claimRequest(
+              itemId,
+              ludex.Address.create(tokenAddress),
+              await connection.getCurrentAddress(),
+              3000000n);
     } catch (error) {
       console.log("Relay Request Error: " + error);
       alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
@@ -140,7 +178,7 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
     }
 
     setIsLoading(false); // 로딩 종료
-    alert(balance + " USDC 금액의 정산 요청이 처리되었습니다.");
+    alert("정산 요청이 처리되었습니다.");
     onClose();
   };
 
@@ -154,22 +192,22 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
           <h2>정산 요청</h2>
           <p>정산 할 게임을 선택해주세요:</p>
           <div className="payout-sales-summary-wrapper">
-            {sales.games.map((game) => (
-              <div key={game.gameId} className="payout-sales-summary">
+            {sales.games.map((game, index) => (
+              <div key={game.itemId} className="payout-sales-summary">
                 <li 
-                  className={game.gameId === selectedGameId ? "selected" : ""} 
-                  onClick={() => setSelectedGameId(game.gameId)} //game.itemId
+                  className={game.itemId === selectedGameId ? "selected" : ""}
+                  onClick={() => setSelectedGameId(game.itemId)} //game.itemId
                 >
                   <img src={game.thumbnailUrl} alt="payout-thumbnail-img" className="payout-thumbnail-img" />
                   <div>
                     <span>{game.title}</span>
-                    <span>{game.price} USDC</span> {/* 해당 게임의 정산할 금액 */}
+                    <span>{gamesBalance[index] ?? "..."} USDC</span> {/* 해당 게임의 정산할 금액 */}
                   </div>
                 </li>
               </div>
             ))}
           </div>
-          <p>수익을 받을 지갑을 선택해주세요:</p>
+          <p>게임 등록 시 선택한 지갑을 선택해주세요:</p>
           <ul className="payout-wallet-list">
             {user?.cryptoWallet?.map((wallet, idx) => (
               <li
@@ -181,6 +219,7 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
               </li>
             ))}
           </ul>
+          <p className="wallet-notice">* 게임 등록 시 선택한 지갑을 선택하지 않을 시 정산 중 오류가 발생합니다.</p>
           <div className="payout-actions">
             <button className="payout-confirm-btn" onClick={handlePayoutConfirm}>정산 요청</button>
             <button onClick={onClose}>취소</button>

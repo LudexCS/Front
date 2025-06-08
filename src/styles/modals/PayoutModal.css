@@ -162,6 +162,12 @@
   background-color: #bbb;
 }
 
+.wallet-notice {
+  color: #ff5555;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
 /* 모달 애니메이션 */
 @keyframes fadeIn {
   from {
