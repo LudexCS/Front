@@ -18,7 +18,7 @@ const PaymentModal = ({ game, onClose }) => {
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [tokenAmount, setTokenAmount] = useState("");
   const [krwAmount, setKrwAmount] = useState(0);
-  const [isUploading, setIsUploading] = useState(false); // 추가됨
+  const [isUploading, setIsUploading] = useState(false);
   const [payment, setPayment] = useState(null);
 
   const clientKey = "test_ck_26DlbXAaV07qqeZgpLzd3qY50Q9R";

@@ -7,7 +7,32 @@ function sanitizeFilename(name) {
   return name.replace(/[^\w.-]+/g, "_"); // 한글, 공백, 특수문자 제거
 }
 
-export const addBanner = async (banner, image) => {
+export const deleteAdminBanner = async (bannerId) => {
+  console.log("BannerId: ", bannerId);
+  try {
+    const response = await platformAdminInstance.delete("/admin/banner/delete", {
+      params: { bannerId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("배너 삭제 실패:", error);
+    throw error;
+  }
+};
+
+export const updateAdminBanner = async (bannerId, dto) => {
+  try {
+    const response = await platformAdminInstance.patch("/admin/banner/update", dto, {
+      params: { bannerId }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("배너 수정 실패:", error);
+    throw error;
+  }
+};
+
+export const addAdminBanner = async (banner, image) => {
   const formData = new FormData();
 
   console.log("json: ", banner);
@@ -22,15 +47,6 @@ export const addBanner = async (banner, image) => {
     formData.append("imageUrl", safeThumb);
   }
 
-  // // 디버깅 로그
-  // for (const [key, value] of formData.entries()) {
-  //   if (value instanceof File) {
-  //     console.log(`[FormData] ${key}: ${value.name}, ${value.size} bytes`);
-  //   } else {
-  //     console.log(`[FormData] ${key}:`, value);
-  //   }
-  // }
-
   try {
     const response = await platformAdminInstance.post("/admin/banner/create", formData);
     return response.data;
@@ -40,12 +56,12 @@ export const addBanner = async (banner, image) => {
   }
 };
 
-export const postReport = async (report) => {
+export const getAdminBanner = async () => {
   try {
-    const response = await platformAdminInstance.post("/protected/report/post", report);
+    const response = await platformAdminInstance.get("/admin/banner/get/bannerList");
     return response.data;
   } catch (error) {
-    console.error("신고 처리 실패:", error);
+    console.error("관리자 배너 조회 실패:", error);
     throw error;
   }
 };
@@ -175,6 +191,16 @@ export const adminUnhandleReport = async (reportId) => {
     return response.data;
   } catch (error) {
     console.error("관리자) 신고 미처리 변경에 실패:", error);
+    throw error;
+  }
+};
+
+export const postReport = async (report) => {
+  try {
+    const response = await platformAdminInstance.post("/protected/report/post", report);
+    return response.data;
+  } catch (error) {
+    console.error("신고 처리 실패:", error);
     throw error;
   }
 };

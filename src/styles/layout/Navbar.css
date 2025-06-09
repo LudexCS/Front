@@ -19,10 +19,21 @@
   .nav-links a {
     color: white;
     text-decoration: none;
-    margin-left: 15px;
+    margin-left: 30px;
     font-size: 20px;
   }
   
   .nav-links a:hover {
     text-decoration: underline;
   }  
+
+ .manage-payout {
+  font-size: 20px;
+  padding: 8px 14px;
+  background-color: white;
+  color: #0055a5;
+  border: 1px solid white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}

@@ -6,7 +6,7 @@ import NavbarManage from "../components/layout/NavbarManage";
 import { useUser } from "../context/UserContext";
 import BannerItem from "../components/admin/BannerItem";
 import AddBannerModal from "../components/modals/AddBannerModal";
-import { getBanner } from "../api/tagsApi";
+import { getAdminBanner } from "../api/adminApi";
 
 const ManageBannerPage = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const ManageBannerPage = () => {
 
   const fetchBanners = async () => {
     try {
-      const response = await getBanner();
+      const response = await getAdminBanner();
       setBanners(response);
     } catch (error) {
       console.error("배너 목록 불러오기 실패:", error);
@@ -36,6 +36,9 @@ const ManageBannerPage = () => {
   // 배너 목록 새로고침
   useEffect(() => {
     fetchBanners();
+    if(isFetch){
+      setIsFetch(false);
+    }
   }, [isFetch]);
 
   return (
@@ -64,10 +67,8 @@ const ManageBannerPage = () => {
 
       {showAddModal && (
         <AddBannerModal
-          onClose={() => {
-            setShowAddModal(false);
-            setIsFetch((prev) => !prev);
-          }}
+          onClose={() => {setShowAddModal(false);}}
+          setIsFetch={setIsFetch}
         />
       )}
     </div>

@@ -1,6 +1,25 @@
 import web3Instance from "./Instance/web3GatewayInstance";
 import * as ludex from "ludex";
 
+export const getWholePending = async () => {
+  try {
+    const res = await web3Instance.get("/admin/profit/get/whole-pending");
+    return res.data.wholePendingProfit;
+  } catch (err) {
+    console.error("미정산 금액 조회 실패:", err);
+    throw err;
+  }
+}
+
+export const postPendingProfit = async () => {
+  try {
+    await web3Instance.post("/admin/profit/settle/pending-profit");
+  } catch (err) {
+    console.error("금액 정산 실패:", err);
+    throw err;
+  }
+}
+
 export const claimPurchase = async ({ ownerId, ownerAddress, purchaseId }) => {
   try {
     const res = await web3Instance.post("/protected/delegate/claim-purchase", {
