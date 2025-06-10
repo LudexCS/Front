@@ -165,6 +165,7 @@ const NftModal = ({ isOpen, onClose, purchaseInfo }) => {
       alert("지갑을 선택해주세요.");
       return;
     }
+    console.log("selectedWallet: ", selectedWallet);
 
     const requestBody = {
       ownerId: user.ownerId,

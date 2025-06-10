@@ -29,8 +29,7 @@ export const claimPurchase = async ({ ownerId, ownerAddress, purchaseId }) => {
     });
     return res.data;
   } catch (err) {
-    const msg = err.response?.data?.message || err.message;
-    return { error: msg };
+    throw err;
   }
 }
 
