@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import FileUploader from "../upload/FileUploader";
 import "../../styles/modals/AddBannerModal.css";
-import { addBanner } from "../../api/adminApi";
+import LoadingModal from "./LoadingModal";
+import { addAdminBanner } from "../../api/adminApi";
 
-const AddBannerModal = ({ onClose }) => {
+const AddBannerModal = ({ onClose, setIsFetch }) => {
   const [file, setFile] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [form, setForm] = useState({
     title: "",
     linkUrl: "",
@@ -25,8 +27,9 @@ const AddBannerModal = ({ onClose }) => {
     return;
     }
     try {
+      setIsUploading(true);
       alert("배너를 등록합니다.");
-      await addBanner({
+      await addAdminBanner({
         title: form.title,
         linkUrl: form.linkUrl,
         visible: true,
@@ -35,13 +38,18 @@ const AddBannerModal = ({ onClose }) => {
         endsAt: form.endsAt
       }, file[0])
       alert("배너가 등록되었습니다.");
+      setIsFetch(true);
       onClose();
     } catch (error) {
       console.error("배너 추가 실패:", error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
   return (
+    <>
+    {isUploading && <LoadingModal />}
     <div className="admin-add-banner-modal">
       <div className="admin-add-banner-content">
         <h2>배너 추가</h2>
@@ -110,6 +118,7 @@ const AddBannerModal = ({ onClose }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

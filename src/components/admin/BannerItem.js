@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/admin/BannerItem.css";
+import { deleteAdminBanner, updateAdminBanner } from "../../api/adminApi";
 
 const BannerItem = ({ banner, setIsFetch }) => {
   const [newBanner, setNewBanner] = useState(banner);
@@ -7,8 +8,7 @@ const BannerItem = ({ banner, setIsFetch }) => {
 
   const editBanner = async () => {
     try {
-      console.log("Saving:", newBanner);
-      // await 수정 API 호출
+      await updateAdminBanner(banner.id, newBanner);
       setIsEditing(false);
       setIsFetch(true);
     } catch (error) {
@@ -17,9 +17,12 @@ const BannerItem = ({ banner, setIsFetch }) => {
   };
 
   const deleteBanner = async () => {
-    console.log("Deleting:", banner.id);
-    // await 삭제 API 호출
-    setIsFetch(true);
+    try {
+      await deleteAdminBanner(banner.id);
+      setIsFetch(true);
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
   };
 
   const handleCancel = () => {
