@@ -66,3 +66,25 @@ export const confirmPayment = async ({ paymentKey, orderId, amount, gameId, item
         throw error;
     }
 }
+
+// check purchased game
+export const checkPurchasedGame = async (gameId) => {
+    try {
+        const response = await purchaseInstance.get(`/protected/check/purchased/${gameId}`);
+        return response.data;
+    } catch (error) {
+        console.error("게임 구매 여부 확인 실패:", error.message);
+        throw error;
+    }
+};
+
+// check resource transaction
+export const checkResourceTransaction = async (resourceId) => {
+    try {
+        const response = await purchaseInstance.get(`/protected/check/transaction/${resourceId}`);
+        return response.data;
+    } catch (error) {
+        console.error("리소스 구매 여부 확인 실패:", error.message);
+        throw error;
+    }
+}
