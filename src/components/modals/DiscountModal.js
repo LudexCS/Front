@@ -50,8 +50,11 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
       await setDiscountGame(discount);
       alert("할인 설정되었습니다.");
       }
-    }catch(error){
-      alert("이미 설정된 할인 정보가 있거나 요청에 실패했습니다.\n확인 후 다시 시도해주세요.");
+    } catch (error) {
+      const msg =
+        error.response.data.message ||
+        "할인 설정에 실패했습니다. 다시 시도해주세요.";
+      alert(msg);
     }
     onClose();
   };
