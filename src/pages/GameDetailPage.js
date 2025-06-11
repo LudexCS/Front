@@ -75,13 +75,34 @@ const GameDetailPage = () => {
           <p className="report-button" onClick={() => setShowReportModal(true)}>report</p>
           <div className="game-detail-info">
             <h2>{game.title}</h2>
-            <p><strong>가격: {game.price.toLocaleString()} $</strong></p>
+            <p>
+              {game.discountRate !== null && game.discountPrice !== null ? (
+                <>
+                  {/* <strong>가격: </strong> */}
+                  <strong style={{ textDecoration: "line-through", color: "#888" }}>
+                    {game.price.toLocaleString()} $
+                  </strong>
+                  <br />
+                  <strong className="detail-discount-price">
+                    {game.discountPrice.toLocaleString()} $
+                  </strong>
+                  &nbsp; &nbsp;
+                  <span className="detail-discount-rate">({game.discountRate}%)</span>
+                </>
+              ) : (
+                <strong>가격: {game.price.toLocaleString()} $</strong>
+              )}
+            </p>
             <p><strong>제작자: {game.nickName}</strong></p>
-            <p>{game.description}</p>
+            <p>
+              <strong>설명: </strong>
+              <br />
+              {game.description}
+            </p>
             <div className="tags">
               {game.tags.map((tag, idx) => <span key={idx}>#{tag} </span>)}
             </div>
-            <p>구동사양</p>
+            <p><strong>구동사양 </strong></p>
             <ul className="game-detail-requirement-list">
               {game.requirements.map((req, idx) => (
                 <li key={idx}>

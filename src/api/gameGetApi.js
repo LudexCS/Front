@@ -72,6 +72,7 @@ export const fetchGamesByKeyword = async (keyword) => {
 
 //게임 상세 정보 조회
 export const fetchGameDetail = async ({ gameId }) => {
+  console.log(gameId);
   try {
     const response = await axios.get("https://api.uosludex.com/management/api/get/gameDetail", {
       params: { gameId },
