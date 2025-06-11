@@ -1,15 +1,16 @@
 // src/components/modals/DiscountModal.js
 import React, { useEffect, useState } from "react";
 import "../../styles/modals/DiscountModal.css";
+import { setDiscountGame } from "../../api/recordApi";
 
 const DiscountModal = ({ isOpen, onClose, game }) => {
-  const originalPrice = 100;         // 기본 가격
+  const originalPrice = game.price;         // 기본 가격
   const originalPercent = 30;        // 기본 지분율
 
   const [startDate, setStartDate] = useState("2025-05-01");
   const [endDate, setEndDate] = useState("2025-07-01");
   const [discountPercent, setDiscountPercent] = useState(50);
-  const [finalPrice, setFinalPrice] = useState(50);
+  const [finalPrice, setFinalPrice] = useState(game.price/2);
   const [isRoyaltyMode, setIsRoyaltyMode] = useState(false);
 
   // % 변경 시 → 금액 반영
@@ -21,7 +22,7 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
       calculated = Math.round((originalPrice * (100 - discountPercent)) / 100);
     }
     setFinalPrice(calculated);
-  }, [discountPercent, isRoyaltyMode]);
+  }, [game, discountPercent, isRoyaltyMode]);
 
   // 금액 변경 시 → % 반영
   const handlePriceChange = (value) => {
@@ -35,16 +36,23 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
     setDiscountPercent(percent);
   };
 
-  const handleSubmit = () => {
-    if (isRoyaltyMode) {
-      console.log("지분감면율 설정:");
-    } else {
-      console.log("할인 설정 내용:");
+  const handleSubmit = async () => {
+    try{
+      if (isRoyaltyMode) {
+        console.log("지분감면율 설정:");
+      } else {
+        const discount = {
+          gameId: game.gameId,
+          discountPrice: finalPrice,
+          startsAt: startDate,
+          endsAt: endDate
+        }
+      await setDiscountGame(discount);
+      alert("할인 설정되었습니다.");
+      }
+    }catch(error){
+      alert("할인 설정에 실패했습니다. 다시 시도해주세요.");
     }
-    console.log("게임 ID:", game?.gameId);
-    console.log("시작일:", startDate);
-    console.log("종료일:", endDate);
-    console.log(isRoyaltyMode ? "지분감면율:" : "할인율:", discountPercent + "%");
     onClose();
   };
 
