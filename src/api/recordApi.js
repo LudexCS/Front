@@ -14,13 +14,11 @@ export const getTradeInfo = async () => {
 };
 
 export const setDiscountGame = async (discount) => {
+  console.log("discount", discount);
   try {
-    const response = await gameManageInstance.post("/protected/discount/register", discount);
-    console.log("할인설정: ", response.data);
-    return response.data;
+    await gameManageInstance.post("/protected/discount/register", discount);
   } catch (err) {
-    const msg = err.response?.data?.message || err.message;
-    console.error("할인 설정 실패:", msg);
+    console.error("할인 설정 실패:", err);
     throw err;
   }
 };

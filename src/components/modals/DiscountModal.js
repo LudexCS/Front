@@ -4,13 +4,13 @@ import "../../styles/modals/DiscountModal.css";
 import { setDiscountGame } from "../../api/recordApi";
 
 const DiscountModal = ({ isOpen, onClose, game }) => {
-  const originalPrice = game.price;         // 기본 가격
+  const originalPrice = game?.price;         // 기본 가격
   const originalPercent = 30;        // 기본 지분율
 
   const [startDate, setStartDate] = useState("2025-05-01");
   const [endDate, setEndDate] = useState("2025-07-01");
   const [discountPercent, setDiscountPercent] = useState(50);
-  const [finalPrice, setFinalPrice] = useState(game.price/2);
+  const [finalPrice, setFinalPrice] = useState(game?.price/2);
   const [isRoyaltyMode, setIsRoyaltyMode] = useState(false);
 
   // % 변경 시 → 금액 반영
@@ -51,7 +51,7 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
       alert("할인 설정되었습니다.");
       }
     }catch(error){
-      alert("할인 설정에 실패했습니다. 다시 시도해주세요.");
+      alert("이미 설정된 할인 정보가 있거나 요청에 실패했습니다.\n확인 후 다시 시도해주세요.");
     }
     onClose();
   };

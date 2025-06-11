@@ -168,3 +168,14 @@
 .action-buttons button:hover {
   background-color: #6a6a6a;
 }
+
+.detail-discount-price {
+  color: #d9534f;
+  font-weight: bold;
+}
+
+.detail-discount-rate {
+  color: #d9534f;
+  font-size: 12px;
+  font-weight: 500;
+}
