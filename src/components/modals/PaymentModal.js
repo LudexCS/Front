@@ -20,6 +20,7 @@ const PaymentModal = ({ game, onClose }) => {
   const [krwAmount, setKrwAmount] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [payment, setPayment] = useState(null);
+  const gamePrice = game.discountPrice ? game.discountPrice : game.price;
 
   const clientKey = "test_ck_26DlbXAaV07qqeZgpLzd3qY50Q9R";
   const customerKey = `user_${sha256(`constant-salt-${user.id}`).toString().slice(0, 20)}`;
@@ -62,11 +63,10 @@ const PaymentModal = ({ game, onClose }) => {
 
   useEffect(() => {
     (async () => {
-      // toss는 소수점 원화를 허락하지 않음. 반올림으로 정수화 - 논의 필요.
-      const price = Math.round(1371 * game.price);
+      const price = Math.round(1371 * gamePrice);
       setKrwAmount(price);
     })();
-  }, [game.price]);
+  }, [game]);
 
   useEffect(() => {
     async function fetchPayment() {
@@ -326,7 +326,7 @@ const handleConfirm = async () => {
       case "FOREIGN_EASY_PAY":
         setIsUploading(true);
 
-        const usdAmount = Number(game.price);
+        const usdAmount = Number(gamePrice);
 
         // 결제 전 결제 정보 저장
         try {
@@ -344,7 +344,7 @@ const handleConfirm = async () => {
             method: "FOREIGN_EASY_PAY", // 해외 간편결제
             amount: {
               currency: "USD",
-              value: Number(game.price),
+              value: Number(gamePrice),
             },
             orderId: orderId,
             orderName: game.title,
@@ -502,37 +502,37 @@ const handleConfirm = async () => {
 
           {activeTab === "CARD" && (
             <div className="payment-tab-content">
-              <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()} $에 구매하시겠습니까?</p>
+              <p><strong>{game.title}</strong>을(를) {gamePrice.toLocaleString()} $에 구매하시겠습니까?</p>
             </div>
           )}
 
           {activeTab === "TRANSFER" && (
               <div className="payment-tab-content">
-                <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()} $에 구매하시겠습니까?</p>
+                <p><strong>{game.title}</strong>을(를) {gamePrice.toLocaleString()} $에 구매하시겠습니까?</p>
               </div>
           )}
 
           {activeTab === "VIRTUAL_ACCOUNT" && (
               <div className="payment-tab-content">
-                <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()} $에 구매하시겠습니까?</p>
+                <p><strong>{game.title}</strong>을(를) {gamePrice.toLocaleString()} $에 구매하시겠습니까?</p>
               </div>
           )}
 
           {activeTab === "MOBILE_PHONE" && (
               <div className="payment-tab-content">
-                <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()} $에 구매하시겠습니까?</p>
+                <p><strong>{game.title}</strong>을(를) {gamePrice.toLocaleString()} $에 구매하시겠습니까?</p>
               </div>
           )}
 
           {activeTab === "CULTURE_GIFT_CERTIFICATE" && (
               <div className="payment-tab-content">
-                <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()} $에 구매하시겠습니까?</p>
+                <p><strong>{game.title}</strong>을(를) {gamePrice.toLocaleString()} $에 구매하시겠습니까?</p>
               </div>
           )}
 
           {activeTab === "FOREIGN_EASY_PAY" && (
               <div className="payment-tab-content">
-                <p><strong>{game.title}</strong>을(를) {game.price.toLocaleString()} $에 구매하시겠습니까?</p>
+                <p><strong>{game.title}</strong>을(를) {gamePrice.toLocaleString()} $에 구매하시겠습니까?</p>
               </div>
           )}
 
