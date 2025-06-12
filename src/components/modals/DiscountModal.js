@@ -91,17 +91,13 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
           const discountPrice = convertPrice(finalPrice);
 
           const fullISOTime = `${endDate}T00:00:00`; // KST 기준
-          const localDate = new Date(fullISOTime);   // JS는 이것을 KST로 해석함
-          const utcDate = new Date(localDate.getTime() - 9 * 60 * 60 * 1000); // 9시간 빼기
-
-          const utcISOString = utcDate.toISOString(); // ISO 8601 형식의 UTC 문자열
-          console.log("Discount endDate at UTC: " + utcISOString); // 예: "2025-06-11T15:00:00.000Z"
+          const localDate = new Date(fullISOTime);
 
           const relayRequest =
               await priceTable.startDiscountRequest(
                   itemId,
                   discountPrice,
-                  utcDate,
+                  localDate,
                   3000000n);
 
           const { args, error } = await requestRelay(relayRequest);
