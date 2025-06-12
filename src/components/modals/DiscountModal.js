@@ -64,14 +64,6 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
       if (isRoyaltyMode) {
         console.log("지분감면율 설정:");
       } else {
-        const discount = {
-          gameId: game.gameId,
-          discountPrice: finalPrice,
-          startsAt: startDate,
-          endsAt: endDate
-        }
-        await setDiscountGame(discount);
-
         // Web3 discount 설정 로직.
         try {
           const connection =
@@ -113,13 +105,18 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
           throw error;
         }
 
+        const discount = {
+          gameId: game.gameId,
+          discountPrice: finalPrice,
+          startsAt: startDate,
+          endsAt: endDate
+        }
+        await setDiscountGame(discount);
+
         alert("할인 설정되었습니다.");
       }
     } catch (error) {
-      const msg =
-        error.response.data.message ||
-        "할인 설정에 실패했습니다. 다시 시도해주세요.";
-      alert(msg);
+      alert("할인 설정에 실패했습니다. 다시 시도해주세요.");
     }
     onClose();
   };
