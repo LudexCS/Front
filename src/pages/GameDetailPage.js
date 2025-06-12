@@ -87,7 +87,7 @@ const GameDetailPage = () => {
                     {game.discountPrice.toLocaleString()} $
                   </strong>
                   &nbsp; &nbsp;
-                  <span className="detail-discount-rate">({game.discountRate}%)</span>
+                  <span className="detail-discount-rate">({-100*game.discountRate}%)</span>
                 </>
               ) : (
                 <strong>가격: {game.price.toLocaleString()} $</strong>
