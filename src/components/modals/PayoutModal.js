@@ -201,7 +201,8 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
                   <img src={game.thumbnailUrl} alt="payout-thumbnail-img" className="payout-thumbnail-img" />
                   <div>
                     <span>{game.title}</span>
-                    <span>{gamesBalance[index] ?? "..."} USDC</span> {/* 해당 게임의 정산할 금액 */}
+                    <span>game revenue: {gamesBalance[index] ?? "..."} USDC</span> {/* 해당 게임의 정산할 금액 */}
+                    <span>resource revenue: {gamesBalance[index] ?? "..."} USDC</span> {/* 해당 리소스의 정산할 금액 */}
                   </div>
                 </li>
               </div>
