@@ -14,7 +14,23 @@ const GameDetailBar = ({ game }) => {
     <div className="bar-game-detail">
       <img src={game.thumbnailUrl} alt={game.title} className="bar-game-detail-thumbnail" />
       <h2>{game.title}</h2>
-      <p>{game.price}</p>
+      <p>
+        {game.discountRate !== null && game.discountPrice !== null ? (
+        <>
+          <strong style={{ textDecoration: "line-through", color: "#888" }}>
+            {game.price.toLocaleString()} $
+          </strong>
+          <br />
+          <strong className="bar-discount-price">
+            {game.discountPrice.toLocaleString()} $
+          </strong>
+          &nbsp; &nbsp;
+          <span className="bar-discount-rate">({game.discountRate}%)</span>
+        </>
+        ) : (
+          <strong>가격: {game.price.toLocaleString()} $</strong>
+        )}
+      </p>
       <p>{game.description}</p>
 
       <div className="bar-tag">

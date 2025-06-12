@@ -21,5 +21,7 @@ COPY --from=builder /app/build /usr/share/nginx/html
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
+ENV TZ=Asia/Seoul
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

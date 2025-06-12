@@ -10,9 +10,34 @@ import LoadingModal from "../components/modals/LoadingModal";
 import { fetchGameDetail, fetchGameResource } from "../api/gameGetApi";
 import { getAllTags } from "../api/tagsApi";
 import { updateGameData, updateResourceData } from "../api/uploadApi";
+import {useConfig} from "../context/ConfigContext";
+import * as ludex from "ludex";
+import {requestRelay} from "../api/walletAuth";
+
+function convertPrice(price) {
+  const parts = price.toString().split('.');
+  if(parts.length === 1)
+  {
+    return BigInt(price) * (10n ** 18n);
+  }
+  else if (parts.length === 2)
+  {
+    const intPart = BigInt(parts[0]) * (10n ** 18n);
+    const decimalPartLength = parts[1].length;
+    const decimalPart =
+        BigInt(parts[1]) * (10n ** (18n - BigInt(decimalPartLength)));
+    return intPart + decimalPart;
+  }
+  else
+  {
+    throw new Error(`Invalid number format given: ${price}`);
+  }
+}
 
 const GameEditPage = () => {
   const { gameId } = useParams();
+  const { chainConfig, ludexConfig } = useConfig();
+  const [prevPrice, setPrevPrice] = useState("");
   const navigate = useNavigate();
   const { gameForm, setGameForm, resourceForm, setResourceForm, sharerIds } = useUpload();
   const [selectedTags, setSelectedTags] = useState([]);
@@ -89,6 +114,9 @@ const GameEditPage = () => {
           isOrigin: true,
         });
 
+        // prevPrice 저장
+        setPrevPrice(gameData.price);
+
         const fields = { ...specFields };
         const values = { ...specValues };
         Object.entries(gameData.requirements?.[0] || {}).forEach(([key, value]) => {
@@ -156,6 +184,44 @@ const GameEditPage = () => {
       if (resourceForm.resourceFile != null) {
         await updateResourceData(resourceForm);
       }
+
+      // Web3에 수정된 Price 반영 로직.
+      if (prevPrice !== gameForm.price) {
+        try {
+          const connection =
+              await ludex.BrowserWalletConnection.create(chainConfig);
+
+          const signer = await connection.getSigner();
+
+          const priceTable =
+              ludex.facade.createWeb3UserFacade(
+                  chainConfig,
+                  ludexConfig,
+                  signer)
+                  .metaTXAccessPriceTable();
+
+          const itemId = gameForm.itemId;
+
+          const relayRequest =
+              await priceTable.changeItemPriceRequest(
+                  itemId,
+                  convertPrice(gameForm.price),
+                  3000000n);
+
+          const { args, error } = await requestRelay(relayRequest);
+
+          if (error) {
+            console.error("relay error:", error.message);
+            alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+            throw error;
+          }
+        } catch (error) {
+          console.error("change price error: ", error.message);
+          alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+          throw error;
+        }
+      }
+
       alert("게임 수정에 성공했습니다.");
     } catch (err) {
       console.error(err);
