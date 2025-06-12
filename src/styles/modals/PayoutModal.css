@@ -53,7 +53,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  /* padding: 10px; */
+  padding: 5px;
   /* border: 1px solid #aaa; */
   /* border-radius: 6px; */
   cursor: pointer;
@@ -61,7 +61,7 @@
   /* margin-bottom: 8px; */
 }
 
-.payout-sales-summary li:hover {
+.payout-sales-summary:hover {
   background-color: #f5f5f5;
 }
 
@@ -83,6 +83,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex: 1;
+  min-width: 0;
 }
 
 .payout-sales-summary li span {
@@ -96,8 +98,11 @@
   font-weight: bold;
 }
 
-.payout-sales-summary li span:nth-child(2) {
+.payout-sales-summary li span:nth-child(2),
+.payout-sales-summary li span:nth-child(3) {
   color: #666;
+  display: block;
+  text-align: right;
 }
 
 /* 지갑 목록 */
