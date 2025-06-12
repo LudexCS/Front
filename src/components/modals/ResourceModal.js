@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../styles/modals/ResourceModal.css";
 import PreviewModal from "./PreviewModal";
 import { useNavigate } from "react-router-dom";
-import { purchaseResource } from "../../api/purchaseApi";
+import {checkResourceTransaction, purchaseResource} from "../../api/purchaseApi";
 import { useUser } from "../../context/UserContext";
 import { useRecord } from "../../context/RecordContext";
 
@@ -17,6 +17,22 @@ const ResourceModal = ({ resource, onClose }) => {
       alert("회원 정보가 필요합니다.");
       navigate("/login");
     }
+
+    try {
+      const isTransactable = await checkResourceTransaction(resource.id);
+      if(!isTransactable){
+        alert("이미 구매한 리소스입니다.");
+        setIsFetch(true);
+        onClose();
+        return;
+      }
+    } catch (error) {
+      alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+      setIsFetch(true);
+      onClose();
+      return;
+    }
+
     try {
       await purchaseResource({ resourceId: resource.id });
       alert("리소스 구매가 완료되었습니다.");
@@ -24,6 +40,8 @@ const ResourceModal = ({ resource, onClose }) => {
       onClose();
     } catch (err) {
       alert("리소스 구매에 실패했습니다.");
+      setIsFetch(true);
+      onClose();
     }
   };
 

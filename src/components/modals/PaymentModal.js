@@ -5,7 +5,7 @@ import { useConfig } from "../../context/ConfigContext";
 import { useRecord } from "../../context/RecordContext";
 import * as ludex from "ludex";
 import { getTokenAddress, requestRelay } from "../../api/walletAuth";
-import {registerPurchase, savePaymentInfo} from "../../api/purchaseApi";
+import {checkPurchasedGame, registerPurchase, savePaymentInfo} from "../../api/purchaseApi";
 import LoadingModal from "./LoadingModal";
 import sha256 from "crypto-js/sha256";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
@@ -116,9 +116,28 @@ const handleConfirm = async () => {
     const orderId = generateOrderId();
     const amount = krwAmount;
 
+    setIsUploading(true);
+
+    try {
+      const isPurchasable = await checkPurchasedGame(game.id);
+      if (!isPurchasable) {
+        console.log(isPurchasable);
+        alert("이미 구매한 게임입니다.");
+        setIsUploading(false);
+        setIsFetch(true);
+        onClose();
+        return;
+      }
+    } catch (error) {
+      alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+      setIsUploading(false);
+      setIsFetch(true);
+      onClose();
+      return;
+    }
+
     switch (activeTab) {
       case "CARD":
-        setIsUploading(true);
 
         // 결제 전 결제 정보 저장
         try {
@@ -161,7 +180,6 @@ const handleConfirm = async () => {
         }
         // 이 밑 코드는 실행되지 않음.
       case "TRANSFER":
-        setIsUploading(true);
 
         // 결제 전 결제 정보 저장
         try {
@@ -205,7 +223,6 @@ const handleConfirm = async () => {
         }
         // 이 밑 코드는 실행되지 않음.
       case "VIRTUAL_ACCOUNT":
-        setIsUploading(true);
 
         // 결제 전 결제 정보 저장
         try {
@@ -250,7 +267,6 @@ const handleConfirm = async () => {
         }
         // 이 밑 코드는 실행되지 않음.
       case "MOBILE_PHONE":
-        setIsUploading(true);
 
         // 결제 전 결제 정보 저장
         try {
@@ -287,7 +303,6 @@ const handleConfirm = async () => {
         }
         // 이 밑 코드는 실행되지 않음.
       case "CULTURE_GIFT_CERTIFICATE":
-        setIsUploading(true);
 
         // 결제 전 결제 정보 저장
         try {
@@ -324,7 +339,6 @@ const handleConfirm = async () => {
         }
         // 이 밑 코드는 실행되지 않음.
       case "FOREIGN_EASY_PAY":
-        setIsUploading(true);
 
         const usdAmount = Number(gamePrice);
 
@@ -431,7 +445,6 @@ const handleConfirm = async () => {
             return;
           }
 
-          setIsUploading(true);
 
           let relayRequest;
           try {
