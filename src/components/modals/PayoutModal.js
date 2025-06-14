@@ -11,51 +11,112 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
   const { chainConfig, ludexConfig } = useConfig();
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [selectedGameId, setSelectedGameId] = useState(null);
+  const [selectedResourceId, setSelectedResourceId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [gamesBalance, setGamesBalance] = useState([]);
+  const [resourcesBalance, setResourcesBalance] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const gamesBalance = await Promise.all(
-          sales.games.map( async (game) => {
-            try {
-              const profitEscrow =
-                  ludex
-                      .facade
-                      .createWeb2UserFacade(
-                          chainConfig,
-                          ludexConfig)
-                      .readonlyAccessProfitEscrow();
+      let gamesBalance = [];
 
-              const tokenAddress = await getTokenAddress();
-              console.log("tokenAddress: " + tokenAddress);
-              if (!tokenAddress) {
-                alert("토큰 주소를 가져오지 못했습니다.");
+      if (Array.isArray(sales.games)) {
+        gamesBalance = await Promise.all(
+            sales.games.map(async (game) => {
+              try {
+                const profitEscrow =
+                    ludex
+                        .facade
+                        .createWeb2UserFacade(chainConfig, ludexConfig)
+                        .readonlyAccessProfitEscrow();
+
+                const tokenAddress = await getTokenAddress();
+                if (!tokenAddress) {
+                  alert("토큰 주소를 가져오지 못했습니다.");
+                  return 0;
+                }
+
+                const itemId = BigInt(game.itemId);
+
+                let balance = (
+                    await profitEscrow.getBalanceFor(
+                        itemId,
+                        ludex.Address.create(tokenAddress)
+                    )
+                ).toString();
+
+                const padded = balance.padStart(7, "0");
+                const integerPart = padded.slice(0, -6);
+                const decimalPart = padded.slice(-6).replace(/0+$/, "");
+                balance = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+
+                console.log(`GameId ${itemId} Game Balance: ${balance} USDC`);
+                return balance;
+              } catch (error) {
+                alert("정산할 금액을 가져오지 못했습니다.");
+                console.log("Balance Error:", error.message);
                 return 0;
               }
-
-              const itemId = BigInt(game.itemId);
-
-              let balance = (await profitEscrow.getBalanceFor(
-                  itemId,
-                  ludex.Address.create(tokenAddress)))
-                  .toString();
-              const padded = balance.toString().padStart(7, "0");
-              const integerPart = padded.slice(0, -6);
-              const decimalPart = padded.slice(-6).replace(/0+$/, "");
-              balance = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
-              console.log("Balance: " + balance.toString() + " USDC");
-              return balance;
-            } catch (error) {
-              alert("정산할 금액을 가져오지 못했습니다.");
-              console.log("Balance Error: " + error.message);
-              return 0;
-            }
-          })
-      );
+            })
+        );
+      }
       setGamesBalance(gamesBalance);
     })();
-  }, [isOpen, chainConfig, ludexConfig, sales.games]);
+  }, [sales.games?.length, isOpen]);
+
+  useEffect(() => {
+    (async () => {
+      let resourcesBalance = [];
+
+      if (Array.isArray(sales.resources)) {
+        resourcesBalance = await Promise.all(
+            sales.resources.map(async (resource) => {
+              try {
+                const profitEscrow =
+                    ludex
+                        .facade
+                        .createWeb2UserFacade(chainConfig, ludexConfig)
+                        .readonlyAccessProfitEscrow();
+
+                const tokenAddress = await getTokenAddress();
+                if (!tokenAddress) {
+                  alert("토큰 주소를 가져오지 못했습니다.");
+                  return 0;
+                }
+
+                const sharerId = resource.sharerId;
+                console.log("sharerId: " + sharerId);
+                if (!sharerId) {
+                  return 0;
+                }
+
+                const itemId = BigInt(sharerId);
+
+                let balance = (
+                    await profitEscrow.getBalanceFor(
+                        itemId,
+                        ludex.Address.create(tokenAddress)
+                    )
+                ).toString();
+
+                const padded = balance.padStart(7, "0");
+                const integerPart = padded.slice(0, -6);
+                const decimalPart = padded.slice(-6).replace(/0+$/, "");
+                balance = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+
+                console.log(`SharerId ${sharerId} Resource Balance: ${balance} USDC`);
+                return balance;
+              } catch (error) {
+                alert("정산할 리소스 금액을 가져오지 못했습니다.");
+                console.log("Resource Balance Error:", error.message);
+                return 0;
+              }
+            })
+        );
+      }
+      setResourcesBalance(resourcesBalance);
+    })();
+  }, [sales.resources?.length, isOpen])
 
   const handlePayoutConfirm = async () => {
     if (!selectedGameId) {
@@ -68,7 +129,8 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
     }
 
     setIsLoading(true); // 로딩 시작
-    console.log("정산 요청된 게임 아이디:", selectedGameId);
+    console.log("정산 요청된 게임 item 아이디:", selectedGameId);
+    console.log("정산 요청된 리소스 아이디:", selectedResourceId);
     console.log("정산 요청된 지갑 주소:", selectedWallet);
 
     const chainIdHex = chainConfig.chainId.toLowerCase();
@@ -150,6 +212,35 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
     }
 
     const itemId = BigInt(selectedGameId);
+    if (selectedResourceId) {
+      console.log("Resource Relay Requesting ..");
+      const sharerId = BigInt(selectedResourceId);
+      let relayRequest;
+      try {
+        relayRequest =
+            await profitEscrow.claimRequest(
+                sharerId,
+                ludex.Address.create(tokenAddress),
+                await connection.getCurrentAddress(),
+                3000000n);
+      } catch (error) {
+        console.log("Relay Request Error: " + error);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        setIsLoading(false);
+        onClose();
+        return;
+      }
+
+      const { args, error } = await requestRelay(relayRequest);
+
+      if (error) {
+        console.error(`message: ${error.message}`);
+        alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+        setIsLoading(false);
+        onClose();
+        return;
+      }
+    }
 
     let relayRequest;
     try {
@@ -196,13 +287,16 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
               <div key={game.itemId} className="payout-sales-summary">
                 <li 
                   className={game.itemId === selectedGameId ? "selected" : ""}
-                  onClick={() => setSelectedGameId(game.itemId)} //game.itemId
+                  onClick={() => {
+                    setSelectedGameId(game.itemId);
+                    setSelectedResourceId(sales.resources[index].sharerId);
+                  }}
                 >
                   <img src={game.thumbnailUrl} alt="payout-thumbnail-img" className="payout-thumbnail-img" />
                   <div>
                     <span>{game.title}</span>
                     <span>game revenue: {gamesBalance[index] ?? "..."} USDC</span> {/* 해당 게임의 정산할 금액 */}
-                    <span>resource revenue: {gamesBalance[index] ?? "..."} USDC</span> {/* 해당 리소스의 정산할 금액 */}
+                    <span>resource revenue: {resourcesBalance[index] ?? "..."} USDC</span> {/* 해당 리소스의 정산할 금액 */}
                   </div>
                 </li>
               </div>

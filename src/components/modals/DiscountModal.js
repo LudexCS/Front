@@ -2,11 +2,34 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/modals/DiscountModal.css";
 import { setDiscountGame } from "../../api/recordApi";
+import {useConfig} from "../../context/ConfigContext";
+import * as ludex from "ludex";
+import {requestRelay} from "../../api/walletAuth";
+
+function convertPrice(price) {
+  const parts = price.toString().split('.');
+  if(parts.length === 1)
+  {
+    return BigInt(price) * (10n ** 18n);
+  }
+  else if (parts.length === 2)
+  {
+    const intPart = BigInt(parts[0]) * (10n ** 18n);
+    const decimalPartLength = parts[1].length;
+    const decimalPart =
+        BigInt(parts[1]) * (10n ** (18n - BigInt(decimalPartLength)));
+    return intPart + decimalPart;
+  }
+  else
+  {
+    throw new Error(`Invalid number format given: ${price}`);
+  }
+}
 
 const DiscountModal = ({ isOpen, onClose, game }) => {
   const originalPrice = game?.price;         // 기본 가격
   const originalPercent = 30;        // 기본 지분율
-
+  const { chainConfig, ludexConfig } = useConfig();
   const [startDate, setStartDate] = useState("2025-05-01");
   const [endDate, setEndDate] = useState("2025-07-01");
   const [discountPercent, setDiscountPercent] = useState(50);
@@ -41,20 +64,59 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
       if (isRoyaltyMode) {
         console.log("지분감면율 설정:");
       } else {
+        // Web3 discount 설정 로직.
+        try {
+          const connection =
+              await ludex.BrowserWalletConnection.create(chainConfig);
+
+          const signer = await connection.getSigner();
+
+          const priceTable =
+              ludex.facade.createWeb3UserFacade(
+                  chainConfig,
+                  ludexConfig,
+                  signer)
+                  .metaTXAccessPriceTable();
+
+          const itemId = game.itemId;
+
+          const discountPrice = convertPrice(finalPrice);
+
+          const fullISOTime = `${endDate}T00:00:00`; // KST 기준
+          const localDate = new Date(fullISOTime);
+
+          const relayRequest =
+              await priceTable.startDiscountRequest(
+                  itemId,
+                  discountPrice,
+                  localDate,
+                  3000000n);
+
+          const { args, error } = await requestRelay(relayRequest);
+
+          if (error) {
+            console.error("relay error:", error.message);
+            alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+            throw error;
+          }
+        } catch (error) {
+          console.error("change price error: ", error.message);
+          alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+          throw error;
+        }
+
         const discount = {
           gameId: game.gameId,
           discountPrice: finalPrice,
           startsAt: startDate,
           endsAt: endDate
         }
-      await setDiscountGame(discount);
-      alert("할인 설정되었습니다.");
+        await setDiscountGame(discount);
+
+        alert("할인 설정되었습니다.");
       }
     } catch (error) {
-      const msg =
-        error.response.data.message ||
-        "할인 설정에 실패했습니다. 다시 시도해주세요.";
-      alert(msg);
+      alert("할인 설정에 실패했습니다. 다시 시도해주세요.");
     }
     onClose();
   };
