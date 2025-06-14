@@ -8,7 +8,7 @@
   .home-top-section {
     display:flex;
     justify-content: space-between;
-    width: 70%;
+    width: 80%;
     max-width: 1800px;
     margin-bottom: 20px;
     align-items: center;
@@ -41,7 +41,7 @@
   
   /* 하단 게임 리스트 */
   .bottom-section {
-    width: 80%;
+    width: 70%;
     max-width: 1800px;
   }
   
