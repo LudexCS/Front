@@ -125,7 +125,6 @@ const GameDetailPage = () => {
             <button onClick={() => setShowPaymentModal(true)}>Buy</button>
           </div>
         </div>
-
         {showResourceModal && (
           <ResourceModal resource={resource} onClose={() => setShowResourceModal(false)} />
         )}
