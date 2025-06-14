@@ -18,16 +18,16 @@
   flex: 1;
   padding: 8px;
   border: none;
-  height: 30px;
-  font-size: 16px;
+  height: 20px;
+  font-size: 14px;
 }
 
 .search-bar button {
-  height: 30px;
+  height: 20px;
   padding: 8px;
   background-color: #ffffff;
   color: rgb(255, 255, 255);
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
 }
