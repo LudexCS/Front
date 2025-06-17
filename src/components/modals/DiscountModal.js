@@ -1,7 +1,7 @@
 // src/components/modals/DiscountModal.js
 import React, { useEffect, useState } from "react";
 import "../../styles/modals/DiscountModal.css";
-import { setDiscountGame } from "../../api/recordApi";
+import {setDiscountGame, setReductionGame} from "../../api/recordApi";
 import {useConfig} from "../../context/ConfigContext";
 import * as ludex from "ludex";
 import {requestRelay} from "../../api/walletAuth";
@@ -26,9 +26,9 @@ function convertPrice(price) {
   }
 }
 
-const DiscountModal = ({ isOpen, onClose, game }) => {
+const DiscountModal = ({ isOpen, onClose, game, resource }) => {
   const originalPrice = game?.price;         // 기본 가격
-  const originalPercent = 30;        // 기본 지분율
+  const originalPercent = resource?.sellerRatio ? resource?.sellerRatio : 0;        // 기본 지분율
   const { chainConfig, ludexConfig } = useConfig();
   const [startDate, setStartDate] = useState("2025-05-01");
   const [endDate, setEndDate] = useState("2025-07-01");
@@ -62,7 +62,62 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
   const handleSubmit = async () => {
     try{
       if (isRoyaltyMode) {
-        console.log("지분감면율 설정:");
+        if (originalPercent === 0) {
+          alert("이 게임은 리소스 감면 할인을 설정할 수 없습니다.");
+          return;
+        }
+
+        // Web3 reduction 설정 로직.
+        try {
+          const connection =
+              await ludex.BrowserWalletConnection.create(chainConfig);
+
+          const signer = await connection.getSigner();
+
+          const priceTable =
+              ludex.facade.createWeb3UserFacade(
+                  chainConfig,
+                  ludexConfig,
+                  signer)
+                  .metaTXAccessPriceTable();
+
+          const itemId = resource.sharerId;
+
+          const reducedShare = finalPrice * 100;
+          console.log("reducedShare: " + reducedShare);
+
+          const fullISOTime = `${endDate}T00:00:00`; // KST 기준
+          const localDate = new Date(fullISOTime);
+
+          const relayRequest =
+              await priceTable.startRevShareReductionEventRequest(
+                  itemId,
+                  reducedShare,
+                  localDate,
+                  3000000n);
+
+          const { args, error } = await requestRelay(relayRequest);
+
+          if (error) {
+            console.error("relay error:", error.message);
+            alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+            throw error;
+          }
+        } catch (error) {
+          console.error("change price error: ", error.message);
+          alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+          throw error;
+        }
+
+        const reduction = {
+          resourceId: resource.resourceId,
+          discountRate: Number(originalPercent - finalPrice) / 100,
+          startsAt: startDate,
+          endsAt: endDate
+        }
+        await setReductionGame(reduction);
+
+        console.log("지분감면 할인이 설정되었습니다.");
       } else {
         // Web3 discount 설정 로직.
         try {
