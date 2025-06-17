@@ -96,10 +96,10 @@ const GameDetailPage = () => {
                 <strong>가격: {game.price.toLocaleString()} $</strong>
               )}
             </p>
-            <p onClick={async () => {
+            <p className="creator-link" onClick={async () => {
               setCreatorGames(await getCreatorGames(game.nickName));
               setShowCreatorModal(true);
-              }}><strong>제작자: {game.nickName}</strong></p>
+              }}><strong>제작자:</strong> {game.nickName}</p>
             {/* 제작자 클릭 시  */}
             <p>
               <strong>설명: </strong>

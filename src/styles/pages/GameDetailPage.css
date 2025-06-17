@@ -145,6 +145,11 @@
   font-weight: 500;
 }
 
+.creator-link {
+  cursor: pointer;
+  font-weight: 500;
+}
+
 /* 구매 / 뒤로가기 버튼 */
 .action-buttons {
   display: flex;
