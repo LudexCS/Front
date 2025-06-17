@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/modals/PayoutModal.css";
 
-const CreatorModal = ({ isOpen, onClose, games }) => {
+const CreatorModal = ({ creator, isOpen, onClose, games }) => {
   const [selectedGameId, setSelectedGameId] = useState(null);
   const navigate = useNavigate();
 
@@ -16,7 +16,7 @@ const CreatorModal = ({ isOpen, onClose, games }) => {
   return (
       <div className="payout-modal-overlay">
         <div className="payout-modal">
-          <h2>제작자의 다른 게임들</h2>
+          <h2>{creator} 님의 게임들</h2>
           <div className="payout-sales-summary-wrapper">
             {games.map((game, index) => (
               <div key={game.gameId} className="payout-sales-summary">

@@ -13,6 +13,7 @@ const GameDetailPage = () => {
   const { gameId } = useParams();
   const [game, setGame] = useState(null);
   const [creatorGames, setCreatorGames] = useState(null);
+  const [creator, setCreator] = useState(null);
   const [resource, setResource] = useState(null);
   const navigate = useNavigate();
   const [showResourceModal, setShowResourceModal] = useState(false);
@@ -97,6 +98,7 @@ const GameDetailPage = () => {
               )}
             </p>
             <p className="creator-link" onClick={async () => {
+              setCreator(game.nickName);
               setCreatorGames(await getCreatorGames(game.nickName));
               setShowCreatorModal(true);
               }}><strong>제작자:</strong> {game.nickName}</p>
@@ -142,7 +144,7 @@ const GameDetailPage = () => {
           <ReportModal gameId={gameId} onClose={() => setShowReportModal(false)} />
         )}
         {showCreatorModal && (
-          <CreatorModal games={creatorGames} onClose={() => setShowCreatorModal(false)} />
+          <CreatorModal games={creatorGames} onClose={() => setShowCreatorModal(false)} creator={creator}/>
         )}
       </div>
       <RelatedGameList gameId={gameId} />
