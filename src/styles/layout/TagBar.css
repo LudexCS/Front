@@ -1,23 +1,27 @@
 .tag-container {
-    display: flex;
-    /* gap: 10px; */
-    margin-top: 10px;
-    flex-wrap: wrap; 
-  }
-  
-  .tag {
-    background-color: #cfcfcf;
-    color: #000000;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    white-space: nowrap;
-    font-size: 16px;
-  }
-  
-  .tag:hover {
-    color: aliceblue;
-    background-color: #6f6f6f;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 12px;
+  margin: 24px auto 0;
+  max-width: 700px;
+  padding: 8px 12px;
+}
+
+.tag-text {
+  background-color: #e0e0e0;
+  color: #222;
+  border: 1px solid #bbb;
+  padding: 6px 12px;
+  border-radius: 4px; /* 네모 형태 */
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.tag:hover {
+  background-color: #4a90e2;
+  color: #fff;
+  border-color: #4a90e2;
+}

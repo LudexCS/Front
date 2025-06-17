@@ -47,7 +47,7 @@ const SearchPage = () => {
       <div className="search-page-container">
         <div className="search-page">
           <SearchBar/>
-          <TagBar/>
+          {/* <TagBar/> */}
         </div>
         <div className="search-content">
           <div className="search-content-left">

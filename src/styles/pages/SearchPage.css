@@ -21,10 +21,10 @@
 }
 
 .search-content {
-  display: flex;
-  align-items: flex-start;
-  height: max-content;
-  /* border: 1px solid #ccc; */
+  display: grid;
+  grid-template-columns: 7fr 3fr; /* 좌측 70%, 우측 30% */
+  gap: 20px; /* 좌우 간격 */
+  align-items: stretch; /* 높이 동기화 */
 }
 
 .search-content-left {
@@ -33,7 +33,4 @@
 
 .search-content-right {
   flex: 3;
-  align-items: flex-start;
-  min-height: 2000px;
-  /* border: 1px solid #ff0000; */
 }

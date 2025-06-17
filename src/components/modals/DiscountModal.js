@@ -64,14 +64,6 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
       if (isRoyaltyMode) {
         console.log("지분감면율 설정:");
       } else {
-        const discount = {
-          gameId: game.gameId,
-          discountPrice: finalPrice,
-          startsAt: startDate,
-          endsAt: endDate
-        }
-        await setDiscountGame(discount);
-
         // Web3 discount 설정 로직.
         try {
           const connection =
@@ -91,17 +83,13 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
           const discountPrice = convertPrice(finalPrice);
 
           const fullISOTime = `${endDate}T00:00:00`; // KST 기준
-          const localDate = new Date(fullISOTime);   // JS는 이것을 KST로 해석함
-          const utcDate = new Date(localDate.getTime() - 9 * 60 * 60 * 1000); // 9시간 빼기
-
-          const utcISOString = utcDate.toISOString(); // ISO 8601 형식의 UTC 문자열
-          console.log("Discount endDate at UTC: " + utcISOString); // 예: "2025-06-11T15:00:00.000Z"
+          const localDate = new Date(fullISOTime);
 
           const relayRequest =
               await priceTable.startDiscountRequest(
                   itemId,
                   discountPrice,
-                  utcDate,
+                  localDate,
                   3000000n);
 
           const { args, error } = await requestRelay(relayRequest);
@@ -117,13 +105,18 @@ const DiscountModal = ({ isOpen, onClose, game }) => {
           throw error;
         }
 
+        const discount = {
+          gameId: game.gameId,
+          discountPrice: finalPrice,
+          startsAt: startDate,
+          endsAt: endDate
+        }
+        await setDiscountGame(discount);
+
         alert("할인 설정되었습니다.");
       }
     } catch (error) {
-      const msg =
-        error.response.data.message ||
-        "할인 설정에 실패했습니다. 다시 시도해주세요.";
-      alert(msg);
+      alert("할인 설정에 실패했습니다. 다시 시도해주세요.");
     }
     onClose();
   };

@@ -17,7 +17,7 @@ const TagBar = () => {
     return (
         <div className="tag-container">
         {tags.map((tag) => (
-            <button key={tag.id} className="tag" onClick={() => navigate(`/search/${tag.name}`)}>
+            <button key={tag.id} className="tag-text" onClick={() => navigate(`/search/${tag.name}`)}>
             #{tag.name}
             </button>
         ))}
