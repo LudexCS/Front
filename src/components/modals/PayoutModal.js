@@ -215,7 +215,7 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
 
     const itemId = BigInt(selectedGameId);
     if (selectedResourceId) {
-      if (Number(resourceBalance) > 0) {
+      if (!resourceBalance && Number(resourceBalance) > 0) {
         console.log("Resource Relay Requesting ..");
         const sharerId = BigInt(selectedResourceId);
         let relayRequest;
@@ -246,7 +246,7 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
       }
     }
 
-    if (Number(gameBalance) > 0) {
+    if (!gameBalance && Number(gameBalance) > 0) {
       console.log("Game Relay Requesting ..");
 
       let relayRequest;
