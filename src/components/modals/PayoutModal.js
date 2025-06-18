@@ -53,7 +53,7 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
                 console.log(`GameId ${itemId} Game Balance: ${balance} USDC`);
                 return balance;
               } catch (error) {
-                alert("정산할 금액을 가져오지 못했습니다.");
+                //alert("정산할 금액을 가져오지 못했습니다.");
                 console.log("Balance Error:", error.message);
                 return 0;
               }
@@ -107,7 +107,7 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
                 console.log(`SharerId ${sharerId} Resource Balance: ${balance} USDC`);
                 return balance;
               } catch (error) {
-                alert("정산할 리소스 금액을 가져오지 못했습니다.");
+                //alert("정산할 리소스 금액을 가져오지 못했습니다.");
                 console.log("Resource Balance Error:", error.message);
                 return 0;
               }
