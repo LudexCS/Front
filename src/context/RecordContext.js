@@ -33,7 +33,7 @@ export const RecordProvider = ({ children }) => {
   }, [isLoggedIn, isFetch]);
 
   return (
-    <RecordContext.Provider value={{ recordData, setIsFetch }}>
+    <RecordContext.Provider value={{ recordData, setIsFetch, isFetch }}>
       {children}
     </RecordContext.Provider>
   );
