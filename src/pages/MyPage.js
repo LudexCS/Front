@@ -21,6 +21,7 @@ const MyPage = () => {
   const [nftInfo, setNftInfo] = useState(null);
   const [discountModalOpen, setDiscountModalOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
+  const [selectedResource, setSelectedResource] = useState(null);
   const [payoutModalOpen, setPayoutModalOpen] = useState(false);
   const { user, isLoggedIn, setIsLoggedIn } = useUser();
   const { recordData } = useRecord();
@@ -74,8 +75,9 @@ const MyPage = () => {
     setPayoutModalOpen(true);
   };
 
-  const handleDiscount = (game) => {
+  const handleDiscount = (game, resource) => {
     setSelectedGame(game);
+    setSelectedResource(resource);
     setDiscountModalOpen(true);
   };
 
@@ -98,7 +100,7 @@ const MyPage = () => {
       </div>
       <NftModal isOpen={nftModalOpen} onClose={() => setNftModalOpen(false)} purchaseInfo={nftInfo} />
       <PayoutModal isOpen={payoutModalOpen} onClose={() => setPayoutModalOpen(false)} sales={recordData.sold}/>
-      <DiscountModal isOpen={discountModalOpen} onClose={() => setDiscountModalOpen(false)} game={selectedGame} />
+      <DiscountModal isOpen={discountModalOpen} onClose={() => setDiscountModalOpen(false)} game={selectedGame} resource={selectedResource} />
     </div>
   );
 };

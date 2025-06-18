@@ -10,13 +10,13 @@ const SalesHistory = ({ sales, onEditGame, onSetDiscount }) => {
 
   return (
     <div className="sales-history">
-      {sales.games.map((game) => (
+      {sales.games.map((game, index) => (
         <div key={game.gameId} className="sales-item">
           <div className="sales-summary">
             <span>{game.title} | {Number(game.price).toLocaleString()} $</span>
             <div>
               <button className="expand-btn" onClick={() => onEditGame(game)}>Edit</button>
-              <button className="expand-btn" onClick={() => onSetDiscount(game)}>Set Discount</button>
+              <button className="expand-btn" onClick={() => onSetDiscount(game, sales.resources[index])}>Set Discount</button>
               <button className="expand-btn" onClick={() => toggleExpand(game.gameId)}>V</button>
             </div>
           </div>
