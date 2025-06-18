@@ -3,11 +3,13 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import "../styles/pages/PaymentSuccessPage.css";
 import {confirmPayment} from "../api/purchaseApi";
 import NavbarSearch from "../components/layout/NavbarSearch";
+import { useRecord } from "../context/RecordContext";
 
 const PaymentSuccessPage = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [responseData, setResponseData] = useState(null);
+    const { setIsFetch, isFetch } = useRecord();
 
     useEffect(() => {
         async function confirm() {
@@ -30,6 +32,12 @@ const PaymentSuccessPage = () => {
             .catch((error) => {
                 navigate(`/payment/fail?code=${error.code}&message=${error.message}`);
             });
+        
+        if(isFetch){
+            setIsFetch(false);
+        } else {
+            setIsFetch(true);
+        }
     }, [searchParams]);
 
     return (
