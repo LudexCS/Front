@@ -3,19 +3,23 @@ import { useParams, useNavigate } from "react-router-dom";
 import ResourceModal from "../components/modals/ResourceModal";
 import PaymentModal from "../components/modals/PaymentModal";
 import ReportModal from "../components/modals/ReportModal";
+import CreatorModal from "../components/modals/CreatorModal";
 import NavbarSearch from "../components/layout/NavbarSearch";
 import RelatedGameList from "../components/game/RelatedGameList";
-import { fetchGameDetail, fetchGameResource } from "../api/gameGetApi";
+import { fetchGameDetail, fetchGameResource, getCreatorGames } from "../api/gameGetApi";
 import "../styles/pages/GameDetailPage.css";
 
 const GameDetailPage = () => { 
   const { gameId } = useParams();
   const [game, setGame] = useState(null);
+  const [creatorGames, setCreatorGames] = useState(null);
+  const [creator, setCreator] = useState(null);
   const [resource, setResource] = useState(null);
   const navigate = useNavigate();
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showCreatorModal, setShowCreatorModal] = useState(false);
   const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
 
   useEffect(() => {
@@ -93,7 +97,12 @@ const GameDetailPage = () => {
                 <strong>가격: {game.price.toLocaleString()} $</strong>
               )}
             </p>
-            <p><strong>제작자: {game.nickName}</strong></p>
+            <p className="creator-link" onClick={async () => {
+              setCreator(game.nickName);
+              setCreatorGames(await getCreatorGames(game.nickName));
+              setShowCreatorModal(true);
+              }}><strong>제작자:</strong> {game.nickName}</p>
+            {/* 제작자 클릭 시  */}
             <p>
               <strong>설명: </strong>
               <br />
@@ -125,7 +134,6 @@ const GameDetailPage = () => {
             <button onClick={() => setShowPaymentModal(true)}>Buy</button>
           </div>
         </div>
-
         {showResourceModal && (
           <ResourceModal resource={resource} onClose={() => setShowResourceModal(false)} />
         )}
@@ -134,6 +142,9 @@ const GameDetailPage = () => {
         )}
         {showReportModal && (
           <ReportModal gameId={gameId} onClose={() => setShowReportModal(false)} />
+        )}
+        {showCreatorModal && (
+          <CreatorModal games={creatorGames} onClose={() => setShowCreatorModal(false)} creator={creator}/>
         )}
       </div>
       <RelatedGameList gameId={gameId} />

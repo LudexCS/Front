@@ -1,5 +1,19 @@
 import axios from "axios";
 
+//판매자의 다른 게임 조회
+export const getCreatorGames = async (nickname) => {
+  try {
+    const response = await axios.get("https://api.uosludex.com/management/api/get/findOtherGames", {
+      params: { nickname },
+    });
+    console.log("판매자의 다른 게임 조회: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("판매자의 다른 게임 조회 실패:", error);
+    throw error;
+  }
+};
+
 //페이지별 게임 목록 조회
 export const fetchGameList = async ({ page, limit }) => {
   try {

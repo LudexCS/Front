@@ -2,12 +2,16 @@ import React from "react";
 import "../../styles/game/GameDetailBar.css";
 import { useNavigate } from "react-router-dom";
 import Banner from "../layout/Banner";
+import TagBar from "../layout/TagBar";
 
 const GameDetailBar = ({ game }) => {
   const navigate = useNavigate();
 
   if (!game) {
-    return <div className="bar-game-banner"><Banner /></div>;
+    return <div className="bar-game-banner">
+      <Banner />
+      <TagBar />
+      </div>;
   }
 
   return (

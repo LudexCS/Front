@@ -3,11 +3,11 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  min-height: 80vh;
+  /* min-height: 80vh; */
   background: #ffffff;
   padding: 40px;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 14px;
   gap: 40px;
   box-sizing: border-box;
 }
@@ -21,7 +21,7 @@
 }
 
 .media-wrapper {
-  width: 100%;
+  width: 90%;
   border: 2px solid #ccc;
   padding: 12px;
   border-radius: 8px;
@@ -100,7 +100,7 @@
 }
 
 .game-detail-info h2 {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 4px;
 }
 
@@ -141,6 +141,11 @@
 
 .resource-link {
   color: #007bff;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.creator-link {
   cursor: pointer;
   font-weight: 500;
 }

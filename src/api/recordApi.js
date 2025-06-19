@@ -22,3 +22,13 @@ export const setDiscountGame = async (discount) => {
     throw err;
   }
 };
+
+export const setReductionGame = async (reduction) => {
+  console.log("reduction", reduction);
+  try {
+    await gameManageInstance.post("/protected/reduction/register", reduction);
+  } catch (err) {
+    console.error("감소 설정 실패:", err);
+    throw err;
+  }
+}

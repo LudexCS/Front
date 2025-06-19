@@ -15,6 +15,8 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [gamesBalance, setGamesBalance] = useState([]);
   const [resourcesBalance, setResourcesBalance] = useState([]);
+  const [gameBalance, setGameBalance] = useState(null);
+  const [resourceBalance, setResourceBalance] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -53,7 +55,7 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
                 console.log(`GameId ${itemId} Game Balance: ${balance} USDC`);
                 return balance;
               } catch (error) {
-                alert("정산할 금액을 가져오지 못했습니다.");
+                //alert("정산할 금액을 가져오지 못했습니다.");
                 console.log("Balance Error:", error.message);
                 return 0;
               }
@@ -107,7 +109,7 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
                 console.log(`SharerId ${sharerId} Resource Balance: ${balance} USDC`);
                 return balance;
               } catch (error) {
-                alert("정산할 리소스 금액을 가져오지 못했습니다.");
+                //alert("정산할 리소스 금액을 가져오지 못했습니다.");
                 console.log("Resource Balance Error:", error.message);
                 return 0;
               }
@@ -213,13 +215,45 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
 
     const itemId = BigInt(selectedGameId);
     if (selectedResourceId) {
-      console.log("Resource Relay Requesting ..");
-      const sharerId = BigInt(selectedResourceId);
+      if (!resourceBalance && Number(resourceBalance) > 0) {
+        console.log("Resource Relay Requesting ..");
+        const sharerId = BigInt(selectedResourceId);
+        let relayRequest;
+        try {
+          relayRequest =
+              await profitEscrow.claimRequest(
+                  sharerId,
+                  ludex.Address.create(tokenAddress),
+                  await connection.getCurrentAddress(),
+                  3000000n);
+        } catch (error) {
+          console.log("Relay Request Error: " + error);
+          alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+          setIsLoading(false);
+          onClose();
+          return;
+        }
+
+        const { args, error } = await requestRelay(relayRequest);
+
+        if (error) {
+          console.error(`message: ${error.message}`);
+          alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
+          setIsLoading(false);
+          onClose();
+          return;
+        }
+      }
+    }
+
+    if (!gameBalance && Number(gameBalance) > 0) {
+      console.log("Game Relay Requesting ..");
+
       let relayRequest;
       try {
         relayRequest =
             await profitEscrow.claimRequest(
-                sharerId,
+                itemId,
                 ludex.Address.create(tokenAddress),
                 await connection.getCurrentAddress(),
                 3000000n);
@@ -240,32 +274,6 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
         onClose();
         return;
       }
-    }
-
-    let relayRequest;
-    try {
-      relayRequest =
-          await profitEscrow.claimRequest(
-              itemId,
-              ludex.Address.create(tokenAddress),
-              await connection.getCurrentAddress(),
-              3000000n);
-    } catch (error) {
-      console.log("Relay Request Error: " + error);
-      alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
-      setIsLoading(false);
-      onClose();
-      return;
-    }
-
-    const { args, error } = await requestRelay(relayRequest);
-
-    if (error) {
-      console.error(`message: ${error.message}`);
-      alert("서버 혼잡 에러입니다. 잠시 후 다시 시도해주세요.");
-      setIsLoading(false);
-      onClose();
-      return;
     }
 
     setIsLoading(false); // 로딩 종료
@@ -290,6 +298,8 @@ const PayoutModal = ({ isOpen, onClose, sales }) => {
                   onClick={() => {
                     setSelectedGameId(game.itemId);
                     setSelectedResourceId(sales.resources[index].sharerId);
+                    setGameBalance(gamesBalance[index]);
+                    setResourceBalance(resourcesBalance[index]);
                   }}
                 >
                   <img src={game.thumbnailUrl} alt="payout-thumbnail-img" className="payout-thumbnail-img" />
